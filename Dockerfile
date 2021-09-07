@@ -29,7 +29,7 @@ COPY . .
 
 USER root
 RUN mkdir ~/.local/share/powershell/Modules/PSDecode
-COPY ./psdecode/PSDecode.psm1 ~/.local/share/powershell/Modules/PSDecode
+COPY tools/PSDecode.psm1 ~/.local/share/powershell/Modules/PSDecode
 
 USER assemblyline
 

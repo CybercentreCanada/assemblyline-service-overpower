@@ -6,6 +6,7 @@ from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultSection, Classification, BODY_FORMAT, Heuristic
 
 from tools.ps1_profiler import main as ps1_profiler
+from tools.ps1_xray import xray
 
 
 class Overpower(ServiceBase):
@@ -19,17 +20,32 @@ class Overpower(ServiceBase):
     def execute(self, request: ServiceRequest) -> None:
         request.result = Result()
 
+        # PowerShellProfiler
         output = ps1_profiler(request.file_path, debug=True)
-        print(output)
 
         # PSDecode
+        args = ["pwsh", "-Command", "PSDecode", request.file_path, "-verbose"]
+        try:
+            completed_process = run(args=args, capture_output=True, timeout=60)
+        except TimeoutExpired:
+            completed_process = None
+
+        psdecode_output = []
+        if completed_process:
+            psdecode_output = completed_process.stdout.decode().split("\n")
+
+        print("here")
+
+
+        # PyPowerShellXray
+
         # psz = sz = None
         # sz = request.file_contents.decode()
         # try:
         #     fRecurse = True
         #     while fRecurse:
         #         psz = str(sz)
-        #         sz2 = psx.xray(sz)
+        #         sz2 = xray(sz)
         #         if len(sz2) == 0:
         #             fRecurse = False
         #             print(psz)
@@ -38,7 +54,6 @@ class Overpower(ServiceBase):
         #     print(psz)
         #     pass
 
-        # PyPowerShellXray
         # args = ["python", "./pypowershellxray/psx.py", "-f", request.file_path, "--verbose", "--dumpapis", "--apidb", "./pypowershellxray/apihashes.db"]
         # try:
         #     completed_process = run(args=args, capture_output=True, timeout=60)
@@ -49,6 +64,6 @@ class Overpower(ServiceBase):
         # if completed_process:
         #     ps1_xray_output = completed_process.stdout.decode().split("\n")
         #
-        print("here")
+        # print("here")
 
 
