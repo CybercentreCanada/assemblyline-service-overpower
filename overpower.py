@@ -5,8 +5,7 @@ from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultSection, Classification, BODY_FORMAT, Heuristic
 
-from pypowershellxray import psx
-from powershellprofiler import PowerShellProfiler
+from tools.ps1_profiler import main as ps1_profiler
 
 
 class Overpower(ServiceBase):
@@ -20,19 +19,8 @@ class Overpower(ServiceBase):
     def execute(self, request: ServiceRequest) -> None:
         request.result = Result()
 
-        output = PowerShellProfiler.main(request.file_path, debug=True)
+        output = ps1_profiler(request.file_path, debug=True)
         print(output)
-
-        # PowerShellProfiler
-        # args = ["python", "./powershellprofiler/PowerShellProfiler.py", "-f", request.file_path, "-d"]
-        # try:
-        #     completed_process = run(args=args, capture_output=True, timeout=60)
-        # except TimeoutExpired:
-        #     completed_process = None
-        #
-        # ps1_profiler_output = []
-        # if completed_process:
-        #     ps1_profiler_output = completed_process.stdout.decode().split("\n")
 
         # PSDecode
         # psz = sz = None
