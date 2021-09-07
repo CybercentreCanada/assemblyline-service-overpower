@@ -24,13 +24,12 @@ jobs:
           versionSpec: "$(python.version)"
       - script: |
           sudo apt-get update
-          sudo apt-get install -y qemu-utils libfuzzy-dev libfuzzy2
           sudo rm -rf /var/lib/apt/lists/*
           sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir assemblyline assemblyline_v4_service
           sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r `pwd`/test/requirements.txt
           sudo rm -rf /tmp/* /var/lib/apt/lists/* ~/.cache/pip
         displayName: Setup environment
-      - script: python -m pytest --durations=10 -rsx -vv --cov-report=xml --cov=metadefender
+      - script: python -m pytest --durations=10 -rsx -vv --cov-report=xml --cov=overpower
         displayName: Test
       - script: python -m codecov
         displayName: Upload Coverage

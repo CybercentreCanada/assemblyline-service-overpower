@@ -25,6 +25,6 @@ stages:
               set -xv  # Echo commands before they are run
               export TAG=${BUILD_SOURCEBRANCH#"refs/tags/v"}
               if [[ "$TAG" == *stable* ]]; then export BUILD_TYPE=stable; else export BUILD_TYPE=latest; fi
-              docker build --build-arg version=$TAG --build-arg branch=$BUILD_TYPE -t cccs/assemblyline-service-metadefender:$TAG -t cccs/assemblyline-service-metadefender:$BUILD_TYPE .
-              docker push cccs/assemblyline-service-metadefender --all-tags
+              docker build --build-arg version=$TAG --build-arg branch=$BUILD_TYPE -t cccs/assemblyline-service-overpower:$TAG -t cccs/assemblyline-service-overpower:$BUILD_TYPE .
+              docker push cccs/assemblyline-service-overpower --all-tags
             displayName: Deploy to Docker Hub
