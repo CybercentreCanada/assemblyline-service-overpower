@@ -1,0 +1,65 @@
+name: MetaDefender
+version: $SERVICE_TAG
+description: >
+  Scan your files with a multi antivirus scanning engine.
+
+accepts: .*
+rejects: empty|metadata/.*
+
+stage: CORE
+category: Antivirus
+
+file_required: true
+timeout: 60
+disable_cache: false
+
+enabled: false
+is_external: false
+licence_count: 0
+
+config:
+  api_key: ""
+  base_url: 'http://localhost:8008/'
+  md_version: 4
+  md_timeout: 40
+  min_node_time: 60
+  max_node_time: 300
+  max_md_scan_time: 5
+  av_config:
+    # AV Blocklist (ignore results)
+    blocklist:
+      - "Antiy-AVL"
+      - "APEX"
+      - "Jiangmin"
+    # Specific keywords found in a signature name
+    kw_score_revision_map:
+      adware: 100
+    # Signature names are not valid YAML keys according to the Assemblyline
+    # ODM so we cannot use them in the heuristic signature_score_map. Hence why we're putting this here.
+    sig_score_revision_map:
+      TACHYON.Suspicious/XOX.Obfus.Gen.2: 100
+      # Note the following should be added to the system-level safelist since their revised scores are 0
+#      Ikarus.Trojan-Downloader.MSWord.Agent: 0
+#      Ikarus.Trojan-Downloader.VBA.Agent: 0
+#      NANOAV.Exploit.Xml.CVE-2017-0199.equmby: 0
+#      TACHYON.Suspicious/XOX.Obfus.Gen.3: 0
+#      Vir.IT eXplorer.Office.VBA_Macro_Heur: 0
+#      Vir.IT eXplorer.W97M/Downloader.AB: 0
+
+heuristics:
+  - heur_id: 1
+    name: File is infected
+    score: 1000
+    filetype: '*'
+    description: MetaDefender Antivirus hit.
+
+  - heur_id: 2
+    name: File is suspicious
+    score: 500
+    filetype: '*'
+    description: MetaDefender Antivirus hit.
+
+docker_config:
+  allow_internet_access: true
+  image: ${REGISTRY}cccs/assemblyline-service-metadefender:$SERVICE_TAG
+  cpu_cores: 0.25
