@@ -1705,7 +1705,7 @@ def unravel_content(original_data):
     return content_data
 
 
-def main(sample_path, working_dir):
+def profile_ps1(sample_path, working_dir):
     global output
 
     # Setup behaviour_tags list so behaviours can be tracked throughout processing

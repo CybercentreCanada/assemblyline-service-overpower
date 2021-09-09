@@ -9,7 +9,7 @@ from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntolog
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultSection
 
-from tools.ps1_profiler import main as ps1_profiler, DEOBFUS_FILE
+from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
 
 
 class Overpower(ServiceBase):
@@ -27,7 +27,7 @@ class Overpower(ServiceBase):
         request.result = Result()
 
         # PowerShellProfiler
-        ps1_profiler_output = ps1_profiler(request.file_path, self.working_directory)
+        ps1_profiler_output = profile_ps1(request.file_path, self.working_directory)
         self._handle_ps1_profiler_output(ps1_profiler_output, request.result)
 
         # PSDecode
@@ -45,30 +45,7 @@ class Overpower(ServiceBase):
         if add_supplementary:
             self._extract_supplementary(ps1_profiler_output, psdecode_output)
 
-        # Retrieve artifacts
-        for file in listdir(self.working_directory):
-            file_path = path.join(self.working_directory, file)
-            artifact_sha256 = self.get_id_from_data(file_path)
-            if artifact_sha256 in self.artifact_hashes:
-                continue
-            else:
-                self.artifact_hashes.add(artifact_sha256)
-            description = "Overpower artifact"
-            to_be_extracted = True
-            if DEOBFUS_FILE in file:
-                description = "De-obfuscated file from PowerShellProfiler"
-            elif "layer" in file:
-                description = "Layer of de-obfuscated PowerShell from PSDecode"
-            elif "suppl" in file:
-                description = "Output from PowerShell tool"
-                to_be_extracted = False
-            self.artifact_list.append({
-                "name": file,
-                "path": file_path,
-                "description": description,
-                "to_be_extracted": to_be_extracted
-            })
-            self.log.debug(f"Adding extracted file: {file_path}" if to_be_extracted else f"Adding supplementary file: {file_path}")
+        self._prepare_artifacts()
 
         # Adding sandbox artifacts using the SandboxOntology helper class
         _ = SandboxOntology.handle_artifacts(self.artifact_list, request)
@@ -112,6 +89,38 @@ class Overpower(ServiceBase):
             psdecode_suppl_path = path.join(self.working_directory, "suppl_psdecode_output.txt")
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
+
+    def _prepare_artifacts(self) -> None:
+        """
+        This method prepares artifacts that have been dumped by PowerShell de-obfuscation tools
+        :return: None
+        """
+        # Retrieve artifacts
+        for file in sorted(listdir(self.working_directory)):
+            file_path = path.join(self.working_directory, file)
+            artifact_sha256 = self.get_id_from_data(file_path)
+            if artifact_sha256 in self.artifact_hashes:
+                continue
+            else:
+                self.artifact_hashes.add(artifact_sha256)
+            to_be_extracted = True
+            if DEOBFUS_FILE in file:
+                description = "De-obfuscated file from PowerShellProfiler"
+            elif "layer" in file:
+                description = "Layer of de-obfuscated PowerShell from PSDecode"
+            elif "suppl" in file:
+                description = "Output from PowerShell tool"
+                to_be_extracted = False
+            else:
+                self.log.warning(f"The following file was dumped but not extracted: {file}")
+                continue
+            self.artifact_list.append({
+                "name": file,
+                "path": file_path,
+                "description": description,
+                "to_be_extracted": to_be_extracted
+            })
+            self.log.debug(f"Adding extracted file: {file_path}" if to_be_extracted else f"Adding supplementary file: {file_path}")
 
     @staticmethod
     def get_id_from_data(file_path: str) -> str:
