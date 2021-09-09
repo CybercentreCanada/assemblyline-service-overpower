@@ -12,6 +12,22 @@ from assemblyline_v4_service.common.result import Result, ResultSection
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
 
 
+def get_id_from_data(file_path: str) -> str:
+    """
+    This method generates a sha256 hash for the file contents of a file
+    :param file_path: The file path
+    :return hash: The sha256 hash of the file
+    """
+    sha256_hash = sha256()
+    # stream it in so we don't load the whole file in memory
+    with open(file_path, 'rb') as f:
+        data = f.read(4096)
+        while data:
+            sha256_hash.update(data)
+            data = f.read(4096)
+    return sha256_hash.hexdigest()
+
+
 class Overpower(ServiceBase):
 
     def __init__(self, config: Optional[Dict] = None) -> None:
@@ -59,7 +75,10 @@ class Overpower(ServiceBase):
         :return: None
         """
         suspicious_res_sec = ResultSection("Suspicious Activity Detected")
-        suspicious_res_sec.set_heuristic(3)
+        if output["score"] < 6:
+            suspicious_res_sec.set_heuristic(3)
+        else:
+            suspicious_res_sec.set_heuristic(4)
         suspicious_res_sec.add_lines(output["behaviour"]["tags"])
         if len(suspicious_res_sec.body) > 0:
             result.add_section(suspicious_res_sec)
@@ -98,7 +117,7 @@ class Overpower(ServiceBase):
         # Retrieve artifacts
         for file in sorted(listdir(self.working_directory)):
             file_path = path.join(self.working_directory, file)
-            artifact_sha256 = self.get_id_from_data(file_path)
+            artifact_sha256 = get_id_from_data(file_path)
             if artifact_sha256 in self.artifact_hashes:
                 continue
             else:
@@ -121,19 +140,3 @@ class Overpower(ServiceBase):
                 "to_be_extracted": to_be_extracted
             })
             self.log.debug(f"Adding extracted file: {file_path}" if to_be_extracted else f"Adding supplementary file: {file_path}")
-
-    @staticmethod
-    def get_id_from_data(file_path: str) -> str:
-        """
-        This method generates a sha256 hash for the file contents of a file
-        :param file_path: The file path
-        :return hash: The sha256 hash of the file
-        """
-        sha256_hash = sha256()
-        # stream it in so we don't load the whole file in memory
-        with open(file_path, 'rb') as f:
-            data = f.read(4096)
-            while data:
-                sha256_hash.update(data)
-                data = f.read(4096)
-        return sha256_hash.hexdigest()

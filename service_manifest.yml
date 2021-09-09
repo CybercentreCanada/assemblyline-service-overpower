@@ -48,6 +48,12 @@ heuristics:
     filetype: '*'
     description: Suspicious activity was detected during execution.
 
+  - heur_id: 4
+    name: File is infected
+    score: 1000
+    filetype: '*'
+    description: PowerShellProfiler has determined that the file is malicious
+
 docker_config:
   allow_internet_access: false
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG

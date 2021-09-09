@@ -203,12 +203,18 @@ class TestOverpower:
     @staticmethod
     def test_handle_ps1_profiler_output(overpower_class_instance):
         from assemblyline_v4_service.common.result import Result, ResultSection
-        output = {"behaviour": {"tags": ["blah"]}}
+        output = {"behaviour": {"tags": ["blah"]}, "score": 3}
         res = Result()
         correct_res_sec = ResultSection("Suspicious Activity Detected", body="blah")
         correct_res_sec.set_heuristic(3)
         overpower_class_instance._handle_ps1_profiler_output(output, res)
         assert check_section_equality(res.sections[0], correct_res_sec)
+
+        output["score"] = 6
+        correct_res_sec.heuristic = None
+        correct_res_sec.set_heuristic(4)
+        overpower_class_instance._handle_ps1_profiler_output(output, res)
+        assert check_section_equality(res.sections[1], correct_res_sec)
 
     @staticmethod
     def test_handle_psdecode_output(overpower_class_instance):
@@ -283,7 +289,7 @@ class TestOverpower:
     ])
     def test_get_id_from_data(data, expected_result):
         from os import remove
-        from jsjaws import get_id_from_data
+        from overpower import get_id_from_data
         some_file = "some_file.txt"
         with open(some_file, "wb") as f:
             f.write(b"blah")
