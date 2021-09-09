@@ -7,7 +7,7 @@ accepts: code/ps1
 rejects: empty|metadata/.*
 
 stage: CORE
-category: Static Analysis
+category: Dynamic Analysis
 
 file_required: true
 timeout: 60
@@ -16,6 +16,37 @@ disable_cache: false
 enabled: false
 is_external: false
 licence_count: 0
+
+submission_params:
+  # Service-wide parameters
+  - default: 60
+    name: tool_timeout
+    type: int
+    value: 60
+
+  - default: false
+    name: add_supplementary
+    type: bool
+    value: false
+
+heuristics:
+  - heur_id: 1
+    name: Network Traffic Detected
+    score: 500
+    filetype: '*'
+    description: Malware Sandbox Tool(s) detected network traffic.
+
+  - heur_id: 2
+    name: IOC(s) Extracted
+    score: 250
+    filetype: '*'
+    description: At least one IOC has been extracted.
+
+  - heur_id: 3
+    name: Suspicious Activity Detected
+    score: 250
+    filetype: '*'
+    description: Suspicious activity was detected during execution.
 
 docker_config:
   allow_internet_access: false

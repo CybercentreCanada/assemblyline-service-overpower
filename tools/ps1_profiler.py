@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-import re
 import base64
 import binascii
+import os
+import re
+from typing import Dict, Any
 import zlib
 from Crypto.Cipher import AES
 from datetime import datetime
@@ -16,9 +18,17 @@ __date__ = "X"
 # The garbage_list is used to prevent loops for functions that don't replace content but simply append to existing
 garbage_list = list()
 
-output = ""
-debugFlag = None
+output: Dict[str, Any] = {
+    "behaviour": {"commands": [], "tags": []},
+    "deobfuscated": None,
+    "family": [],
+    "modifications": [],
+    "score": 0,
+    "verdict": None,
+}
 
+
+DEOBFUS_FILE = "deobfuscated.ps1"
 
 #####################
 # Support Functions #
@@ -72,7 +82,7 @@ def score_behaviours(behaviour_tags):
     score_values = {
 
         # Negative
-        # Behaviors which are generally only seen in Malware.
+        # Behaviours which are generally only seen in Malware.
         "Code Injection": 10.0,
         "Key Logging": 3.0,
         "Screen Scraping": 2.0,
@@ -86,11 +96,11 @@ def score_behaviours(behaviour_tags):
         "DNS C2": 2.0,
         "Disabled Protections": 4.0,
         "Negative Context": 10.0,
-        "Malicious Behavior Combo": 6.0,
+        "Malicious Behaviour Combo": 6.0,
         "Known Malware": 10.0,
 
         # Neutral
-        # Behaviors which require more context to infer intent.
+        # Behaviours which require more context to infer intent.
         "Downloader": 1.5,
         "Starts Process": 1.5,
         "Script Execution": 1.5,
@@ -111,7 +121,7 @@ def score_behaviours(behaviour_tags):
         "Variable Extension": 2.0,
 
         # Benign
-        # Behaviors which are generally only seen in Benign scripts - subtracts from score.
+        # Behaviours which are generally only seen in Benign scripts - subtracts from score.
         "Script Logging": -1.0,
         "License": -2.0,
         "Function Body": -2.0,
@@ -119,20 +129,20 @@ def score_behaviours(behaviour_tags):
     }
 
     score = 0.0
-    behavior_data = list()
+    behaviour_data = list()
 
-    for behavior in behaviour_tags:
+    for behaviour in behaviour_tags:
 
-        if "Known Malware:" in behavior:
-            behavior_data.append("%s: %s - %s" % (behavior.split(":")[0], behavior.split(":")[1], score_values[behavior.split(":")[0]]))
-            behavior = behavior.split(":")[0]
-        elif "Obfuscation:" in behavior:
-            behavior_data.append("%s: %s - %s" % (behavior.split(":")[0], behavior.split(":")[1], score_values[behavior.split(":")[0]]))
-            behavior = behavior.split(":")[0]
+        if "Known Malware:" in behaviour:
+            behaviour_data.append("%s: %s - %s" % (behaviour.split(":")[0], behaviour.split(":")[1], score_values[behaviour.split(":")[0]]))
+            behaviour = behaviour.split(":")[0]
+        elif "Obfuscation:" in behaviour:
+            behaviour_data.append("%s: %s - %s" % (behaviour.split(":")[0], behaviour.split(":")[1], score_values[behaviour.split(":")[0]]))
+            behaviour = behaviour.split(":")[0]
         else:
-            behavior_data.append("%s - %s" % (behavior, score_values[behavior]))
+            behaviour_data.append("%s - %s" % (behaviour, score_values[behaviour]))
 
-        score += score_values[behavior]
+        score += score_values[behaviour]
 
     if score < 0.0:
         score = 0.0
@@ -151,7 +161,7 @@ def score_behaviours(behaviour_tags):
     else:
         verdict = "Severe Risk"
 
-    return score, verdict, behavior_data
+    return score, verdict, behaviour_data
 
 
 def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
@@ -170,12 +180,12 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
     """
     global output
     # {Behaviour:[["entry1","entry2"],["entry3","entry4"]]}
-    behavior_col = {}
+    behaviour_col = {}
     obf_type = None
 
-    #######################
-    # Malicious Behaviors #
-    #######################
+    ########################
+    # Malicious Behaviours #
+    ########################
 
     # Generates possible code injection variations.
     # Create memory
@@ -197,29 +207,29 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
           "SendMessageCallbackA", "SendMessageCallbackW", "SetWinEventHook", "SetWindowsHookExA", "SetWindowsHookExW",
           "CreateThread", "Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer", "DeviceIoControl"]
 
-    behavior_col["Code Injection"] = [["Read", "Write", "Load", "Reflection.Assembly", "EntryPoint.Invoke"], ]
+    behaviour_col["Code Injection"] = [["Read", "Write", "Load", "Reflection.Assembly", "EntryPoint.Invoke"], ]
 
-    behavior_col["Key Logging"] = [
+    behaviour_col["Key Logging"] = [
         ["GetAsyncKeyState", "Windows.Forms.Keys"],
         ["LShiftKey", "RShiftKey", "LControlKey", "RControlKey"],
     ]
 
-    behavior_col["Screen Scraping"] = [
+    behaviour_col["Screen Scraping"] = [
         ["Drawing.Bitmap", "Width", "Height", "Screen"],
         ["Drawing.Graphics", "FromImage", "Screen"],
         ["CopyFromScreen", "Size"],
     ]
 
-    behavior_col["AppLocker Bypass"] = [
+    behaviour_col["AppLocker Bypass"] = [
         ["regsvr32", "/i:http", "scrobj.dll"],
     ]
 
-    behavior_col["AMSI Bypass"] = [
+    behaviour_col["AMSI Bypass"] = [
         ["Management.Automation.AMSIUtils", "amsiInitFailed"],
         ["Expect100Continue"],
     ]
 
-    behavior_col["Clear Logs"] = [
+    behaviour_col["Clear Logs"] = [
         ["GlobalSession.ClearLog"],
         ["clear-eventlog", "Windows PowerShell"],
         ["clear-eventlog", "Applicatipn"],
@@ -227,7 +237,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["ClearMyTracksByProcess"],
     ]
 
-    behavior_col["Coin Miner"] = [
+    behaviour_col["Coin Miner"] = [
         ["miner_path", "miner_url"],
         ["minername", "Miner Path"],
         ["RainbowMiner"],
@@ -235,33 +245,33 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["xmrig.exe"],
     ]
 
-    behavior_col["Embedded File"] = [
+    behaviour_col["Embedded File"] = [
         ["MZ", "This program cannot be run in DOS mode"],
         ["TVqQAAMAAAA"],  # B64 MZ Header
     ]
 
-    behavior_col["Abnormal Size"] = [  # Work done in processing.
+    behaviour_col["Abnormal Size"] = [  # Work done in processing.
     ]
 
-    behavior_col["Ransomware"] = [
+    behaviour_col["Ransomware"] = [
         ["README-Encrypted-Files.html"],
         ["!!! Your Personal identification ID:"],
         ["DECRYPT_INSTRUCTIONS.html"],
         ["BinaryWriter", "Cryptography", "ReadWrite", "Add-Content", "html"],
     ]
 
-    behavior_col["DNS C2"] = [
+    behaviour_col["DNS C2"] = [
         ["nslookup", "querytype=txt", "8.8.8.8"],
     ]
 
-    behavior_col["Disabled Protections"] = [
+    behaviour_col["Disabled Protections"] = [
         ["REG_DWORD", "DisableAntiSpyware"],
         ["REG_DWORD", "DisableAntiVirus"],
         ["REG_DWORD", "DisableScanOnRealtimeEnable"],
         ["REG_DWORD", "DisableBlockAtFirstSeen"],
     ]
 
-    behavior_col["Negative Context"] = [
+    behaviour_col["Negative Context"] = [
         ["Invoke-Shellcode"],  # Could be PowerSploit, Empire, or other frameworks.
         ["meterpreter"],
         ["metasploit"],
@@ -302,11 +312,11 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["FuzzySec"],
     ]
 
-    #####################
-    # Neutral Behaviors #
-    #####################
+    ######################
+    # Neutral Behaviours #
+    ######################
 
-    behavior_col["Downloader"] = [
+    behaviour_col["Downloader"] = [
         ["DownloadFile"],
         ["DownloadString"],
         ["DownloadData"],
@@ -327,7 +337,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["Excel.Workbooks.Open", "http", "ReleaseComObject", "Sheets", "Item", "Range", "Row"],
     ]
 
-    behavior_col["Starts Process"] = [
+    behaviour_col["Starts Process"] = [
         ["Start-Process"],
         ["New-Object", "IO.MemoryStream", "IO.StreamReader"],
         ["Diagnostics.Process]::Start"],
@@ -337,7 +347,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["START", "$ENV:APPDATA", "exe", "http"],
     ]
 
-    behavior_col["Script Execution"] = [
+    behaviour_col["Script Execution"] = [
         ["Invoke-Expression"],
         ["Invoke-Command"],
         ["InvokeCommand"],
@@ -352,7 +362,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["shellexecute"],
     ]
 
-    behavior_col["Compression"] = [
+    behaviour_col["Compression"] = [
         ["Convert", "FromBase64String", "Text.Encoding"],
         ["IO.Compression.GzipStream"],
         ["Compression.CompressionMode]::Decompress"],
@@ -360,39 +370,39 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["IO.MemoryStream"],
     ]
 
-    behavior_col["Hidden Window"] = [
+    behaviour_col["Hidden Window"] = [
         ["WindowStyle", "Hidden"],
         ["CreateNoWindow=$true"],
         ["Window.ReSizeTo 0, 0"],
     ]
 
-    behavior_col["Custom Web Fields"] = [
+    behaviour_col["Custom Web Fields"] = [
         ["Headers.Add"],
         ["SessionKey", "SessiodID"],
         ["Method", "ContentType", "UserAgent", "WebRequest]::create"],
     ]
 
-    behavior_col["Persistence"] = [
+    behaviour_col["Persistence"] = [
         ["New-Object", "-COMObject", "Schedule.Service"],
         ["SCHTASKS"],
     ]
 
-    behavior_col["Sleeps"] = [
+    behaviour_col["Sleeps"] = [
         ["Start-Sleep"],
         ["sleep -s"],
     ]
 
-    behavior_col["Uninstalls Apps"] = [
+    behaviour_col["Uninstalls Apps"] = [
         ["foreach", "UninstallString"],
     ]
 
-    behavior_col["Obfuscation"] = [
+    behaviour_col["Obfuscation"] = [
         ["-Join", "[int]", "-as", "[char]"],
         ["-bxor"],
         ["PtrToStringAnsi"],
     ]
 
-    behavior_col["Crypto"] = [
+    behaviour_col["Crypto"] = [
         ["Security.Cryptography.AESCryptoServiceProvider", "Mode", "Key", "IV"],
         ["CreateEncryptor().TransformFinalBlock"],
         ["CreateDecryptor().TransformFinalBlock"],
@@ -401,7 +411,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["ConvertTo-SecureString", "-Key"],
     ]
 
-    behavior_col["Enumeration"] = [
+    behaviour_col["Enumeration"] = [
         ["Environment]::UserDomainName"],
         ["Environment]::UserName"],
         ["$env:username"],
@@ -430,39 +440,39 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["GetTokenInformation"],
     ]
 
-    behavior_col["Registry"] = [
+    behaviour_col["Registry"] = [
         ["HKCU:\\"],
         ["HKLM:\\"],
         ["New-ItemProperty", "-Path", "-Name", "-PropertyType", "-Value"],
         ["reg add", "reg delete"],
     ]
 
-    behavior_col["Sends Data"] = [
+    behaviour_col["Sends Data"] = [
         ["UploadData", "POST"],
     ]
 
-    behavior_col["Byte Usage"] = [  # Additional checks done in processing.
+    behaviour_col["Byte Usage"] = [  # Additional checks done in processing.
         ["AppDomain]::CurrentDomain.GetAssemblies()", "GlobalAssemblyCache"],
         ["[Byte[]] $buf"],
         ["IO.File", "WriteAllBytes"],
     ]
 
-    behavior_col["SysInternals"] = [
+    behaviour_col["SysInternals"] = [
         ["procdump", "sysinternals"],
         ["psexec", "sysinternals"],
     ]
 
-    behavior_col["One Liner"] = [  # Work done in processing.
+    behaviour_col["One Liner"] = [  # Work done in processing.
     ]
 
-    behavior_col["Variable Extension"] = [  # Work done in processing.
+    behaviour_col["Variable Extension"] = [  # Work done in processing.
     ]
 
-    ####################
-    # Benign Behaviors #
-    ####################
+    #####################
+    # Benign Behaviours #
+    #####################
 
-    behavior_col["Script Logging"] = [
+    behaviour_col["Script Logging"] = [
         ["LogMsg", "LogErr"],
         ["Write-Debug"],
         ["Write-Log"],
@@ -472,7 +482,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["Write-Warning"],
     ]
 
-    behavior_col["License"] = [
+    behaviour_col["License"] = [
         ["# Copyright", "# Licensed under the"],
         ["Copyright (C)"],
         ["Permission is hereby granted"],
@@ -480,12 +490,12 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["Begin signature block"]
     ]
 
-    behavior_col["Function Body"] = [
+    behaviour_col["Function Body"] = [
         [".SYNOPSIS", ".DESCRIPTION", ".EXAMPLE"],
         [".VERSION", ".AUTHOR", ".CREDITS"],
     ]
 
-    behavior_col["Positive Context"] = [
+    behaviour_col["Positive Context"] = [
         ["createButton"],
         ["toolTip"],
         ["deferral"],
@@ -504,11 +514,11 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["Remote Forensic Snapshot"],
     ]
 
-    # Behavioral Combos combine a base grouping of behaviors to help raise the score of files without a lot of complexity.
-    # Take care in adding to this list and use a minimum length of 3 behaviors.
+    # Behavioural Combos combine a base grouping of behaviours to help raise the score of files without a lot of complexity.
+    # Take care in adding to this list and use a minimum length of 3 behaviours.
     # Instances where FP hits occur have been commented out
 
-    behavior_combos = [
+    behaviour_combos = [
         ["Downloader", "One Liner", "Variable Extension"],
         ["Downloader", "Script Execution", "Crypto", "Enumeration"],
         ["Downloader", "Script Execution", "Persistence", "Enumeration"],
@@ -526,29 +536,21 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         ["Hidden Window", "Persistence", "Downloader"],
     ]
 
-    for behavior in behavior_col:
-
-        start_time = datetime.now()
-
-        # Check Behavior Keyword/Combinations.
-        for check in behavior_col[behavior]:
-
+    for behaviour, checks in behaviour_col.items():
+        # Check Behaviour Keyword/Combinations.
+        for check in checks:
             bh_flag = True
-
             for value in check:
                 if value.lower() not in alternative_data.lower() and bh_flag:
                     bh_flag = None
 
             if bh_flag:
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
+                    output["behaviour"]["commands"].extend(check)
 
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
-
-                    if debugFlag:
-                        output += "\n".join(check)
-
-        # Separate Meta-Behavioral Checks.
-        if behavior == "Obfuscation":
+        # Separate Meta-behavioural Checks.
+        if behaviour == "Obfuscation":
 
             obf_type = None
 
@@ -569,44 +571,44 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
             # Added a line count length to try and stop this triggering on long benigns.
             ) and len(re.findall(r"(\n|\r\n)", original_data.strip())) <= 50:
 
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
                     obf_type = "Char Frequency"
 
             # Check Symbol Usage.
             if len(re.findall(r"\\\_+/", alternative_data)) >= 50:
 
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
                     obf_type = "High Symbol"
 
             # Check unique high variable declaration (includes JavaScript).
             if len(list(set(re.findall(r"var [^ ]+ ?=", alternative_data)))) >= 40 or \
                     len(list(set(re.findall(r"\\$\w+?(?:\s*)=", alternative_data)))) >= 40:
 
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
                     obf_type = "High Variable"
 
-        if behavior == "Byte Usage":
+        if behaviour == "Byte Usage":
 
             if len(re.findall(r"0x[A-F0-9a-f][A-F0-9a-f],", alternative_data)) >= 100:
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
 
-        if behavior == "One Liner":
+        if behaviour == "One Liner":
 
             if len(re.findall(r"(\n|\r\n)", original_data.strip())) == 0:
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
 
-        if behavior == "Abnormal Size":
+        if behaviour == "Abnormal Size":
 
             if len(original_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", original_data)) >= 5000:
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
 
-        if behavior == "Variable Extension":
+        if behaviour == "Variable Extension":
 
             short_vars = len(re.findall(
                 r"(Set-Item Variable|SI Variable|Get-ChildItem Variable|LS Variable|Get-Item Variable|ChildItem Variable|Set-Variable|Get-Variable|DIR Variable|GetCommandName|(\.Value\|Member|\.Value\.Name))",
@@ -614,10 +616,10 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
             asterik_vars = len(re.findall(r"[A-Za-z0-9]\*[A-Za-z0-9]", original_data))
 
             if short_vars + asterik_vars >= 10:
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
 
-        if behavior == "Code Injection":
+        if behaviour == "Code Injection":
             cf1, cf2, cf3 = None, None, None
             for entry in c1:
                 if entry.lower() in alternative_data.lower() and not cf1:
@@ -629,12 +631,8 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
                 if entry.lower() in alternative_data.lower() and not cf3 and cf1 and cf2:
                     cf3 = True
             if cf1 and cf2 and cf3:
-                if behavior not in behaviour_tags:
-                    behaviour_tags.append(behavior)
-
-        # stop_time = datetime.now() - start_time
-        # if debugFlag:
-        #     output += f"Behaviour Check - {behavior}: {stop_time}\n"
+                if behaviour not in behaviour_tags:
+                    behaviour_tags.append(behaviour)
 
     # Tries to catch download cradle PowerShell scripts where the obfuscation isn't identified.
     # Examples are heavy variable command usage for chaining/parsing.
@@ -646,25 +644,25 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         behaviour_tags.append("Obfuscation")
         obf_type = "Hidden Commands"
 
-    # Applies identified Malware Family or Obfuscation Type to behavior.
+    # Applies identified Malware Family or Obfuscation Type to behaviour.
     if family:
         behaviour_tags.append("Known Malware:%s" % (family))
 
     if obf_type:
         behaviour_tags[behaviour_tags.index("Obfuscation")] = f"Obfuscation:{obf_type}"
 
-    # Tries to determine if any behavior combos exist - should always be last step.
-    for combo_row in behavior_combos:
+    # Tries to determine if any behaviour combos exist - should always be last step.
+    for combo_row in behaviour_combos:
         found_flag = 1
         if len(combo_row) != len(behaviour_tags):
             found_flag = 0
         else:
-            for behavior in combo_row:
-                if behavior not in behaviour_tags:
+            for behaviour in combo_row:
+                if behaviour not in behaviour_tags:
                     found_flag = 0
         if found_flag == 1:
-            if "Malicious Behavior Combo" not in behaviour_tags:
-                behaviour_tags.append("Malicious Behavior Combo")
+            if "Malicious Behaviour Combo" not in behaviour_tags:
+                behaviour_tags.append("Malicious Behaviour Combo")
 
     return behaviour_tags
 
@@ -989,12 +987,7 @@ def remove_null(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
-
-    modification_flag = True
-
-    if debugFlag:
-        output += f"\t[!] Removed NULLs - {modification_flag}: %{datetime.now() - start_time}\n"
+    output["modifications"].append(f"Removed NULLs")
 
     return content_data.replace("\x00", "").replace("\\x00", ""), modification_flag
 
@@ -1013,8 +1006,6 @@ def format_replace(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
-    obf_group = None
 
     try:
         # Inner most operators, may not contain strings potentially with nested format operator layers ("{").
@@ -1043,12 +1034,9 @@ def format_replace(content_data, modification_flag):
 
     content_data = content_data.replace(obf_group.replace("\x01", "\n"), '"' + built_string + '"').replace("\x01", "\n")
 
-    modification_flag = True
+    output["modifications"].append("Format Replaced")
 
-    if debugFlag:
-        output += f"\t[!] Format Replaced - {modification_flag}: {datetime.now() - start_time}\n"
-
-    return content_data, modification_flag
+    return content_data, True
 
 
 def format_builder(obf_group):
@@ -1091,8 +1079,6 @@ def remove_escape_quote(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
-
     counter = 0
 
     # Replace blank quotes first so as to not cause issues with following replacements
@@ -1108,8 +1094,8 @@ def remove_escape_quote(content_data, modification_flag):
         modification_flag = True
         counter += 1
 
-    if debugFlag:
-        output += f"\t[!] Removed Escaped Quotes - {modification_flag}: {datetime.now() - start_time} _ {counter}\n"
+    if modification_flag:
+        output["modifications"].append(f"Removed Escaped Quotes: _ {counter}")
 
     return content_data, modification_flag
 
@@ -1127,14 +1113,8 @@ def remove_empty_quote(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
-
-    modification_flag = True
-
-    if debugFlag:
-        output += f"\t[!] Removed Empty Quotes - {modification_flag}: {datetime.now() - start_time}\n"
-
-    return content_data.replace("''", "").replace('""', ''), modification_flag
+    output["modifications"].append("Removed Empty Quotes")
+    return content_data.replace("''", "").replace('""', ''), True
 
 
 def remove_tick(content_data, modification_flag):
@@ -1150,14 +1130,8 @@ def remove_tick(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
-
-    modification_flag = True
-
-    if debugFlag:
-        output += f"\t[!] Removed Back Ticks - {modification_flag}: {datetime.now() - start_time}\n"
-
-    return content_data.replace("`", ""), modification_flag
+    output["modifications"].append("Removed Back Ticks")
+    return content_data.replace("`", ""), True
 
 
 def remove_caret(content_data, modification_flag):
@@ -1173,14 +1147,8 @@ def remove_caret(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
-
-    modification_flag = True
-
-    if debugFlag:
-        output += f"\t[!] Removed Carets - {modification_flag}: {datetime.now() - start_time}\n"
-
-    return content_data.replace("^", ""), modification_flag
+    output["modifications"].append("Removed Carets")
+    return content_data.replace("^", ""), True
 
 
 def space_replace(content_data, modification_flag):
@@ -1195,7 +1163,8 @@ def space_replace(content_data, modification_flag):
         content_data: "$var= 'EXAMPLE'"
         modification_flag: Boolean
     """
-
+    global output
+    output["modifications"].append(f"Converted double spaces to single spaces")
     return content_data.replace("  ", " "), modification_flag
 
 
@@ -1212,7 +1181,6 @@ def char_replace(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
 
     #  Hex needs to go first otherwise the 0x gets gobbled by second Int loop/PCRE (0x41 -> 65 -> "A")
     for value in re.findall(r"\[char]0x[0-9a-z]{1,2}", content_data):
@@ -1228,8 +1196,8 @@ def char_replace(content_data, modification_flag):
             content_data = content_data.replace(value, '"%s"' % chr(char_convert))
             modification_flag = True
 
-    if debugFlag:
-        output += f"\t[!] Char Replace - {modification_flag}: {datetime.now() - start_time}\n"
+    if modification_flag:
+        output["modifications"].append("CharReplace")
 
     return content_data, modification_flag
 
@@ -1247,7 +1215,6 @@ def type_conversion(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
     counter = 0
 
     for baseValue in [0, 8, 16, 32]:
@@ -1273,8 +1240,8 @@ def type_conversion(content_data, modification_flag):
             garbage_list.append(base_string)
             modification_flag = True
 
-    if debugFlag:
-        output += f"\t[!] Type Conversion - {modification_flag}: {datetime.now() - start_time} _ {counter}\n"
+    if modification_flag:
+        output["modifications"].append(f"Type Conversion _ {counter}")
 
     return content_data, modification_flag
 
@@ -1293,7 +1260,6 @@ def string_split(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
 
     split_string = re.search(r"\.split\((\'|\")[^\'\"]+?\1\)", content_data, re.IGNORECASE).group()
     delim_split = [x for x in split_string[8:-2]]
@@ -1314,8 +1280,8 @@ def string_split(content_data, modification_flag):
                         content_data += "\n\n##### SPLIT STRINGS #####\n\n%s\n\n" % (stripped_string)
                         modification_flag = True
 
-    if debugFlag:
-        output += f"\t[!] Split Strings - {modification_flag}: {datetime.now() - start_time}\n"
+    if modification_flag:
+        output["modifications"].append("Split Strings")
 
     return content_data, modification_flag
 
@@ -1333,14 +1299,13 @@ def join_strings(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
 
     for entry in re.findall(r"(?:\"|\')(?:\s*)\+(?:\s*)(?:\"|\')", content_data):
         content_data = content_data.replace(entry, "")
         modification_flag = True
 
-    if debugFlag:
-        output += f"\t[!] Joined Strings - {modification_flag}: {datetime.now() - start_time}\n"
+    if modification_flag:
+        output["modifications"].append("Joined Strings")
 
     return content_data, modification_flag
 
@@ -1358,8 +1323,6 @@ def replace_decoder(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
-
     # Clean up any chars or byte values before replacing
     content_data, modification_flag = char_replace(content_data, None)
 
@@ -1374,14 +1337,34 @@ def replace_decoder(content_data, modification_flag):
         if entry[3] != "" and entry[0] not in garbage_list and len(entry[0]) < 30:
             garbage_list.append(entry[0])
             content_data = content_data.replace(entry[0], "")
+            output["modifications"].append(f"Replaced Strings - '{entry[0]}' with ''")
             content_data = content_data.replace(entry[3], entry[6])
+            output["modifications"].append(f"Replaced Strings - '{entry[3]}' with '{entry[6]}'")
             modification_flag = True
-
-    if debugFlag:
-        output += f"\t[!] Replaced Strings - {modification_flag}: {datetime.now() - start_time}\n"
 
     return content_data, modification_flag
 
+
+def replace_powershell(content_data, modification_flag):
+    """
+    Attempts to replace strings across the content that use the PowerShell command.
+
+    Args:
+        content_data: "POWERSHELL $SOS='blah';"
+        modification_flag: Boolean
+
+    Returns:
+        content_data: "$SOS='blah';"
+        modification_flag: Boolean
+    """
+    for entry in re.findall(r"powershell\s*", content_data, re.IGNORECASE):
+        content_data = content_data.replace(entry, "")
+        modification_flag = True
+
+    if modification_flag:
+        output["modifications"].append("Removed PowerShell command")
+
+    return content_data, modification_flag
 
 ########################
 # Unraveling Functions #
@@ -1403,8 +1386,6 @@ def reverse_strings(original_data, content_data, modification_flag):
 
     """
     global output
-    start_time = datetime.now()
-
     reverse_msg = original_data[::-1]
 
     if reverse_msg not in garbage_list:
@@ -1412,8 +1393,8 @@ def reverse_strings(original_data, content_data, modification_flag):
         garbage_list.append(reverse_msg)
         modification_flag = True
 
-    if debugFlag:
-        output += f"\t[!] Reversed Strings - {modification_flag}: {datetime.now() - start_time}\n"
+    if modification_flag:
+        output["modifications"].append(f"Reversed Strings")
 
     return content_data, modification_flag
 
@@ -1430,7 +1411,6 @@ def decompress_content(content_data, modification_flag):
         content_data: Decompressed content of ASCII printable
     """
     global output
-    start_time = datetime.now()
 
     for entry in re.findall(r"[A-Za-z0-9+/=]{40,}", content_data):
         try:  # Wrapped in try/except because both strings can appear but pipe through unrelated Base64.
@@ -1443,8 +1423,8 @@ def decompress_content(content_data, modification_flag):
         except Exception as e:
             pass
 
-    if debugFlag:
-        output += f"\t[!] Decompressed Content - {modification_flag}: {datetime.now() - start_time}\n"
+    if modification_flag:
+        output["modifications"].append("Decompressed Content")
 
     return content_data, modification_flag
 
@@ -1499,7 +1479,6 @@ def decode_base64(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
 
     for entry in re.findall(r"[A-Za-z0-9+/=]{30,}", content_data):
         try:
@@ -1518,8 +1497,8 @@ def decode_base64(content_data, modification_flag):
         except Exception as e:
             pass
 
-    if debugFlag:
-        output += f"\t[!] Decoded Base64 - {modification_flag}: {datetime.now() - start_time}\n"
+    if modification_flag:
+        output["modifications"].append("Decoded Base64")
 
     return content_data, modification_flag
 
@@ -1537,7 +1516,6 @@ def decrypt_strings(content_data, modification_flag):
         modification_flag: Boolean
     """
     global output
-    start_time = datetime.now()
 
     for entry in re.findall(r"[A-Za-z0-9+/=]{250,}", content_data):
         try:  # Wrapped in try/except since we're effectively brute forcing
@@ -1553,8 +1531,8 @@ def decrypt_strings(content_data, modification_flag):
         except Exception as e:
             pass
 
-    if debugFlag:
-        output += f"\t[!] Decrypted Content - {modification_flag}: {datetime.now() - start_time}\n"
+    if modification_flag:
+        output["modifications"].append("Decrypted Content")
 
     return content_data, modification_flag
 
@@ -1605,13 +1583,10 @@ def normalize(content_data):
         content_data: Normalized / De-Obfuscated content
     """
 
-    # Passes modification_flag to each function to determine whether or not it should try to normalize the new content.
     global output
+    # Passes modification_flag to each function to determine whether or not it should try to normalize the new content.
     while True:
-
         modification_flag = None
-        if debugFlag:
-            output += "[+] Normalization Function\n"
 
         # Remove Null Bytes - Changes STATE
         # Keep this one first so that further PCRE work as expected.
@@ -1670,6 +1645,10 @@ def normalize(content_data):
                 content_data, re.IGNORECASE):
             content_data, modification_flag = replace_decoder(content_data, modification_flag)
 
+        # Remove PowerShell command
+        if re.search(r"powershell\s*", content_data, re.IGNORECASE):
+            content_data, modification_flag = replace_powershell(content_data, modification_flag)
+
         if modification_flag is None:
             break
 
@@ -1695,7 +1674,7 @@ def unravel_content(original_data):
 
         # Reversed Strings - Changes STATE
         # Looks only in original_data, can be problematic flipping unraveled content back and forth.
-        reverse_string = ["noitcnuf", "marap", "nruter", "elbairav", "tcejbo-wen", "ecalper",]
+        reverse_string = ["noitcnuf", "marap", "nruter", "elbairav", "tcejbo-wen", "ecalper"]
         if any(entry in original_data.lower() for entry in reverse_string):
             content_data, modification_flag = reverse_strings(original_data, content_data, modification_flag)
 
@@ -1726,44 +1705,42 @@ def unravel_content(original_data):
     return content_data
 
 
-def main(file_path, debug=False):
+def main(sample_path, working_dir):
     global output
-    # Setup global debugFlag to print debug information throughout the script
-    global debugFlag
-    if debug:
-        debugFlag = True
-    else:
-        debugFlag = None
 
-    # Setup behavior_tags list so behaviors can be tracked throughout processing
-    behavior_tags = []
+    # Setup behaviour_tags list so behaviours can be tracked throughout processing
+    behaviour_tags = []
 
     # Open file for processing, ignore errors
     script_time = datetime.now()
-    with open(file_path, encoding='utf8', errors='ignore') as fh:
+    with open(sample_path, encoding='utf8', errors='ignore') as fh:
         original_data = fh.read()
 
     # Strip NULLs out before processing
     original_data = original_data.replace("\x00", "")
 
     # Launches the primary unraveling loop to begin cleaning up the script for profiling.
-    alternative_data = f"\n##### ALTERED SCRIPT #####\n\n{unravel_content(original_data)}"
+    alternative_data = f"{unravel_content(original_data)}\n"
+    output["deobfuscated"] = alternative_data
 
     # Launches family specific profiling function over original_data and alternative_data
     family = family_finder(original_data + alternative_data)
-    if debugFlag and family:
-        output += f"Family ID: {family}\n"
+    if family:
+        output["family"].append(family)
 
-    # Launches behavioral profiling over original_data and alternative_data
-    behavior_tags = profile_behaviours(behavior_tags, original_data, alternative_data, family)
+    # Launches behavioural profiling over original_data and alternative_data
+    behaviour_tags = profile_behaviours(behaviour_tags, original_data, alternative_data, family)
     script_time = datetime.now() - script_time
 
-    # Score the behaviors and print final results
-    score, verdict, behavior_tags = score_behaviours(behavior_tags)
-    output += f"\n{file_path} , {score} , {verdict} , {script_time} , {'[' + ' | '.join(behavior_tags) + ']'}\n"
+    # Score the behaviours and print final results
+    score, verdict, behaviour_tags = score_behaviours(behaviour_tags)
+    output["score"] = score
+    output["verdict"] = verdict
+    output["behaviour"]["tags"].extend(behaviour_tags)
 
-    # Print what we've parsed out for debugging
-    if debugFlag:
-        output += f"{alternative_data}\n"
+    # Write what we've parsed out for further analysis
+    alt_data = os.path.join(working_dir, DEOBFUS_FILE)
+    with open(alt_data, "w") as f:
+        f.write(output["deobfuscated"])
 
     return output

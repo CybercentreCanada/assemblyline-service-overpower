@@ -65,7 +65,6 @@ function new-object {
             [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
             [string]$Obj
         )
-
         if($Obj -ieq 'System.Net.WebClient' -or $Obj -ieq 'Net.WebClient'){
             $webclient_obj = microsoft.powershell.utility\new-object Net.WebClient
             Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Force -Name "DownloadFile" -Value {
@@ -101,7 +100,6 @@ function Get_Encoding_Type {
         [Byte[]]$input_bytes
         )
 
-    Write-Verbose 'Detecting encoding type...'
     $enc_type = ''
     if($input_bytes[0] -eq 0xEF -and $input_bytes[1] -eq 0xBB -and $input_bytes[2] -eq 0xBF){
         $enc_type = 'UTF8'
@@ -123,8 +121,6 @@ function Get_Encoding_Type {
     else {
         $enc_type = 'ASCII'
         }
-
-    Write-Verbose "Encoding detected: $($enc_type)"
     return $enc_type
 }
 
@@ -153,7 +149,6 @@ function Base64_Decode {
         $b64_decoded = [System.Convert]::FromBase64String($b64_encoded_string)
         }
     catch{
-        Write-Verbose "Not a valid Base64 string"
         $ErrorMessage = $_.Exception.Message
         return $false
     }
@@ -180,7 +175,7 @@ function Replace_Quotes_FuncName
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
-                Write-Verbose "[Replace_Quotes_FuncName] Replacing: $($match)`tWith: $($match.ToString().replace('"','').replace(`"'`",`"`"))"
+                Write-Verbose "[Replace_Quotes_FuncName] Replacing: $($match) With: $($match.ToString().replace('"', '').replace("'", ''))"
                 $Command = $Command.Replace($match, $match.ToString().replace('"','').replace("'",""))
                 }
             $matches = $str_format_pattern.Matches($Command) 
@@ -228,7 +223,7 @@ function Clean_Func_Calls
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
                 $replaced_val = $match.ToString().replace('"','').replace("'",'')
-                Write-Verbose "[Clean_Func_Calls] Replacing: $($match)`tWith: $($replaced_val)"
+                Write-Verbose "[Clean_Func_Calls] Replacing: $($match) With: $($replaced_val)"
                 $Command = $Command.Replace($match, $replaced_val )
                 }
             $matches = $str_format_pattern.Matches($Command) 
@@ -251,7 +246,7 @@ function Replace_Parens
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
-                Write-Verbose "[Replace_Parens] Replacing: $($match)`tWith: $($match.ToString().replace('(','').replace(')',''))"
+                Write-Verbose "[Replace_Parens] Replacing: $($match) With: $($match.ToString().replace('(','').replace(')',''))"
                 $Command = $Command.Replace($match, $match.ToString().replace('(','').replace(')',''))
                 }
             $matches = $str_format_pattern.Matches($Command) 
@@ -274,7 +269,8 @@ function Replace_NonEscapes
         $curr_quote_chr = ''
         $str_quotes = '"', "'"
         $char_idx_arr = @()
-
+        $special_chars = "0", "a", "b", "f", "n", "r", "t", "v", "'", "``", "`#", '"'
+        $special_chars = "0", "a", "b", "f", "n", "r", "v", "'", "``", "`#", '"'
         for ($char=0; $char -lt $Command.Length; $char++){
             if($Command[$char] -in $str_quotes -and -not $in_str){
                 $curr_quote_chr=$Command[$char]
@@ -287,7 +283,9 @@ function Replace_NonEscapes
             elseif($Command[$char] -eq '`' -and -not $in_str){
                 $char_idx_arr += ,$char
             }
-
+            elseif($prev_char -eq '`' -and $in_str -and $Command[$char] -notin $special_chars){
+                $char_idx_arr += ,$($char-1)
+            }
             $prev_char = $Command[$char]
         }
 
@@ -363,14 +361,13 @@ function Resolve_Replaces
             [String]$Command
         )
 
-       $str_format_pattern = [regex]"\(?['`"][^'`"]+['`"]\)?\.(?i)replace\([^,]+,[^\)]+\)"
-       $matches = $str_format_pattern.Matches($Command)
-
-       While ($matches.Count -gt 0){
+        $str_format_pattern = [regex]"\(?['`"][^'`"]+['`"]\)?\.(?i)replace\((?:(?:'.+?')|(?:[^,]+)),(?:(?:'.+?')|(?:[^\)]+))\)"
+        $matches = $str_format_pattern.Matches($Command)
+        While ($matches.Count -gt 0){
             ForEach($match in $matches){
                 $resolved_string = IEX($match)
                 $resolved_string = $resolved_string.replace("'","''")
-                Write-Verbose "[Resolve_Replaces] Replacing: $($match)`tWith: $($resolved_string)"
+                Write-Verbose "[Resolve_Replaces] Replacing: $($match) With: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
                 }
             $matches = $str_format_pattern.Matches($Command) 
@@ -378,6 +375,29 @@ function Resolve_Replaces
        
        return $Command
     }
+
+function Resolves_PowerShell_On_Linux
+{
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    $str_format_pattern = [regex]"(?i)powershell\s*"
+    $matches = $str_format_pattern.Matches($Command)
+    While ($matches.Count -gt 0){
+        ForEach($match in $matches){
+            $resolved_string = ""
+            Write-Verbose "[Resolves_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+            $Command = $Command.Replace($match, "$($resolved_string)")
+        }
+        $matches = $str_format_pattern.Matches($Command)
+    }
+
+    return $Command
+}
 
 function String_Concat_Cleanup
     {
@@ -415,6 +435,7 @@ function Code_Cleanup
             $new_command = String_Concat_Cleanup($new_command)
             $new_command = Resolve_String_Formats($new_command)
             $new_command = Resolve_Replaces($new_command)
+            $new_command = Resolves_PowerShell_On_Linux($new_command)
         }
         
         return $new_command
@@ -463,15 +484,15 @@ function Beautify
     return $new_str
 }
 
-function Get_MD5
+function Get_SHA256
     {
         param(
             [Parameter(Mandatory=$True)]
             [byte[]]$strBytes
         )
 
-        $md5obj = new-object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
-        $hash = [System.BitConverter]::ToString($md5obj.ComputeHash($strBytes))
+        $sha256obj = new-object -TypeName System.Security.Cryptography.SHA256CryptoServiceProvider
+        $hash = [System.BitConverter]::ToString($sha256obj.ComputeHash($strBytes))
 
         return $hash.ToLower().Replace('-','')
     }
@@ -496,23 +517,19 @@ function Extract_Executables {
 
 function Dump_Files {
     param(
-            [Parameter(Mandatory=$True)]
-            [System.Collections.Generic.List[System.Object]]$layers
+            [Parameter(Mandatory=$True)][System.Collections.Generic.List[System.Object]]$layers,
+            [Parameter(Mandatory=$True)][String]$dump
          )
 
-    Write-Host "Saving layers to $([System.IO.Path]::GetTempPath())"
-    
     ForEach ($layer in $layers)
         {
-            $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_layer_$($layers.IndexOf($layer)+1).txt"
-            Write-Host "Writing $($out_filename)"
+            $out_filename = "$dump/layer_$($layers.IndexOf($layer)+1).ps1"
             $layer | Out-File $out_filename
         }
 
     if($beautify)
         {
-            $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_layer_$($layers.count + 1).txt"
-            Write-Host "Writing $($out_filename)"
+            $out_filename = "$dump/layer_$($layers.count + 1).ps1"
             Beautify($str_fmt_res) | Out-File $out_filename
         }
 
@@ -526,18 +543,18 @@ function Dump_Files {
 
             if($exe_matches.Count -eq 1)
                 {
-                    $exe_md5 = Get_MD5($extracted_exes)
-                    $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
-                    Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
+                    $exe_sha256 = Get_SHA256($extracted_exes)
+                    $out_filename = "$([System.IO.Path]::GetTempPath())$($sha256)_executable_$($exe_sha256).bin"
+                    Write-Host "Writing $($out_filename). SHA256: $($exe_sha256)"
                     $extracted_exes | Set-Content $out_filename -Encoding Byte
                 }
             Else
                 {
                     ForEach($exe in $extracted_exes)
                         {
-                        $exe_md5 = Get_MD5($exe)
-                        $out_filename = "$([System.IO.Path]::GetTempPath())$($md5)_executable_$($exe_md5).bin"
-                        Write-Host "Writing $($out_filename).`tMD5: $($exe_md5)"
+                        $exe_sha256 = Get_SHA256($exe)
+                        $out_filename = "$([System.IO.Path]::GetTempPath())$($sha256)_executable_$($exe_sha256).bin"
+                        Write-Host "Writing $($out_filename). SHA256: $($exe_sha256)"
                         $exe | Set-Content $out_filename -Encoding Byte
                         }
                 }
@@ -557,12 +574,11 @@ function PSDecode {
     PSDecode will describe in greater detail what it is doing during the decoding process. Can be helpful when troubleshooting
 
 .PARAMETER dump
-
-PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filename will be ib the format <lowercase_MD5_of_original>_layer_<layer_number>.txt.
+    PSDecode will dump all of the decoded layers to the path passed in. Filename will be in the format layer_<layer_number>.ps1.
     For example:
-                c924cb080b1c7d9975d59817f96ca874_layer_1.txt
-                c924cb080b1c7d9975d59817f96ca874_layer_2.txt
-                c924cb080b1c7d9975d59817f96ca874_layer_3.txt
+                layer_1.ps1
+                layer_2.ps1
+                layer_3.ps1
 
 .PARAMETER beautify
     Attempts to beautify the final layer. This typically works well on simpler scripts but might break on more complex scripts. As a result, I've made this optional.
@@ -592,14 +608,13 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
 #>
 
     [CmdletBinding()]
-      param(
-            [Parameter(Mandatory=$false)][switch]$dump,
-            [Parameter(Mandatory=$false)][switch]$beautify,
-            [Parameter(Mandatory=$false)][switch]$x,
-            [Parameter(Mandatory=$false)][int]$timeout = 60,
-            [Parameter(Mandatory=$True, Valuefrompipeline = $True, Position = 0)][PSObject[]]$InputObject
-            )
-
+    param (
+        [Parameter(Mandatory=$false)][String]$dump,
+        [Parameter(Mandatory=$false)][switch]$beautify,
+        [Parameter(Mandatory=$false)][switch]$x,
+        [Parameter(Mandatory=$false)][int]$timeout = 60,
+        [Parameter(Mandatory=$True, Valuefrompipeline = $True, Position = 0)][PSObject[]]$InputObject
+    )
     $layers  = New-Object System.Collections.Generic.List[System.Object]
     $actions = New-Object System.Collections.Generic.List[System.Object]
     $action_pattern = [regex]'%#\[[^\]]+\][^%]+%#'
@@ -607,33 +622,23 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
     $override_functions = @()
     $encoded_script = ""
 
-    if($timeout -ne 60){
+    if($timeout -ne 60) {
         Write-Verbose "Default timeout of 60 seconds changed to $($timeout)"
     }
 
-    if ($PSCmdlet.MyInvocation.ExpectingInput) {
-        Write-Verbose 'Input received from PIPE'
-        $script_bytes = [System.Text.Encoding]::ASCII.GetBytes($InputObject)
-        $encoded_script = $InputObject | Out-String
-    }
-    else {
-        try {
-            Write-Verbose "Input received from file: $($InputObject)"
-            if($IsLinux -or $IsMacOs){
-                $script_bytes = Get-Content $InputObject -Raw -AsByteStream -ErrorAction Stop
-            }
-            else{
-                $script_bytes = Get-Content $InputObject -Raw -Encoding byte -ErrorAction Stop
-            }
+    try {
+        if($IsLinux -or $IsMacOs){
+            $script_bytes = Get-Content $InputObject -Raw -AsByteStream -ErrorAction Stop
         }
-        catch {
-                throw "Error reading: $($InputObject)"
-            }
+        else{
+            $script_bytes = Get-Content $InputObject -Raw -Encoding byte -ErrorAction Stop
+        }
     }
-    
-    Write-Verbose "Calculating MD5 of input"
-    $md5 = Get_MD5($script_bytes)
-    Write-Verbose "MD5: $($md5)"
+    catch {
+            throw "Error reading: $($InputObject)"
+        }
+
+    $sha256 = Get_SHA256($script_bytes)
     $enc_type = Get_Encoding_Type($script_bytes)
     $pref_enc = [System.Text.Encoding]::ASCII
 
@@ -656,16 +661,10 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         $encoded_script = [System.Text.Encoding]::ASCII.GetString($script_bytes)
     }
 
-    Write-Verbose 'Testing input to see if Base64 encoded'
     $b64_decoded = Base64_Decode($encoded_script.Trim())
 
     if($b64_decoded){
-        Write-Verbose 'Input was Base64 encoded. Decoding was successful. Saved original Base64 encoded string as layer'
-        $layers.Add($encoded_script)
         $encoded_script = $b64_decoded
-    }
-    else{
-        Write-Verbose 'Input was either not Base64 encoded or was invalid Base64. Treating as non-Base64'
     }
 
     $override_functions += $Invoke_Expression_Override
@@ -679,28 +678,21 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
     
     $override_functions  = ($override_functions -join "`r`n") + "`r`n`r`n"
     
-    Write-Verbose 'Performing code cleanup on initial script'
     $clean_code = Code_Cleanup($encoded_script)
 
     if($encoded_script -ne $clean_code){
-        Write-Verbose 'Code cleanup resulted in script modification. Saving original as layer.'
-        $layers.Add($encoded_script)
         $encoded_script = $clean_code
     }
 
-    Write-Verbose 'Building decoder'
     $decoder = $override_functions + $encoded_script
-
-    Write-Verbose 'Base64 encoding decoder'
     $b64_decoder = Base64_Encode($decoder)
 
 
     while($layers -notcontains ($encoded_script) -and -not [string]::IsNullOrEmpty($encoded_script)){
-
         $layers.Add($encoded_script)
         
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo
-        $pinfo.FileName = "powershell"
+        $pinfo.FileName = "pwsh"
         $pinfo.CreateNoWindow = $true
         $pinfo.RedirectStandardError = $true
         $pinfo.RedirectStandardOutput = $true
@@ -712,43 +704,35 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         else{
             
             $tmp_file = [System.IO.Path]::GetTempPath() + [GUID]::NewGuid().ToString() + ".ps1"; 
-            Write-Verbose "Output script is too large. Writing temp file to: $($tmp_file)"
             Base64_Decode($b64_decoder) | Out-File $tmp_file
             $pinfo.Arguments = "-File $($tmp_file)"
         }
 
         $p = New-Object System.Diagnostics.Process
         $p.StartInfo = $pinfo
-        Write-Verbose 'Executing decoder'
         $p.Start() | Out-Null
 
         if(-not $p.WaitForExit($timeout*1000)){
             Write-Host -ForegroundColor Red "$($timeout) second timeout hit when executing decoder. Killing process and breaking out"
             Stop-Process $p
             if ($tmp_file -and (Test-Path $tmp_file)){
-                Write-Verbose "Removing temp file that was written to: $($tmp_file)"
                 Remove-Item $tmp_file
             }
             break
         }
 
-        $encoded_script =$p.StandardOutput.ReadToEnd()
+        $encoded_script = $p.StandardOutput.ReadToEnd()
         $stderr = $p.StandardError.ReadToEnd()
 
         if ($tmp_file -and (Test-Path $tmp_file)){
-            Write-Verbose "Removing temp file that was written to: $($tmp_file)"
             Remove-Item $tmp_file
             }
 
         $action_matches = $action_pattern.Matches($encoded_script)
 
         if($p.ExitCode -eq 0 -and $encoded_script -and $action_matches.Count -eq 0){
-            Write-Verbose 'Layer successfully decoded. Moving on to next layer'
-            Write-Verbose 'Performing code cleanup on next layer'
             $encoded_script = Code_Cleanup($encoded_script)
-            Write-Verbose 'Building new decoder'
             $decoder = ($override_functions -join "`r`n`r`n") + "`r`n`r`n" + $encoded_script
-            Write-Verbose 'Base64 encoding new decoder'
             $b64_decoder = Base64_Encode($decoder)
 
         }
@@ -774,8 +758,6 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         }
      }
 
-    Write-Verbose 'Processing completed'
-
     if($layers.Count -gt 0){
         $last_layer = $layers[-1]
         if(-not $noclean){
@@ -789,9 +771,8 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
             $layers.Add($str_fmt_res)
         }
 
-        if($dump){
-
-            Dump_Files($layers)
+        if(-not ([string]::IsNullOrEmpty($dump))){
+            Dump_Files $layers $dump
         }
 
         ForEach ($layer in $layers){
@@ -801,7 +782,7 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         }
     }
 
-    if($p.ExitCode -eq 0 ){#-and -not $stderr){
+    if($p.ExitCode -eq 0 -and -not $stderr){
         if($beautify){
             $beautiful_str = Beautify($str_fmt_res)
             $heading = "`r`n`r`n" + "#"*25 + " Beautified Layer " + "#"*26
@@ -819,7 +800,7 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
                 }
             }
         else{
-            Write-Host "No actions Identified. Methods executed by the script may not have corresponding override methods defined."
+            Write-Host "No actions identified. Methods executed by the script may not have corresponding override methods defined."
         }
     }
     ElseIf($p.ExitCode -eq 0 -and $stderr){
@@ -835,7 +816,7 @@ PSDecode will dump all of the decoded layers to the system's %TEMP% path. Filena
         $footer = "#"*30 + " Warning! " + "#"*31
         Write-Host -ForegroundColor Yellow $heading
         Write-Host -ForegroundColor Yellow "Exit code: $($p.ExitCode)"
-        Write-Host -ForegroundColor Yellow "Decoder script returned non-zero exit code but no error message was sent to stderr. This is likely the result of the malware intentionally terminating its own execuion rather than some kind of decoding failure"
+        Write-Host -ForegroundColor Yellow "Decoder script returned non-zero exit code but no error message was sent to stderr. This is likely the result of the malware intentionally terminating its own execution rather than some kind of decoding failure"
         Write-Host -ForegroundColor Yellow $footer
         }
     ElseIf($p.ExitCode -ne 0 -and $stderr){

@@ -16,6 +16,8 @@ RUN dpkg -i packages-microsoft-prod.deb
 RUN apt-get update
 # Install PowerShell
 RUN apt-get install -y powershell
+# Cleanup
+RUN rm packages-microsoft-prod.deb
 
 # Switch to assemblyline user
 USER assemblyline
