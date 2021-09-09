@@ -1,7 +1,6 @@
 import os
 import pytest
 import shutil
-import requests_mock
 
 # Getting absolute paths, names and regexes
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
