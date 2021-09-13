@@ -7,9 +7,24 @@ from typing import Optional, Dict, Any, List
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultSection
+from assemblyline_v4_service.common.result import Result, ResultSection, Heuristic
 
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
+
+TRANSLATE_SCORE = {
+    0.5: 5,  # Low Risk
+    1.0: 10,  # Low Risk
+    1.5: 15,  # Low Risk
+    2.0: 20,  # Low Risk
+    3.0: 30,  # Low Risk
+    4.0: 100,  # Mild Risk
+    5.0: 150,  # Mild Risk
+    6.0: 500,  # Moderate Risk
+    7.0: 600,  # Moderate Risk
+    8.0: 700,  # Moderate Risk
+    9.0: 800,  # Moderate Risk
+    10.0: 900,  # Elevated Risk
+}
 
 
 def get_id_from_data(file_path: str) -> str:
@@ -47,7 +62,7 @@ class Overpower(ServiceBase):
         self._handle_ps1_profiler_output(ps1_profiler_output, request.result)
 
         # PSDecode
-        args = ["pwsh", "-Command", "PSDecode", request.file_path, "-verbose", "-dump", self.working_directory]
+        args = ["pwsh", "-Command", "PSDecode", request.file_path, "-verbose", "-dump", self.working_directory, "-timeout", f"{tool_timeout}"]
         try:
             completed_process = run(args=args, capture_output=True, timeout=tool_timeout)
         except TimeoutExpired:
@@ -74,13 +89,29 @@ class Overpower(ServiceBase):
         :param result: A Result object containing the service results
         :return: None
         """
-        suspicious_res_sec = ResultSection("Suspicious Activity Detected")
-        if output["score"] < 6:
-            suspicious_res_sec.set_heuristic(3)
+        suspicious_res_sec = ResultSection("Placeholder")
+        # Check if there is a malware family detected
+        if len(output["family"]) > 0:
+            suspicious_res_sec.title_text = "Malicious Activity Detected"
+            for family in output["family"]:
+                suspicious_res_sec.add_tag("attribution.family", family)
+                suspicious_res_sec.set_heuristic(4)
+        # Otherwise, the behaviour is just suspicious
         else:
-            suspicious_res_sec.set_heuristic(4)
-        suspicious_res_sec.add_lines(output["behaviour"]["tags"])
-        if len(suspicious_res_sec.body) > 0:
+            suspicious_res_sec.title_text = "Suspicious Activity Detected"
+
+        for tag in output["behaviour"]["tags"]:
+            profiler_sig_section = ResultSection(f"Signature: {tag['name']}", parent=suspicious_res_sec)
+            sec_heur = Heuristic(5)
+            if tag["score"] < 0:
+                # According to the PowerShell Profiler, if a score is < 0, then the script can be generally assumed
+                # to be benign. But we don't assume anything!
+                continue
+            translated_score = TRANSLATE_SCORE[tag["score"]]
+            sec_heur.add_signature_id(tag["name"], score=translated_score)
+            profiler_sig_section.heuristic = sec_heur
+
+        if len(suspicious_res_sec.subsections) > 0 or suspicious_res_sec.heuristic is not None:
             result.add_section(suspicious_res_sec)
 
     @staticmethod

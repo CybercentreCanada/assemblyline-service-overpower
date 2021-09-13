@@ -97,7 +97,6 @@ def score_behaviours(behaviour_tags):
         "Disabled Protections": 4.0,
         "Negative Context": 10.0,
         "Malicious Behaviour Combo": 6.0,
-        "Known Malware": 10.0,
 
         # Neutral
         # Behaviours which require more context to infer intent.
@@ -133,14 +132,12 @@ def score_behaviours(behaviour_tags):
 
     for behaviour in behaviour_tags:
 
-        if "Known Malware:" in behaviour:
-            behaviour_data.append("%s: %s - %s" % (behaviour.split(":")[0], behaviour.split(":")[1], score_values[behaviour.split(":")[0]]))
-            behaviour = behaviour.split(":")[0]
-        elif "Obfuscation:" in behaviour:
-            behaviour_data.append("%s: %s - %s" % (behaviour.split(":")[0], behaviour.split(":")[1], score_values[behaviour.split(":")[0]]))
-            behaviour = behaviour.split(":")[0]
+        if "Obfuscation:" in behaviour:
+            obfus, name = behaviour.split(':')
+            behaviour_data.append({"name": f"{obfus}: {name}", "score": score_values[obfus]})
+            behaviour = obfus
         else:
-            behaviour_data.append("%s - %s" % (behaviour, score_values[behaviour]))
+            behaviour_data.append({"name": behaviour, "score": score_values[behaviour]})
 
         score += score_values[behaviour]
 
@@ -154,9 +151,9 @@ def score_behaviours(behaviour_tags):
         verdict = "Low Risk"
     elif 6 > score >= 4:
         verdict = "Mild Risk"
-    elif 6 <= score <= 10:
+    elif 6 <= score < 10:
         verdict = "Moderate Risk"
-    elif 10 < score <= 20:
+    elif 10 <= score <= 20:
         verdict = "Elevated Risk"
     else:
         verdict = "Severe Risk"
@@ -644,10 +641,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data, family):
         behaviour_tags.append("Obfuscation")
         obf_type = "Hidden Commands"
 
-    # Applies identified Malware Family or Obfuscation Type to behaviour.
-    if family:
-        behaviour_tags.append("Known Malware:%s" % (family))
-
+    # Applies identified Obfuscation Type to behaviour.
     if obf_type:
         behaviour_tags[behaviour_tags.index("Obfuscation")] = f"Obfuscation:{obf_type}"
 
@@ -1068,7 +1062,7 @@ def format_builder(obf_group):
 
 def remove_escape_quote(content_data, modification_flag):
     """
-    Removes escaped quotes. These will freqently get in the way for string matching over longer structures.
+    Removes escaped quotes. These will frequently get in the way for string matching over longer structures.
 
     Args:
         content_data: b"This is an \\"EXAMPLE\\""

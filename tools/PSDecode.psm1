@@ -63,7 +63,8 @@ $New_Object_Override = @'
 function new-object {
         param(
             [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
-            [string]$Obj
+            [string]$Obj,
+            [Parameter(Mandatory=$False)][System.Object[]]$Args
         )
         if($Obj -ieq 'System.Net.WebClient' -or $Obj -ieq 'Net.WebClient'){
             $webclient_obj = microsoft.powershell.utility\new-object Net.WebClient
@@ -87,8 +88,13 @@ function new-object {
                 }
             return $random_obj
         }
-        else{
-            $unk_obj = microsoft.powershell.utility\new-object $Obj
+        else {
+            if ($Args.count -gt 0) {
+                $unk_obj = microsoft.powershell.utility\new-object $Obj $Args
+            }
+            else {
+                $unk_obj = microsoft.powershell.utility\new-object $Obj
+            }
             return $unk_obj
         }
     }

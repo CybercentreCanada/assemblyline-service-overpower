@@ -1,7 +1,7 @@
 name: Overpower
 version: $SERVICE_TAG
 description: >
-  De-obfuscates your PowerShell files.
+  De-obfuscates your PowerShell files, profiles them and runs them.
 
 accepts: code/ps1
 rejects: empty|metadata/.*
@@ -10,7 +10,7 @@ stage: CORE
 category: Dynamic Analysis
 
 file_required: true
-timeout: 60
+timeout: 300
 disable_cache: false
 
 enabled: false
@@ -53,6 +53,12 @@ heuristics:
     score: 1000
     filetype: '*'
     description: PowerShellProfiler has determined that the file is malicious
+
+  - heur_id: 5
+    name: File contains suspicious content
+    score: 250
+    filetype: '*'
+    description: PowerShellProfiler has detected suspicious content
 
 docker_config:
   allow_internet_access: false
