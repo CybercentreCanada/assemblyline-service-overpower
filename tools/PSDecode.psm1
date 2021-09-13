@@ -545,25 +545,18 @@ function Dump_Files {
     if($exe_matches.Count -gt 0)
         {
             $extracted_exes = Extract_Executables($exe_matches)
-            Write-Host "Identified $($exe_matches.Count) potential executable(s). Saving to $([System.IO.Path]::GetTempPath())"
+            Write-Host "Identified $($exe_matches.Count) potential executable(s)"
 
-            if($exe_matches.Count -eq 1)
-                {
-                    $exe_sha256 = Get_SHA256($extracted_exes)
-                    $out_filename = "$([System.IO.Path]::GetTempPath())$($sha256)_executable_$($exe_sha256).bin"
-                    Write-Host "Writing $($out_filename). SHA256: $($exe_sha256)"
-                    $extracted_exes | Set-Content $out_filename -Encoding Byte
+            ForEach($exe in $extracted_exes) {
+                $exe_sha256 = Get_SHA256($exe)
+                $out_filename = "$dump/executable_$($exe_sha256).bin"
+                if ($PSVersionTable.PSVersion.Major -gt 6) {
+                    $exe | Set-Content $out_filename -AsByteStream
                 }
-            Else
-                {
-                    ForEach($exe in $extracted_exes)
-                        {
-                        $exe_sha256 = Get_SHA256($exe)
-                        $out_filename = "$([System.IO.Path]::GetTempPath())$($sha256)_executable_$($exe_sha256).bin"
-                        Write-Host "Writing $($out_filename). SHA256: $($exe_sha256)"
-                        $exe | Set-Content $out_filename -Encoding Byte
-                        }
+                else {
+                    $exe | Set-Content $out_filename -Encoding Byte
                 }
+            }
         }
 }
 

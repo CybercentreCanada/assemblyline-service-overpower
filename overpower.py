@@ -91,22 +91,22 @@ class Overpower(ServiceBase):
         """
         suspicious_res_sec = ResultSection("Placeholder")
         # Check if there is a malware family detected
-        if len(output["family"]) > 0:
+        if len(output["families"]) > 0:
             suspicious_res_sec.title_text = "Malicious Activity Detected"
-            for family in output["family"]:
+            suspicious_res_sec.set_heuristic(4)
+            for family in output["families"]:
                 suspicious_res_sec.add_tag("attribution.family", family)
-                suspicious_res_sec.set_heuristic(4)
         # Otherwise, the behaviour is just suspicious
         else:
             suspicious_res_sec.title_text = "Suspicious Activity Detected"
 
         for tag in output["behaviour"]["tags"]:
-            profiler_sig_section = ResultSection(f"Signature: {tag['name']}", parent=suspicious_res_sec)
-            sec_heur = Heuristic(5)
             if tag["score"] < 0:
                 # According to the PowerShell Profiler, if a score is < 0, then the script can be generally assumed
                 # to be benign. But we don't assume anything!
                 continue
+            profiler_sig_section = ResultSection(f"Signature: {tag['name']}", parent=suspicious_res_sec)
+            sec_heur = Heuristic(5)
             translated_score = TRANSLATE_SCORE[tag["score"]]
             sec_heur.add_signature_id(tag["name"], score=translated_score)
             profiler_sig_section.heuristic = sec_heur
@@ -161,6 +161,9 @@ class Overpower(ServiceBase):
             elif "suppl" in file:
                 description = "Output from PowerShell tool"
                 to_be_extracted = False
+            elif "executable" in file and ".bin" in file:
+                description = "Potential Executable from PSDecode"
+                to_be_extracted = True
             else:
                 self.log.warning(f"The following file was dumped but not extracted: {file}")
                 continue
