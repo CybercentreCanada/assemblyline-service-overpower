@@ -24,6 +24,7 @@ jobs:
           versionSpec: "$(python.version)"
       - script: |
           sudo apt-get update
+          sudo apt-get install -y qemu-utils libfuzzy-dev libfuzzy2
           sudo rm -rf /var/lib/apt/lists/*
           sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir assemblyline assemblyline_v4_service tld
           sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r `pwd`/test/requirements.txt
