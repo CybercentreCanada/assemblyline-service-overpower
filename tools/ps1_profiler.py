@@ -6,7 +6,7 @@ import re
 from typing import Dict, Any
 import zlib
 from Crypto.Cipher import AES
-from datetime import datetime
+from assemblyline_v4_service.common.extractor.base64 import base64_search
 
 
 __author__ = "Jeff White [karttoon] @noottrak"
@@ -17,16 +17,6 @@ __date__ = "X"
 
 # The garbage_list is used to prevent loops for functions that don't replace content but simply append to existing
 garbage_list = list()
-
-output: Dict[str, Any] = {
-    "behaviour": {"commands": [], "tags": []},
-    "deobfuscated": None,
-    "families": [],
-    "modifications": [],
-    "score": 0,
-    "verdict": None,
-}
-
 
 DEOBFUS_FILE = "deobfuscated.ps1"
 
@@ -67,77 +57,76 @@ def strip_ascii(content_data):
 #######################
 
 
-def score_behaviours(behaviour_tags):
+def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, Any]):
     """
     Scores the identified behaviours.
 
     Args:
-        behaviour_tags: ["Downloader", "Crypto"]
+        behaviour_tags: {"Downloader": {"marks": ["Invoke-WebRequest]}}
 
     Returns:
         score: 3.5
         verdict: "Likely Benign"
-        behaviourData: ["Downloader - 1.5", "Crypto - 2.0"]
+        behaviour_tags: {"Downloader": {"marks": ["Invoke-WebRequest], "score": 1.5}}
     """
     score_values = {
 
         # Negative
         # Behaviours which are generally only seen in Malware.
-        "Code Injection": 10.0,
-        "Key Logging": 3.0,
-        "Screen Scraping": 2.0,
-        "AppLocker Bypass": 2.0,
-        "AMSI Bypass": 2.0,
-        "Clear Logs": 2.0,
-        "Coin Miner": 6.0,
+        "Code Injection": 4.0,
+        "Key Logging": 5.0,
+        "Screen Scraping": 5.0,
+        "AppLocker Bypass": 5.0,
+        "AMSI Bypass": 4.0,
+        "Clear Logs": 4.0,
+        "Coin Miner": 5.0,
         "Embedded File": 4.0,
-        "Abnormal Size": 2.0,
-        "Ransomware": 10.0,
-        "DNS C2": 2.0,
-        "Disabled Protections": 4.0,
-        "Negative Context": 10.0,
-        "Malicious Behaviour Combo": 6.0,
+        "Abnormal Size": 4.0,
+        "Ransomware": 6.0,
+        "DNS C2": 4.0,
+        "Disabled Protections": 5.0,
+        "Negative Context": 5.0,
+        "Malicious Behaviour Combo": 5.0,
+        "Hidden Window": 4.0,
+        "Script Execution": 4.0,
 
         # Neutral
         # Behaviours which require more context to infer intent.
-        "Downloader": 1.5,
-        "Starts Process": 1.5,
-        "Script Execution": 1.5,
-        "Compression": 1.5,
-        "Hidden Window": 0.5,
-        "Custom Web Fields": 1.0,
-        "Persistence": 1.0,
-        "Sleeps": 0.5,
-        "Uninstalls Apps": 0.5,
-        "Obfuscation": 1.0,
-        "Crypto": 2.0,
-        "Enumeration": 0.5,
-        "Registry": 0.5,
-        "Sends Data": 1.0,
+        "Downloader": 3.0,
+        "Starts Process": 2.0,
+        "Compression": 2.0,
+        "Custom Web Fields": 2.0,
+        "Persistence": 3.0,
+        "Sleeps": 1.0,
+        "Uninstalls Apps": 3.0,
+        "Obfuscation": 3.0,
+        "Crypto": 3.0,
+        "Enumeration": 1.0,
+        "Registry": 2.0,
+        "Sends Data": 2.0,
         "Byte Usage": 1.0,
-        "SysInternals": 1.5,
-        "One Liner": 2.0,
+        "SysInternals": 3.0,
+        "One Liner": 1.0,
         "Variable Extension": 2.0,
 
         # Benign
         # Behaviours which are generally only seen in Benign scripts - subtracts from score.
         "Script Logging": -1.0,
-        "License": -2.0,
-        "Function Body": -2.0,
-        "Positive Context": -3.0,
+        "License": -1.0,
+        "Function Body": -1.0,
+        "Positive Context": -1.0,
     }
 
     score = 0.0
-    behaviour_data = list()
 
-    for behaviour in behaviour_tags:
+    for behaviour in behaviour_tags.keys():
 
         if "Obfuscation:" in behaviour:
             obfus, name = behaviour.split(':')
-            behaviour_data.append({"name": f"{obfus}: {name}", "score": score_values[obfus]})
+            behaviour_tags[behaviour]["score"] = score_values[obfus]
             behaviour = obfus
         else:
-            behaviour_data.append({"name": behaviour, "score": score_values[behaviour]})
+            behaviour_tags[behaviour]["score"] = score_values[behaviour]
 
         score += score_values[behaviour]
 
@@ -145,7 +134,7 @@ def score_behaviours(behaviour_tags):
         score = 0.0
 
     # These verdicts are arbitrary and can be adjusted as necessary.
-    if score == 0 and behaviour_tags == []:
+    if score == 0 and behaviour_tags == {}:
         verdict = "Unknown"
     elif score < 4:
         verdict = "Low Risk"
@@ -158,23 +147,22 @@ def score_behaviours(behaviour_tags):
     else:
         verdict = "Severe Risk"
 
-    return score, verdict, behaviour_data
+    return score, verdict, behaviour_tags
 
 
-def profile_behaviours(behaviour_tags, original_data, alternative_data):
+def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternative_data) -> Dict[str, Any]:
     """
     Identifies the core behaviours for this profiling script. Broken into 3 sections for Malicious, Neutral, Benign.
     Includes meta-behaviours and keyword/combinations.
 
     Args:
-        behaviour_tags: []
+        behaviour_tags: {}
         original_data: Original PowerShell Script
         alternative_data: Normalize/Unraveled PowerShell Script
 
     Returns:
-        behaviourTags: ["Downloader", "Crypto"]
+        behaviour_tags: [{"name": "Downloader", "marks": ["Invoke-WebRequest"]]
     """
-    global output
     # {Behaviour:[["entry1","entry2"],["entry3","entry4"]]}
     behaviour_col = {}
     obf_type = None
@@ -306,6 +294,8 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data):
         ["harmj0y"],
         ["mattifestation"],
         ["FuzzySec"],
+        ["Net.WebClient", "DownloadString", "IEX", "New-Object"],
+        ["-W", "Hidden", "-Exec", "Bypass"],
     ]
 
     ######################
@@ -370,6 +360,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data):
         ["WindowStyle", "Hidden"],
         ["CreateNoWindow=$true"],
         ["Window.ReSizeTo 0, 0"],
+        ["-W", "Hidden"],
     ]
 
     behaviour_col["Custom Web Fields"] = [
@@ -537,13 +528,15 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data):
         for check in checks:
             bh_flag = True
             for value in check:
-                if value.lower() not in alternative_data.lower() and bh_flag:
+                if value.lower() not in alternative_data.lower():
                     bh_flag = None
+                    break
 
             if bh_flag:
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
-                    output["behaviour"]["commands"].extend(check)
+                    behaviour_tags[behaviour] = {"marks": [item for item in check]}
+                else:
+                    behaviour_tags[behaviour]["marks"].extend(check)
 
         # Separate Meta-behavioural Checks.
         if behaviour == "Obfuscation":
@@ -568,14 +561,14 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data):
             ) and len(re.findall(r"(\n|\r\n)", original_data.strip())) <= 50:
 
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": []}
                     obf_type = "Char Frequency"
 
             # Check Symbol Usage.
-            if len(re.findall(r"\\\_+/", alternative_data)) >= 50:
+            if len(re.findall(r"\\_+/", alternative_data)) >= 50:
 
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": []}
                     obf_type = "High Symbol"
 
             # Check unique high variable declaration (includes JavaScript).
@@ -583,26 +576,26 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data):
                     len(list(set(re.findall(r"\\$\w+?(?:\s*)=", alternative_data)))) >= 40:
 
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": []}
                     obf_type = "High Variable"
 
         elif behaviour == "Byte Usage":
 
             if len(re.findall(r"0x[A-F0-9a-f][A-F0-9a-f],", alternative_data)) >= 100:
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": []}
 
         elif behaviour == "One Liner":
 
             if len(re.findall(r"(\n|\r\n)", original_data.strip())) == 0:
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": []}
 
         elif behaviour == "Abnormal Size":
 
             if len(original_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", original_data)) >= 5000:
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": []}
 
         elif behaviour == "Variable Extension":
 
@@ -613,41 +606,42 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data):
 
             if short_vars + asterik_vars >= 10:
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": []}
 
         elif behaviour == "Code Injection":
             cf1, cf2, cf3 = None, None, None
             for entry in c1:
                 if entry.lower() in alternative_data.lower() and not cf1:
-                    cf1 = True
+                    cf1 = entry
             for entry in c2:
                 if entry.lower() in alternative_data.lower() and not cf2 and cf1:
-                    cf2 = True
+                    cf2 = entry
             for entry in c3:
                 if entry.lower() in alternative_data.lower() and not cf3 and cf1 and cf2:
-                    cf3 = True
+                    cf3 = entry
             if cf1 and cf2 and cf3:
                 if behaviour not in behaviour_tags:
-                    behaviour_tags.append(behaviour)
+                    behaviour_tags[behaviour] = {"marks": [cf1, cf2, cf3]}
 
     # Tries to catch download cradle PowerShell scripts where the obfuscation isn't identified.
     # Examples are heavy variable command usage for chaining/parsing.
-    if len(behaviour_tags) == 2 and "One Liner" in behaviour_tags and (
+    if len(behaviour_tags.keys()) == 2 and "One Liner" in behaviour_tags and (
             "http://" in alternative_data.lower() or "https://" in alternative_data.lower()) and \
             ("Script Execution" in behaviour_tags or "Starts Process" in behaviour_tags
             ):
-        behaviour_tags.append("Downloader")
-        behaviour_tags.append("Obfuscation")
+        behaviour_tags["Downloader"] = {"marks": []}
+        behaviour_tags["Obfuscation"] = {"marks": []}
         obf_type = "Hidden Commands"
 
     # Applies identified Obfuscation Type to behaviour.
     if obf_type:
-        behaviour_tags[behaviour_tags.index("Obfuscation")] = f"Obfuscation:{obf_type}"
+        behaviour_tags[f"Obfuscation:{obf_type}"] = behaviour_tags["Obfuscation"]
+        del behaviour_tags["Obfuscation"]
 
     # Tries to determine if any behaviour combos exist - should always be last step.
     for combo_row in behaviour_combos:
         found_flag = 1
-        if len(combo_row) != len(behaviour_tags):
+        if len(combo_row) != len(behaviour_tags.keys()):
             found_flag = 0
         else:
             for behaviour in combo_row:
@@ -655,7 +649,7 @@ def profile_behaviours(behaviour_tags, original_data, alternative_data):
                     found_flag = 0
         if found_flag == 1:
             if "Malicious Behaviour Combo" not in behaviour_tags:
-                behaviour_tags.append("Malicious Behaviour Combo")
+                behaviour_tags["Malicious Behaviour Combo"] = {"marks": [].extend(combo_row)}
 
     return behaviour_tags
 
@@ -887,6 +881,11 @@ def family_finder(content_data):
     if any(entry in content_data.lower() for entry in ["invoke-cradlecrafter", "postcradlecommand"]):
         families.append("Invoke-CradleCrafter")
 
+    # Family: Invoke-SharpHound
+    # Reference: https://github.com/BloodHoundAD/SharpHound3
+    if any(entry in content_data.lower() for entry in ["invokesharphound", "sharphound"]):
+        families.append("Invoke-SharpHound")
+
     return families
 
 
@@ -895,11 +894,12 @@ def family_finder(content_data):
 ###########################################
 
 
-def remove_null(content_data, modification_flag):
+def remove_null(output: Dict[str, Any], content_data, modification_flag):
     """
     Windows/Unicode introduces NULL bytes will interfere with string and REGEX pattern matching.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "\x00H\x00e\x00l\x00l\x00o"
         modification_flag: Boolean
 
@@ -907,27 +907,24 @@ def remove_null(content_data, modification_flag):
         content_data: "Hello"
         modification_flag: Boolean
     """
-    global output
     output["modifications"].append(f"Removed NULLs")
 
     return content_data.replace("\x00", "").replace("\\x00", ""), modification_flag
 
 
-def format_replace(content_data, modification_flag):
+def format_replace(output, content_data):
     """
     Attempts to parse PowerShell Format Operator by re-ordering substrings into the main string.
     Due to flexibility of language, it tries to identify nested versions first and unwrap it inside-out.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: 'This is an ("{1}{0}{2}" -F"AMP","EX", "LE")'
-        modification_flag: Boolean
 
     Returns:
         content_data: 'This is an "EXAMPLE"'
         modification_flag: Boolean
     """
-    global output
-
     try:
         # Inner most operators, may not contain strings potentially with nested format operator layers ("{").
         obf_group = re.search(
@@ -987,11 +984,12 @@ def format_builder(obf_group):
     return content_data
 
 
-def remove_escape_quote(content_data, modification_flag):
+def remove_escape_quote(output, content_data, modification_flag):
     """
     Removes escaped quotes. These will frequently get in the way for string matching over longer structures.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: b"This is an \\"EXAMPLE\\""
         modification_flag: Boolean
 
@@ -999,7 +997,6 @@ def remove_escape_quote(content_data, modification_flag):
         content_data: b'This is an "EXAMPLE"'
         modification_flag: Boolean
     """
-    global output
     counter = 0
 
     # Replace blank quotes first so as to not cause issues with following replacements
@@ -1021,79 +1018,78 @@ def remove_escape_quote(content_data, modification_flag):
     return content_data, modification_flag
 
 
-def remove_empty_quote(content_data, modification_flag):
+def remove_empty_quote(output, content_data):
     """
     Removes Empty Quotes which can be used as obfuscation to break strings apart.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "EXA''MPLE"
-        modification_flag: Boolean
 
     Returns:
         content_data: "EXAMPLE"
         modification_flag: Boolean
     """
-    global output
     output["modifications"].append("Removed Empty Quotes")
     return content_data.replace("''", "").replace('""', ''), True
 
 
-def remove_tick(content_data, modification_flag):
+def remove_tick(output, content_data):
     """
     Removes Back Ticks which can be used as obfuscation to break strings apart.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "$v`a`r=`'EXAMPLE'`"
-        modification_flag: Boolean
 
     Returns:
         content_data: "$var='EXAMPLE'"
         modification_flag: Boolean
     """
-    global output
     output["modifications"].append("Removed Back Ticks")
     return content_data.replace("`", ""), True
 
 
-def remove_caret(content_data, modification_flag):
+def remove_caret(output, content_data):
     """
     Removes Caret which can be used as obfuscation to break strings apart.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "$v^a^r=^'EXAMPLE'^"
-        modification_flag: Boolean
 
     Returns:
         content_data: "$var='EXAMPLE'"
         modification_flag: Boolean
     """
-    global output
     output["modifications"].append("Removed Carets")
     return content_data.replace("^", ""), True
 
 
-def space_replace(content_data, modification_flag):
+def space_replace(output, content_data, modification_flag):
     """
     Converts two spaces to one.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "$var=    'EXAMPLE'"
         modification_flag:
 
     Returns:
+        output: What is to be returned by the profiler
         content_data: "$var= 'EXAMPLE'"
         modification_flag: Boolean
     """
-    global output
-    output["modifications"].append(f"Converted double spaces to single spaces")
+    output["modifications"].append("Converted double spaces to single spaces")
     return content_data.replace("  ", " "), modification_flag
 
 
-def char_replace(content_data, modification_flag):
+def char_replace(output, content_data, modification_flag):
     """
     Attempts to convert PowerShell char data types using Hex and Int values into ASCII.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: [char]101
         modification_flag: Boolean
 
@@ -1101,8 +1097,6 @@ def char_replace(content_data, modification_flag):
         content_data: "e"
         modification_flag: Boolean
     """
-    global output
-
     #  Hex needs to go first otherwise the 0x gets gobbled by second Int loop/PCRE (0x41 -> 65 -> "A")
     for value in re.findall(r"\[char]0x[0-9a-z]{1,2}", content_data):
         char_convert = int(value.split("]")[1], 0)
@@ -1123,11 +1117,12 @@ def char_replace(content_data, modification_flag):
     return content_data, modification_flag
 
 
-def type_conversion(content_data, modification_flag):
+def type_conversion(output, content_data, modification_flag):
     """
     Attempts to identify Int (various bases), 0xHex, and \\xHex formats in comma-delimited lists for conversion to ASCII.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "69,88,65,77,80,76,69"
         modification_flag: Boolean
 
@@ -1135,7 +1130,6 @@ def type_conversion(content_data, modification_flag):
         content_data: "EXAMPLE"
         modification_flag: Boolean
     """
-    global output
     counter = 0
 
     for baseValue in [0, 8, 16, 32]:
@@ -1167,12 +1161,13 @@ def type_conversion(content_data, modification_flag):
     return content_data, modification_flag
 
 
-def string_split(content_data, modification_flag):
+def string_split(output, content_data, modification_flag):
     """
     Attempts to split strings and combine them back with a comma.
     Primarily targeting lists of bytes for type conversion.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "HAeBlBlCo".split("ABC")
         modification_flag: Boolean
 
@@ -1180,8 +1175,6 @@ def string_split(content_data, modification_flag):
         content_data: "H,e,l,l,o"
         modification_flag: Boolean
     """
-    global output
-
     split_string = re.search(r"\.split\((\'|\")[^\'\"]+?\1\)", content_data, re.IGNORECASE).group()
     delim_split = [x for x in split_string[8:-2]]
     check_strings = re.findall(r"((\'|\")[^\2]+?\2)", content_data)
@@ -1207,11 +1200,12 @@ def string_split(content_data, modification_flag):
     return content_data, modification_flag
 
 
-def join_strings(content_data, modification_flag):
+def join_strings(output, content_data, modification_flag):
     """
     Joins strings together where a quote is followed by a concatenation and another quote.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "$var=('EX'+'AMP'+'LE')"
         modification_flag: Boolean
 
@@ -1219,8 +1213,6 @@ def join_strings(content_data, modification_flag):
         content_data: "$var=('EXAMPLE')"
         modification_flag: Boolean
     """
-    global output
-
     for entry in re.findall(r"(?:\"|\')(?:\s*)\+(?:\s*)(?:\"|\')", content_data):
         content_data = content_data.replace(entry, "")
         modification_flag = True
@@ -1231,21 +1223,20 @@ def join_strings(content_data, modification_flag):
     return content_data, modification_flag
 
 
-def replace_decoder(content_data, modification_flag):
+def replace_decoder(output, content_data):
     """
     Attempts to replace strings across the content that use the Replace function.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: "(set GmBtestGmb).replace('GmB',[Char]39)"
-        modification_flag: Boolean
 
     Returns:
         content_data: "set 'test'"
         modification_flag: Boolean
     """
-    global output
     # Clean up any chars or byte values before replacing
-    content_data, modification_flag = char_replace(content_data, None)
+    content_data, modification_flag = char_replace(output, content_data, None)
 
     # Group 0 = Full Line, Group 3 = First, Group 6 = Second.
     # Second replace can be empty so * instead of +, first may never be empty.
@@ -1266,7 +1257,7 @@ def replace_decoder(content_data, modification_flag):
     return content_data, modification_flag
 
 
-def replace_powershell(content_data, modification_flag):
+def replace_powershell(output, content_data, modification_flag):
     """
     Attempts to replace strings across the content that use the PowerShell command.
 
@@ -1275,6 +1266,7 @@ def replace_powershell(content_data, modification_flag):
         modification_flag: Boolean
 
     Returns:
+        output: What is to be returned by the profiler
         content_data: "$SOS='blah';"
         modification_flag: Boolean
     """
@@ -1292,11 +1284,12 @@ def replace_powershell(content_data, modification_flag):
 ########################
 
 
-def reverse_strings(original_data, content_data, modification_flag):
+def reverse_strings(output, original_data, content_data, modification_flag):
     """
     Reverses content and appends it to the modified data blob.
 
     Args:
+        output: What is to be returned by the profiler
         original_data: marap
         content_data: example
         modification_flag: Boolean
@@ -1306,7 +1299,6 @@ def reverse_strings(original_data, content_data, modification_flag):
         modification_flag: Boolean
 
     """
-    global output
     reverse_msg = original_data[::-1]
 
     if reverse_msg not in garbage_list:
@@ -1320,27 +1312,30 @@ def reverse_strings(original_data, content_data, modification_flag):
     return content_data, modification_flag
 
 
-def decompress_content(content_data, modification_flag):
+def decompress_content(output, content_data, modification_flag):
     """
     Attempts to decompress content using various algorithms (zlib/gzip/etc).
 
     Args:
+        output: What is to be returned by the profiler
         content_data: String of Base64 content
         modification_flag: Boolean
 
     Returns:
         content_data: Decompressed content of ASCII printable
     """
-    global output
-
     for entry in re.findall(r"[A-Za-z0-9+/=]{40,}", content_data):
         try:  # Wrapped in try/except because both strings can appear but pipe through unrelated Base64.
             decompress_msg = decompress_data(entry)
-            if decompress_msg:
+            if decompress_msg and decompress_msg != entry:
                 if decompress_msg not in garbage_list:
                     content_data += "\n\n##### DECOMPRESS CONTENT #####\n\n%s\n\n" % (decompress_msg)
                     garbage_list.append(decompress_msg)
                     modification_flag = True
+
+                    # Add decompressed data to be extracted later
+                    if all(item in decompress_msg for item in ["MZ", "This program cannot be run in DOS mode"]):
+                        output["extracted"].append({"type": "decompressed", "data": decompress_msg.encode()})
         except Exception as e:
             pass
 
@@ -1387,33 +1382,30 @@ def decompress_data(content_data):
     return content_data
 
 
-def decode_base64(content_data, modification_flag):
+def decode_base64(output, entries, modification_flag):
     """
     Attempts to decode Base64 content.
 
     Args:
-        content_data: Encoded Base64 string
+        output: What is to be returned by the profiler
+        entries: A dictionary with the original base64 encoded sections as keys
+        and the corresponding decoded data as values
         modification_flag: Boolean
 
     Returns:
         content_data: Decoded Base64 string
         modification_flag: Boolean
     """
-    global output
-
-    for entry in re.findall(r"[A-Za-z0-9+/=]{30,}", content_data):
+    for entry, decoded in entries.items():
         try:
             # In instances where we have a broken/fragmented Base64 string.
             # Try to subtract to the lower boundary than attempting to add padding.
             while len(entry) % 4:
                 entry = entry[:-1]
 
-            b64data = base64.b64decode(entry)
-            base_string = strip_ascii(b64data)
-
-            if base_string not in garbage_list:
-                content_data += f"\n\n##### B64 CONTENT #####\n\n{base_string}\n\n"
-                garbage_list.append(base_string)
+            if entry and entry.decode() not in garbage_list:
+                output["extracted"].append({"type": "base64_decoded", "data": decoded})
+                garbage_list.append(entry.decode())
                 modification_flag = True
         except Exception as e:
             pass
@@ -1421,14 +1413,15 @@ def decode_base64(content_data, modification_flag):
     if modification_flag:
         output["modifications"].append("Decoded Base64")
 
-    return content_data, modification_flag
+    return modification_flag
 
 
-def decrypt_strings(content_data, modification_flag):
+def decrypt_strings(output, content_data, modification_flag):
     """
     Attempts to decrypt Microsoft SecureStrings using AES-CBC.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: Content with key and encrypted SecureString
         modification_flag: Boolean
 
@@ -1436,8 +1429,6 @@ def decrypt_strings(content_data, modification_flag):
         content_data: Decrypted content
         modification_flag: Boolean
     """
-    global output
-
     for entry in re.findall(r"[A-Za-z0-9+/=]{250,}", content_data):
         try:  # Wrapped in try/except since we're effectively brute forcing
 
@@ -1493,18 +1484,18 @@ def decrypt_data(content_data, key):
 ########################
 
 
-def normalize(content_data):
+def normalize(output: Dict[str, Any], content_data):
     """
     The primary normalization and de-obfuscation function. Runs various checks and changes as necessary.
 
     Args:
+        output: What is to be returned by the profiler
         content_data: Script content
 
     Returns:
         content_data: Normalized / De-Obfuscated content
     """
 
-    global output
     # Passes modification_flag to each function to determine whether or not it should try to normalize the new content.
     while True:
         modification_flag = None
@@ -1512,7 +1503,7 @@ def normalize(content_data):
         # Remove Null Bytes - Changes STATE
         # Keep this one first so that further PCRE work as expected.
         if re.search(r"(\x00|\\\\x00)", content_data):
-            content_data, modification_flag = remove_null(content_data, modification_flag)
+            content_data, modification_flag = remove_null(output, content_data, modification_flag)
 
         # Rebuild format operator replacements - Changes STATE
         while re.search(
@@ -1520,27 +1511,27 @@ def normalize(content_data):
                 content_data) or re.search(
             r'\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(\"|\').+?(\"|\')(?:\s*)\)',
             content_data.replace("\n", "")):
-            content_data, modification_flag = format_replace(content_data, modification_flag)
+            content_data, modification_flag = format_replace(output, content_data)
 
         # Un-Escape Quotes - Changes STATE
         if re.search(r"([^'])(\\')", content_data) or re.search(r'([^"])(\\")', content_data):
-            content_data, modification_flag = remove_escape_quote(content_data, modification_flag)
+            content_data, modification_flag = remove_escape_quote(output, content_data, modification_flag)
 
         # Remove Empty Quotes - Changes STATE
         if "''" in content_data or '""' in content_data:
-            content_data, modification_flag = remove_empty_quote(content_data, modification_flag)
+            content_data, modification_flag = remove_empty_quote(output, content_data)
 
         # Remove Back Tick - Changes STATE
         if "`" in content_data:
-            content_data, modification_flag = remove_tick(content_data, modification_flag)
+            content_data, modification_flag = remove_tick(output, content_data)
 
         # Remove Caret - Changes STATE
         if "^" in content_data:
-            content_data, modification_flag = remove_caret(content_data, modification_flag)
+            content_data, modification_flag = remove_caret(output, content_data)
 
         # Removes Space Padding - Does NOT change STATE
         while re.search(r"[\x20]{2,}", content_data):
-            content_data, modification_flag = space_replace(content_data, modification_flag)
+            content_data, modification_flag = space_replace(output, content_data, modification_flag)
 
         # Converts Char bytes to ASCII - Changes STATE
         if re.search(r"\[char](0x)?[0-9A-Fa-f]{1,3}", content_data, re.IGNORECASE):
@@ -1548,15 +1539,15 @@ def normalize(content_data):
 
         # Type conversions - Changes STATE
         if re.search(r"([1-2]?[0-9]?[0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data):
-            content_data, modification_flag = type_conversion(content_data, modification_flag)
+            content_data, modification_flag = type_conversion(output, content_data, modification_flag)
 
         # String Splits - Changes STATE
         if re.search(r"\.split\((\'|\")[^\'\"]+?\1\)", content_data, re.IGNORECASE):
-            content_data, modification_flag = string_split(content_data, modification_flag)
+            content_data, modification_flag = string_split(output, content_data, modification_flag)
 
         # Bridge strings together - Changes STATE
         if re.search(r"(\"|\')(?:\s*)\+(?:\s*)(\"|\')", content_data):
-            content_data, modification_flag = join_strings(content_data, modification_flag)
+            content_data, modification_flag = join_strings(output, content_data, modification_flag)
 
         # Replace strings - Changes STATE
         # Leave this one last after other formatting has completed
@@ -1564,11 +1555,11 @@ def normalize(content_data):
                 r'((?:replace)(?:\s*)\((?:\s*)\(?(?:([^(\'|\")])*)(\'|\")([^(\3)]+?)\3(?:[^,]*?),(?:\s*)'
                 r'\(?(?:([^(\'|\")])*)(\'|\")([^(\6)]*?)\6(?:\s*)\)?(?:\s*)\))',
                 content_data, re.IGNORECASE):
-            content_data, modification_flag = replace_decoder(content_data, modification_flag)
+            content_data, modification_flag = replace_decoder(output, content_data)
 
         # Remove PowerShell command
         if re.search(r"powershell\s*", content_data, re.IGNORECASE):
-            content_data, modification_flag = replace_powershell(content_data, modification_flag)
+            content_data, modification_flag = replace_powershell(output, content_data, modification_flag)
 
         if modification_flag is None:
             break
@@ -1576,17 +1567,18 @@ def normalize(content_data):
     return content_data
 
 
-def unravel_content(original_data):
+def unravel_content(output, original_data):
     """
     This is the primary function responsible for creating an alternate data stream of unraveled data.
 
     Args:
+        output: What is to be returned by the profiler
         original_data: Script content
 
     Returns:
         content_data: Unraveled additional content
     """
-    content_data = normalize(original_data)
+    content_data = normalize(output, original_data)
     loop_count = 0
 
     while True:
@@ -1603,20 +1595,21 @@ def unravel_content(original_data):
         if all(entry in content_data.lower() for entry in ["streamreader", "frombase64string"]) or \
                 all(entry in content_data.lower() for entry in ["deflatestream", "decompress"]) or \
                 all(entry in content_data.lower() for entry in ["memorystream", "frombase64string"]):
-            content_data, modification_flag = decompress_content(content_data, modification_flag)
+            content_data, modification_flag = decompress_content(output, content_data, modification_flag)
 
         # Base64 Decodes - Changes STATE
-        if re.search(r"[A-Za-z0-9+/=]{30,}", content_data):
-            content_data, modification_flag = decode_base64(content_data, modification_flag)
+        entries = base64_search(content_data.encode())
+        if len(entries):
+            modification_flag = decode_base64(output, entries, modification_flag)
 
         # Decrypts SecureStrings - Changes STATE
         if "convertto-securestring" in content_data.lower() and \
                 re.search(r"(?:[0-9]{1,3},){15,}[0-9]{1,3}", content_data.replace(" ", "")) and \
                 re.search(r"[A-Za-z0-9+=/]{255,}", content_data):
-            content_data, modification_flag = decrypt_strings(content_data, modification_flag)
+            content_data, modification_flag = decrypt_strings(output, content_data, modification_flag)
 
         # Normalize / De-Obfuscate the new contents before proceeding.
-        content_data = normalize(content_data)
+        content_data = normalize(output, content_data)
 
         if modification_flag is None:
             break
@@ -1627,13 +1620,20 @@ def unravel_content(original_data):
 
 
 def profile_ps1(sample_path, working_dir):
-    global output
+    output: Dict[str, Any] = {
+        "behaviour": {"commands": [], "tags": []},
+        "deobfuscated": None,
+        "families": [],
+        "modifications": [],
+        "score": 0,
+        "verdict": None,
+        "extracted": []
+    }
 
-    # Setup behaviour_tags list so behaviours can be tracked throughout processing
-    behaviour_tags = []
+    # Setup behaviour_tags dict so behaviours can be tracked throughout processing
+    behaviour_tags: Dict[str, Any] = {}
 
     # Open file for processing, ignore errors
-    script_time = datetime.now()
     with open(sample_path, encoding='utf8', errors='ignore') as fh:
         original_data = fh.read()
 
@@ -1641,7 +1641,7 @@ def profile_ps1(sample_path, working_dir):
     original_data = original_data.replace("\x00", "")
 
     # Launches the primary unraveling loop to begin cleaning up the script for profiling.
-    alternative_data = f"{unravel_content(original_data)}\n"
+    alternative_data = f"{unravel_content(output, original_data)}\n"
     output["deobfuscated"] = alternative_data
 
     # Launches family specific profiling function over original_data and alternative_data
@@ -1656,7 +1656,7 @@ def profile_ps1(sample_path, working_dir):
     score, verdict, behaviour_tags = score_behaviours(behaviour_tags)
     output["score"] = score
     output["verdict"] = verdict
-    output["behaviour"]["tags"].extend(behaviour_tags)
+    output["behaviour"] = behaviour_tags
 
     # Write what we've parsed out for further analysis
     alt_data = os.path.join(working_dir, DEOBFUS_FILE)

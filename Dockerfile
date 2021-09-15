@@ -23,7 +23,7 @@ RUN rm packages-microsoft-prod.deb
 USER assemblyline
 
 # Install pip packages
-RUN pip install --no-cache-dir --user vivisect && rm -rf ~/.cache/pip
+RUN pip install --no-cache-dir --user tld && rm -rf ~/.cache/pip
 
 # Copy Overpower service code
 WORKDIR /opt/al_service

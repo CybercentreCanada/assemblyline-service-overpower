@@ -10,7 +10,7 @@ stage: CORE
 category: Dynamic Analysis
 
 file_required: true
-timeout: 300
+timeout: 180
 disable_cache: false
 
 enabled: false
@@ -18,11 +18,10 @@ is_external: false
 licence_count: 0
 
 submission_params:
-  # Service-wide parameters
-  - default: 60
+  - default: 30
     name: tool_timeout
     type: int
-    value: 60
+    value: 30
 
   - default: false
     name: add_supplementary
@@ -31,30 +30,18 @@ submission_params:
 
 heuristics:
   - heur_id: 1
-    name: Network Traffic Detected
-    score: 500
-    filetype: '*'
-    description: Malware Sandbox Tool(s) detected network traffic.
-
-  - heur_id: 2
     name: IOC(s) Extracted
     score: 250
     filetype: '*'
     description: At least one IOC has been extracted.
 
-  - heur_id: 3
-    name: Suspicious Activity Detected
-    score: 250
-    filetype: '*'
-    description: Suspicious activity was detected during execution.
-
-  - heur_id: 4
+  - heur_id: 2
     name: File is infected
     score: 1000
     filetype: '*'
     description: PowerShellProfiler has determined that the file is malicious
 
-  - heur_id: 5
+  - heur_id: 3
     name: File contains suspicious content
     score: 250
     filetype: '*'

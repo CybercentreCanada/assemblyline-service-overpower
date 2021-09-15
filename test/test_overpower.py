@@ -202,27 +202,51 @@ class TestOverpower:
 
     @staticmethod
     def test_handle_ps1_profiler_output(overpower_class_instance):
-        from assemblyline_v4_service.common.result import Result, ResultSection
-        output = {"behaviour": {"tags": ["blah"]}, "score": 3}
+        from os import path
+        from assemblyline_v4_service.common.result import Result, ResultSection, Heuristic
+        output = {"deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}}, "score": 3, "families": [], "extracted": []}
         res = Result()
-        correct_res_sec = ResultSection("Suspicious Activity Detected", body="blah")
-        correct_res_sec.set_heuristic(3)
-        overpower_class_instance._handle_ps1_profiler_output(output, res)
+        correct_res_sec = ResultSection("Suspicious Content Detected in blah")
+        correct_sig_res_sec = ResultSection("Signature: blah", parent=correct_res_sec)
+        sig_heur = Heuristic(3)
+        sig_heur.add_signature_id("blah", score=100)
+        correct_sig_res_sec.heuristic = sig_heur
+        overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert check_section_equality(res.sections[0], correct_res_sec)
 
-        output["score"] = 6
-        correct_res_sec.heuristic = None
-        correct_res_sec.set_heuristic(4)
-        overpower_class_instance._handle_ps1_profiler_output(output, res)
+        output["behaviour"]["minus"] = {"score": -1, "marks": []}
+        output["families"] = ["blah"]
+        output["deobfuscated"] = "http://blah.com/blah.exe"
+        correct_res_sec.title_text = "Malicious Content Detected in blah"
+        correct_res_sec.set_heuristic(2)
+        correct_res_sec.add_tag("attribution.family", "blah")
+        correct_res_sec.subsections = []
+        overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert check_section_equality(res.sections[1], correct_res_sec)
+
+        correct_ioc_res_sec = ResultSection("IOC(s) extracted from blah")
+        correct_ioc_res_sec.add_tag("network.dynamic.domain", "blah.com")
+        correct_ioc_res_sec.add_tag("network.dynamic.uri", "http://blah.com/blah.exe")
+        correct_ioc_res_sec.add_tag("network.dynamic.uri_path", "/blah.exe")
+        correct_ioc_res_sec.set_heuristic(1)
+        assert check_section_equality(res.sections[2], correct_ioc_res_sec)
+
+        output = {"deobfuscated": "blah.com;", "behaviour": {"blah": {"score": 2.0, "marks": []}}, "score": 3, "families": [], "extracted": [{"type": "base64_decoded", "data": b"blah"}]}
+        overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
+        assert len(res.sections) == 3
+        assert path.exists(path.join(overpower_class_instance.working_directory, "ps1profiler_base64_decoded_0"))
 
     @staticmethod
     def test_handle_psdecode_output(overpower_class_instance):
-        from assemblyline_v4_service.common.result import Result
+        from assemblyline_v4_service.common.result import Result, ResultSection
         res = Result()
-        output = []
+        correct_res_sec = ResultSection("Actions detected with PSDecode")
+        output = ["blah", "############################## Actions ##############################", "blah.com"]
+        correct_res_sec.body = "blah.com"
+        correct_res_sec.set_heuristic(1)
+        correct_res_sec.add_tag("network.dynamic.domain", "blah.com")
         overpower_class_instance._handle_psdecode_output(output, res)
-        assert True
+        assert check_section_equality(res.sections[0], correct_res_sec)
 
     @staticmethod
     def test_extract_supplementary(overpower_class_instance):
@@ -250,18 +274,15 @@ class TestOverpower:
         item_0 = join(overpower_class_instance.working_directory, DEOBFUS_FILE)
         item_1 = join(overpower_class_instance.working_directory, "layer1.txt")
         item_2 = join(overpower_class_instance.working_directory, "suppl")
-        items = [item_0, item_1, item_2]
+        item_3 = join(overpower_class_instance.working_directory, "executable.bin")
+        items = [item_0, item_1, item_2, item_3]
         for index, item in enumerate(items):
             with open(item, "w") as f:
                 f.write(f"blah_{index}")
 
-        item_3 = join(overpower_class_instance.working_directory, "suppl_duplicate")
-        with open(item_3, "w") as f:
-            f.write("blah_2")
-
-        item_4 = join(overpower_class_instance.working_directory, "random_dump")
+        item_4 = join(overpower_class_instance.working_directory, "suppl_duplicate")
         with open(item_4, "w") as f:
-            f.write("yaba")
+            f.write("blah_2")
 
         overpower_class_instance._prepare_artifacts()
         assert overpower_class_instance.artifact_list[0] == {
@@ -271,12 +292,18 @@ class TestOverpower:
             "to_be_extracted": True
         }
         assert overpower_class_instance.artifact_list[1] == {
+            "name": "executable.bin",
+            "path": item_3,
+            "description": "Overpower Dump",
+            "to_be_extracted": True
+        }
+        assert overpower_class_instance.artifact_list[2] == {
             "name": "layer1.txt",
             "path": item_1,
             "description": "Layer of de-obfuscated PowerShell from PSDecode",
             "to_be_extracted": True
         }
-        assert overpower_class_instance.artifact_list[2] == {
+        assert overpower_class_instance.artifact_list[3] == {
             "name": "suppl",
             "path": item_2,
             "description": "Output from PowerShell tool",
@@ -295,3 +322,29 @@ class TestOverpower:
             f.write(b"blah")
         assert get_id_from_data(some_file) == expected_result
         remove(some_file)
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        "blob, file_ext, correct_tags",
+        [
+            ("", "", {}),
+            ("192.168.100.1", "", {'network.dynamic.ip': ['192.168.100.1']}),
+            ("blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca']}),
+            ("https://blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca'], 'network.dynamic.uri': ['https://blah.ca']}),
+            ("https://blah.ca/blah", ".exe", {'network.dynamic.domain': ['blah.ca'], 'network.dynamic.uri': ['https://blah.ca/blah'], "network.dynamic.uri_path": ["/blah"]}),
+            ("drive:\\\\path to\\\\microsoft office\\\\officeverion\\\\winword.exe", ".exe", {}),
+            ("DRIVE:\\\\PATH TO\\\\MICROSOFT OFFICE\\\\OFFICEVERION\\\\WINWORD.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.DOC", ".exe", {}),
+            ("DRIVE:\\\\PATH TO\\\\PYTHON27.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.py", ".py", {}),
+            ("POST /some/thing/bad.exe HTTP/1.0\nUser-Agent: Mozilla\nHost: evil.ca\nAccept: */*\nContent-Type: application/octet-stream\nContent-Encoding: binary\n\nConnection: close", "", {"network.dynamic.domain": ["evil.ca"]}),
+            ("evil.ca/some/thing/bad.exe", "", {"network.dynamic.domain": ["evil.ca"], "network.dynamic.uri": ["evil.ca/some/thing/bad.exe"], "network.dynamic.uri_path": ["/some/thing/bad.exe"]}),
+            ("blah.ca", ".ca", {}),
+        ]
+    )
+    def test_extract_iocs_from_text_blob(blob, file_ext, correct_tags, overpower_class_instance):
+        from assemblyline_v4_service.common.result import ResultSection
+        test_result_section = ResultSection("blah")
+        correct_result_section = ResultSection("blah", tags=correct_tags)
+        if correct_tags:
+            correct_result_section.set_heuristic(1)
+        overpower_class_instance._extract_iocs_from_text_blob(blob, test_result_section, file_ext)
+        assert check_section_equality(test_result_section, correct_result_section)

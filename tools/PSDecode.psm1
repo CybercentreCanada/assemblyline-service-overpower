@@ -78,6 +78,13 @@ function new-object {
                 }
             return $webclient_obj
         }
+        elseif ($Obj -ieq 'System.Net.Sockets.TCPClient') {
+            $tcpclient_obj = microsoft.powershell.utility\new-object System.Net.Sockets.TCPClient
+            $IP = $Args[0]
+            $port = $Args[1]
+            Write-Host "%#[System.Net.Sockets.TCPClient] Connect To $($IP):$($port)%#"
+            return $tcpclient_obj
+        }
         elseif($Obj -ieq 'random'){
             $random_obj = microsoft.powershell.utility\new-object Random
             Add-Member -memberType ScriptMethod -InputObject $random_obj -Name "next" -Value {
@@ -98,6 +105,29 @@ function new-object {
             return $unk_obj
         }
     }
+'@
+
+$Sleep_Override = @'
+function start-sleep {
+        param(
+            [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
+            [string]$Obj
+        )
+        Write-Host "%#[Start-Sleep] $(Obj)%#"
+    }
+'@
+
+$Start_Job = @'
+function start-job {
+        param(
+            [Parameter(Mandatory=$True, Valuefrompipeline = $True)][ScriptBlock]$ScriptBlock
+        )
+        Write-Host "$ScriptBlock"
+    }
+'@
+
+$Receive_Job = @'
+function receive-job {}
 '@
 
 function Get_Encoding_Type {
@@ -371,7 +401,9 @@ function Resolve_Replaces
         $matches = $str_format_pattern.Matches($Command)
         While ($matches.Count -gt 0){
             ForEach($match in $matches){
-                $resolved_string = IEX($match)
+                Write-Verbose "match: $match"
+                try {$resolved_string = IEX($match)}
+                catch {continue}
                 $resolved_string = $resolved_string.replace("'","''")
                 Write-Verbose "[Resolve_Replaces] Replacing: $($match) With: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
@@ -391,15 +423,38 @@ function Resolves_PowerShell_On_Linux
         [String]$Command
     )
 
-    $str_format_pattern = [regex]"(?i)powershell\s*"
-    $matches = $str_format_pattern.Matches($Command)
+    $env_windir_pattern = [regex]'(?i)\$env\:windir'
+    $matches = $env_windir_pattern.Matches($Command)
+    While ($matches.Count -gt 0){
+        ForEach($match in $matches){
+            $resolved_string = "'/usr/bin/pwsh'"
+            Write-Verbose "[Resolves_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+            $Command = $Command.Replace($match, "$($resolved_string)")
+        }
+        $matches = $env_windir_pattern.Matches($Command)
+    }
+
+    $powershell_path_pattern = [regex]"(?i)\\syswow64\\windowspowershell\\v1\.0\\powershell\.exe"
+    $matches = $powershell_path_pattern.Matches($Command)
     While ($matches.Count -gt 0){
         ForEach($match in $matches){
             $resolved_string = ""
             Write-Verbose "[Resolves_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
             $Command = $Command.Replace($match, "$($resolved_string)")
         }
-        $matches = $str_format_pattern.Matches($Command)
+        $matches = $powershell_path_pattern.Matches($Command)
+    }
+
+    # Since we are already using Linux's pwsh to run the script, we do not need a redundant powershell image path
+    $powershell_image_pattern = [regex]"(?i)powershell(\.exe)?\s*"
+    $matches = $powershell_image_pattern.Matches($Command)
+    While ($matches.Count -gt 0){
+        ForEach($match in $matches){
+            $resolved_string = ''
+            Write-Verbose "[Resolves_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+            $Command = $Command.Replace($match, "$($resolved_string)")
+        }
+        $matches = $powershell_image_pattern.Matches($Command)
     }
 
     return $Command
@@ -549,7 +604,7 @@ function Dump_Files {
 
             ForEach($exe in $extracted_exes) {
                 $exe_sha256 = Get_SHA256($exe)
-                $out_filename = "$dump/executable_$($exe_sha256).bin"
+                $out_filename = "$dump/psdecode_executable_$($extracted_exes.IndexOf($exe)+1).bin"
                 if ($PSVersionTable.PSVersion.Major -gt 6) {
                     $exe | Set-Content $out_filename -AsByteStream
                 }
@@ -670,7 +725,10 @@ function PSDecode {
     $override_functions += $Invoke_Command_Override
     $override_functions += $Invoke_Item_Override
     $override_functions += $Get_Item_Override
-    
+    $override_functions += $Sleep_Override
+    $override_functions += $Start_Job
+    $override_functions += $Receive_Job
+
     if(!$x){
         $override_functions += $New_Object_Override
     }
@@ -781,7 +839,7 @@ function PSDecode {
         }
     }
 
-    if($p.ExitCode -eq 0 -and -not $stderr){
+    if($p.ExitCode -eq 0){
         if($beautify){
             $beautiful_str = Beautify($str_fmt_res)
             $heading = "`r`n`r`n" + "#"*25 + " Beautified Layer " + "#"*26
@@ -789,27 +847,24 @@ function PSDecode {
             Write-Host $beautiful_str
         }
 
-        $heading = "`r`n`r`n" + "#"*30 + " Actions " + "#"*30
-        Write-Host $heading
+        if ($stderr) {
+            $heading = "`r`n`r`n" + "#"*30 + " Warning! " + "#"*31
+            $footer = "#"*30 + " Warning! " + "#"*31
+            Write-Host -ForegroundColor Yellow $heading
+            Write-Host -ForegroundColor Yellow "Exit code: $($p.ExitCode)"
+            Write-Host -ForegroundColor Yellow "Decoder script returned successful exit code but also sent the following to stderr:`r`n$($stderr)"
+            Write-Host -ForegroundColor Yellow $footer
+        }
 
         if($actions.Count -gt 0){
+            $heading = "`r`n`r`n" + "#"*30 + " Actions " + "#"*30
+            Write-Host $heading
             for ($counter=0; $counter -lt $actions.Count; $counter++){
-                $line = "{0,5}. {1}" -f ($counter+1),$actions[$counter]
+                $line = "$($actions[$counter])"
                 Write-Host $line
                 }
             }
-        else{
-            Write-Host "No actions identified. Methods executed by the script may not have corresponding override methods defined."
-        }
     }
-    ElseIf($p.ExitCode -eq 0 -and $stderr){
-        $heading = "`r`n`r`n" + "#"*30 + " Warning! " + "#"*31
-        $footer = "#"*30 + " Warning! " + "#"*31
-        Write-Host -ForegroundColor Yellow $heading
-        Write-Host -ForegroundColor Yellow "Exit code: $($p.ExitCode)"
-        Write-Host -ForegroundColor Yellow "Decoder script returned successful exit code but also sent the following to stderr:`r`n$($stderr)"
-        Write-Host -ForegroundColor Yellow $footer
-        }
     ElseIf($p.ExitCode -ne 0 -and -not $stderr){
         $heading = "`r`n`r`n" + "#"*30 + " Warning! " + "#"*31
         $footer = "#"*30 + " Warning! " + "#"*31
