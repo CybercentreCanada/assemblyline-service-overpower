@@ -30,7 +30,7 @@ WORKDIR /opt/al_service
 COPY . .
 
 USER root
-RUN mkdir ~/.local/share/powershell/Modules/PSDecode
+RUN mkdir -p ~/.local/share/powershell/Modules/PSDecode
 COPY tools/PSDecode.psm1 ~/.local/share/powershell/Modules/PSDecode
 
 USER assemblyline
