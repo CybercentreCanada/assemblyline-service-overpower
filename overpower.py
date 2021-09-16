@@ -7,7 +7,7 @@ from tld import get_tld
 from typing import Optional, Dict, Any, List, Tuple, Set
 
 from assemblyline.common.str_utils import safe_str
-from assemblyline.odm.base import DOMAIN_REGEX, URI_PATH, IP_REGEX, FULL_URI
+from assemblyline.odm.base import DOMAIN_REGEX, URI_PATH, IP_REGEX, FULL_URI, EMAIL_REGEX as EMAIL_ONLY_REGEX
 from assemblyline_v4_service.common.balbuzard.patterns import PatternMatch
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
@@ -24,6 +24,8 @@ TRANSLATE_SCORE = {
     5.0: 900,  # Elevated Risk
     6.0: 1000,  # Malware
 }
+
+EMAIL_REGEX = EMAIL_ONLY_REGEX.lstrip("^").rstrip("$")
 
 
 def get_id_from_data(file_path: str) -> str:
@@ -258,9 +260,10 @@ class Overpower(ServiceBase):
         ips = set(findall(IP_REGEX, blob))
         # There is overlap here between regular expressions, so we want to isolate domains that are not ips
         domains = set(findall(DOMAIN_REGEX, blob)) - ips
+        emails = set(findall(EMAIL_REGEX, blob))
         # There is overlap here between regular expressions, so we want to isolate uris that are not domains
         uris = set(findall(self.patterns.PAT_URI_NO_PROTOCOL, blob.encode()))
-        uris = {uri.decode() for uri in uris} - domains - ips
+        uris = {uri.decode() for uri in uris} - domains - ips - emails
         ioc_extracted = False
 
         for ip in ips:
@@ -276,6 +279,10 @@ class Overpower(ServiceBase):
             safe_domain = safe_str(domain)
             ioc_extracted = True
             result_section.add_tag("network.dynamic.domain", safe_domain)
+        for email in emails:
+            safe_email = safe_str(email)
+            ioc_extracted = True
+            result_section.add_tag("network.email.address", safe_email)
         for uri in uris:
             # If there is a domain in the uri, then do
             if not any(ip in uri for ip in ips):

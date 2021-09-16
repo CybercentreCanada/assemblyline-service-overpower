@@ -338,6 +338,7 @@ class TestOverpower:
             ("POST /some/thing/bad.exe HTTP/1.0\nUser-Agent: Mozilla\nHost: evil.ca\nAccept: */*\nContent-Type: application/octet-stream\nContent-Encoding: binary\n\nConnection: close", "", {"network.dynamic.domain": ["evil.ca"]}),
             ("evil.ca/some/thing/bad.exe", "", {"network.dynamic.domain": ["evil.ca"], "network.dynamic.uri": ["evil.ca/some/thing/bad.exe"], "network.dynamic.uri_path": ["/some/thing/bad.exe"]}),
             ("blah.ca", ".ca", {}),
+            ("blah@blah.ca", ".ca", {"network.email.address": ["blah@blah.ca"]}),
         ]
     )
     def test_extract_iocs_from_text_blob(blob, file_ext, correct_tags, overpower_class_instance):

@@ -65,9 +65,9 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, A
         behaviour_tags: {"Downloader": {"marks": ["Invoke-WebRequest]}}
 
     Returns:
-        score: 3.5
+        score: 1.0
         verdict: "Likely Benign"
-        behaviour_tags: {"Downloader": {"marks": ["Invoke-WebRequest], "score": 1.5}}
+        behaviour_tags: {"Downloader": {"marks": ["Invoke-WebRequest], "score": 3.0}}
     """
     score_values = {
 
@@ -89,6 +89,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, A
         "Malicious Behaviour Combo": 5.0,
         "Hidden Window": 4.0,
         "Script Execution": 4.0,
+        "Uses WMI": 4.0,
 
         # Neutral
         # Behaviours which require more context to infer intent.
@@ -100,7 +101,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, A
         "Sleeps": 1.0,
         "Uninstalls Apps": 3.0,
         "Obfuscation": 3.0,
-        "Crypto": 3.0,
+        "Crypto": 2.0,
         "Enumeration": 1.0,
         "Registry": 2.0,
         "Sends Data": 2.0,
@@ -108,6 +109,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, A
         "SysInternals": 3.0,
         "One Liner": 1.0,
         "Variable Extension": 2.0,
+        "Email": 3.0,
 
         # Benign
         # Behaviours which are generally only seen in Benign scripts - subtracts from score.
@@ -167,10 +169,6 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     behaviour_col = {}
     obf_type = None
 
-    ########################
-    # Malicious Behaviours #
-    ########################
-
     # Generates possible code injection variations.
     # Create memory
     c1 = ["VirtualAlloc", "NtAllocateVirtualMemory", "ZwAllocateVirtualMemory", "HeapAlloc", "calloc"]
@@ -194,8 +192,12 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     behaviour_col["Code Injection"] = [["Read", "Write", "Load", "Reflection.Assembly", "EntryPoint.Invoke"], ]
 
     behaviour_col["Key Logging"] = [
-        ["GetAsyncKeyState", "Windows.Forms.Keys"],
+        ["GetAsyncKeyState"],
+        ["Windows.Forms.Keys"],
         ["LShiftKey", "RShiftKey", "LControlKey", "RControlKey"],
+        ["GetKeyboardState"],
+        ["MapVirtualKey"],
+        ["Start-KeyLogger"],
     ]
 
     behaviour_col["Screen Scraping"] = [
@@ -253,6 +255,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["REG_DWORD", "DisableAntiVirus"],
         ["REG_DWORD", "DisableScanOnRealtimeEnable"],
         ["REG_DWORD", "DisableBlockAtFirstSeen"],
+        ["Uninstall-WindowsFeature", "Windows-Defender"],
+        ["Set-MpPreference", "-DisableRealtimeMonitoring", "$true"],
     ]
 
     behaviour_col["Negative Context"] = [
@@ -288,19 +292,18 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         #["Brute-force", "password"],
         ["exploit", "vulnerbility", "cve-"],
         ["Privilege Escalation"],
+        ["Net.WebClient", "DownloadString", "IEX", "New-Object"],
+        ["-W", "Hidden", "-Exec", "Bypass"],
+        ["taskkill", "/im", "/f"],
+        ["net", "stop", "/y"],
+        ["sc", "config", "start=", "disabled"],
         # Names of researchers / script authors for common offensive scripts that frequently show up in copied code.
         # Low hanging fruit - not necessarily always bad but increase risk.
         ["khr0x40sh"],
         ["harmj0y"],
         ["mattifestation"],
         ["FuzzySec"],
-        ["Net.WebClient", "DownloadString", "IEX", "New-Object"],
-        ["-W", "Hidden", "-Exec", "Bypass"],
     ]
-
-    ######################
-    # Neutral Behaviours #
-    ######################
 
     behaviour_col["Downloader"] = [
         ["DownloadFile"],
@@ -381,6 +384,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Uninstalls Apps"] = [
         ["foreach", "UninstallString"],
+        ["start", "wmic", "product", "call", "uninstall", "/nointeractive"],
+        ["Uninstall-WindowsFeature"],
     ]
 
     behaviour_col["Obfuscation"] = [
@@ -431,7 +436,10 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["HKCU:\\"],
         ["HKLM:\\"],
         ["New-ItemProperty", "-Path", "-Name", "-PropertyType", "-Value"],
-        ["reg add", "reg delete"],
+        ["reg add"],
+        ["reg delete"],
+        ["reg.exe add"],
+        ["reg.exe delete"],
     ]
 
     behaviour_col["Sends Data"] = [
@@ -454,10 +462,6 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Variable Extension"] = [  # Work done in processing.
     ]
-
-    #####################
-    # Benign Behaviours #
-    #####################
 
     behaviour_col["Script Logging"] = [
         ["LogMsg", "LogErr"],
@@ -499,6 +503,16 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Remote Forensic Snapshot"],
         ["Function Write-Log"],
         ["Remote Forensic Snapshot"],
+    ]
+
+    behaviour_col["Email"] = [
+        ["SMTP"],
+        ["send-mailmessage"],
+        ["-smtpServer"],
+    ]
+
+    behaviour_col["Uses WMI"] = [
+        ["wmic"]
     ]
 
     # Behavioural Combos combine a base grouping of behaviours to help raise the score of files without a lot of complexity.
@@ -1402,8 +1416,10 @@ def decode_base64(output, entries, modification_flag):
             # Try to subtract to the lower boundary than attempting to add padding.
             while len(entry) % 4:
                 entry = entry[:-1]
+            base_string = strip_ascii(decoded)
 
-            if entry and entry.decode() not in garbage_list:
+            # Require a minimum length for encoded and decoded values
+            if entry and entry.decode() not in garbage_list and len(entry) > 50 and len(base_string) > 16:
                 output["extracted"].append({"type": "base64_decoded", "data": decoded})
                 garbage_list.append(entry.decode())
                 modification_flag = True

@@ -130,6 +130,42 @@ $Receive_Job = @'
 function receive-job {}
 '@
 
+$Task_Kill = @'
+function taskkill {
+    Write-Host "%#[taskkill] $($args)%#"
+}
+'@
+
+$Net = @'
+function net {
+    Write-Host "%#[net] $($args)%#"
+}
+'@
+
+$SC = @'
+function sc {
+    Write-Host "%#[sc] $($args)%#"
+}
+'@
+
+$Start = @'
+function start {
+    Write-Host "%#[start] $($args)%#"
+}
+'@
+
+$Uninstall_WindowsFeature = @'
+function Uninstall-WindowsFeature {
+    Write-Host "%#[Uninstall-WindowsFeature] $($args)%#"
+}
+'@
+
+$Set_MpPreference = @'
+function Set-MpPreference {
+    Write-Host "%#[Set-MpPreference] $($args)%#"
+}
+'@
+
 function Get_Encoding_Type {
     param(
         [Parameter(Mandatory=$True)]
@@ -728,6 +764,12 @@ function PSDecode {
     $override_functions += $Sleep_Override
     $override_functions += $Start_Job
     $override_functions += $Receive_Job
+    $override_functions += $Task_Kill
+    $override_functions += $Net
+    $override_functions += $SC
+    $override_functions += $Start
+    $override_functions += $Uninstall_WindowsFeature
+    $override_functions += $Set_MpPreference
 
     if(!$x){
         $override_functions += $New_Object_Override
