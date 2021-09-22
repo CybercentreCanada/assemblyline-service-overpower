@@ -31,19 +31,19 @@ submission_params:
 heuristics:
   - heur_id: 1
     name: IOC(s) Extracted
-    score: 250
+    score: 1
     filetype: '*'
     description: At least one IOC has been extracted.
 
   - heur_id: 2
     name: File is infected
-    score: 1000
+    score: 1
     filetype: '*'
     description: PowerShellProfiler has determined that the file is malicious
 
   - heur_id: 3
     name: File contains suspicious content
-    score: 250
+    score: 1
     filetype: '*'
     description: PowerShellProfiler has detected suspicious content
 
