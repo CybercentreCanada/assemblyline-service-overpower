@@ -1551,7 +1551,7 @@ def normalize(output: Dict[str, Any], content_data):
 
         # Converts Char bytes to ASCII - Changes STATE
         if re.search(r"\[char](0x)?[0-9A-Fa-f]{1,3}", content_data, re.IGNORECASE):
-            content_data, modification_flag = char_replace(content_data, modification_flag)
+            content_data, modification_flag = char_replace(output, content_data, modification_flag)
 
         # Type conversions - Changes STATE
         if re.search(r"([1-2]?[0-9]?[0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data):
@@ -1605,7 +1605,7 @@ def unravel_content(output, original_data):
         # Looks only in original_data, can be problematic flipping unraveled content back and forth.
         reverse_string = ["noitcnuf", "marap", "nruter", "elbairav", "tcejbo-wen", "ecalper"]
         if any(entry in original_data.lower() for entry in reverse_string):
-            content_data, modification_flag = reverse_strings(original_data, content_data, modification_flag)
+            content_data, modification_flag = reverse_strings(output, original_data, content_data, modification_flag)
 
         # Decompress Streams - Changes STATE
         if all(entry in content_data.lower() for entry in ["streamreader", "frombase64string"]) or \
