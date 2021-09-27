@@ -273,7 +273,10 @@ class Overpower(ServiceBase):
         for domain in domains:
             # File names match the domain and URI regexes, so we need to avoid tagging them
             # Note that get_tld only takes URLs so we will prepend http:// to the domain to work around this
-            tld = get_tld(f"http://{domain}", fail_silently=True)
+            try:
+                tld = get_tld(f"http://{domain}", fail_silently=True)
+            except ValueError:
+                continue
             if tld is None or f".{tld}" == file_ext:
                 continue
             safe_domain = safe_str(domain)
