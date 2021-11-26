@@ -73,7 +73,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, A
 
         # Negative
         # Behaviours which are generally only seen in Malware.
-        "Code Injection": 1.0,
+        "Code Injection": 2.0,
         "Key Logging": 1.0,
         "Screen Scraping": 1.0,
         "AppLocker Bypass": 1.0,
@@ -100,7 +100,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, A
         "Persistence": 1.0,
         "Sleeps": 1.0,
         "Uninstalls Apps": 1.0,
-        "Obfuscation": 1.0,
+        "Obfuscation": 2.0,
         "Crypto": 1.0,
         "Enumeration": 1.0,
         "Registry": 1.0,
