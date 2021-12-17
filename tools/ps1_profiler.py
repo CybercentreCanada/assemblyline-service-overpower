@@ -6,7 +6,7 @@ import re
 from typing import Dict, Any
 import zlib
 from Crypto.Cipher import AES
-from assemblyline_v4_service.common.extractor.base64 import base64_search
+from assemblyline_v4_service.common.extractor.base64 import find_base64
 
 
 __author__ = "Jeff White [karttoon] @noottrak"
@@ -1410,18 +1410,14 @@ def decode_base64(output, entries, modification_flag):
         content_data: Decoded Base64 string
         modification_flag: Boolean
     """
-    for entry, decoded in entries.items():
+    for decoded in entries:
         try:
-            # In instances where we have a broken/fragmented Base64 string.
-            # Try to subtract to the lower boundary than attempting to add padding.
-            while len(entry) % 4:
-                entry = entry[:-1]
             base_string = strip_ascii(decoded)
 
             # Require a minimum length for encoded and decoded values
-            if entry and entry.decode() not in garbage_list and len(entry) > 50 and len(base_string) > 16:
+            if decoded not in garbage_list and len(decoded) > 36 and len(base_string) > 16:
                 output["extracted"].append({"type": "base64_decoded", "data": decoded})
-                garbage_list.append(entry.decode())
+                garbage_list.append(decoded)
                 modification_flag = True
         except Exception as e:
             pass
@@ -1614,8 +1610,8 @@ def unravel_content(output, original_data):
             content_data, modification_flag = decompress_content(output, content_data, modification_flag)
 
         # Base64 Decodes - Changes STATE
-        entries = base64_search(content_data.encode())
-        if len(entries):
+        entries = [decoded for decoded, _, _ in find_base64(content_data.encode())]
+        if entries:
             modification_flag = decode_base64(output, entries, modification_flag)
 
         # Decrypts SecureStrings - Changes STATE
