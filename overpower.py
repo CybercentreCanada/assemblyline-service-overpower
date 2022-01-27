@@ -53,7 +53,7 @@ class Overpower(ServiceBase):
         self.patterns = PatternMatch()
 
     def execute(self, request: ServiceRequest) -> None:
-        self.artifact_hashes = set()
+        self.artifact_hashes = {request.sha256}
         self.artifact_list: List[Dict[str, Any]] = []
         tool_timeout = request.get_param("tool_timeout")
         add_supplementary = request.get_param("add_supplementary")
@@ -79,11 +79,14 @@ class Overpower(ServiceBase):
 
         # PowerShellProfiler
         files_to_profile = [(request.file_name, request.file_path)]
-        files_to_profile.extend([(layer, path.join(self.working_directory, layer)) for layer in sorted(listdir(self.working_directory)) if "layer" in layer])
+        files_to_profile.extend([(layer, path.join(self.working_directory, layer))
+                                for layer in sorted(listdir(self.working_directory)) if "layer" in layer])
         total_ps1_profiler_output: Dict[str, Any] = {}
         for file_to_profile, file_path in files_to_profile:
             total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
-            self._handle_ps1_profiler_output(total_ps1_profiler_output[file_to_profile], request.result, file_to_profile)
+            self._handle_ps1_profiler_output(
+                total_ps1_profiler_output[file_to_profile],
+                request.result, file_to_profile)
 
         if add_supplementary:
             self._extract_supplementary(total_ps1_profiler_output, psdecode_output)
@@ -246,7 +249,9 @@ class Overpower(ServiceBase):
                 "description": description,
                 "to_be_extracted": to_be_extracted
             })
-            self.log.debug(f"Adding extracted file: {file_path}" if to_be_extracted else f"Adding supplementary file: {file_path}")
+            self.log.debug(
+                f"Adding extracted file: {file_path}"
+                if to_be_extracted else f"Adding supplementary file: {file_path}")
 
     def _extract_iocs_from_text_blob(self, blob: str, result_section: ResultSection, file_ext: str = "") -> None:
         """
