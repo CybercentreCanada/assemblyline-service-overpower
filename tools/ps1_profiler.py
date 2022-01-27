@@ -268,7 +268,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Download_Execute"],
         ["exetotext"],
         ["PostExploit"],
-        ["PEBytes32", "PEBytes64"], # Could be Mimikatz or Empire.
+        ["PEBytes32", "PEBytes64"],  # Could be Mimikatz or Empire.
         ["Invoke-Mypass"],
         ["PowerShell", "bypass", "hidden", "WebClient", "DownloadFile", "exe", "Start-Process", "APPDATA"],
         ["certutil.exe", "BEGIN CERTIFICATE"],  # "function set-Certificate()
@@ -317,7 +317,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Invoke-WebRequest"],
         ["Net.WebRequest"],
         ["wget"],
-        #["Get-Content"],
+        # ["Get-Content"],
         ["send", "open", "responseBody"],
         ["HttpWebRequest", "GetResponse"],
         ["InternetExplorer.Application", "Navigate"],
@@ -559,20 +559,20 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
             # Character Frequency Analysis (Original Script only).
             if (original_data.count("w") >= 500 or
-                original_data.count("4") >= 250 or
-                original_data.count("_") >= 250 or
-                original_data.count("D") >= 250 or
-                original_data.count("C") >= 200 or
-                original_data.count("K") >= 200 or
-                original_data.count("O") >= 200 or
-                original_data.count(":") >= 100 or
-                original_data.count(";") >= 100 or
-                original_data.count(",") >= 100 or
-                (original_data.count("(") >= 50 and original_data.count(")") >= 50) or
-                (original_data.count("[") >= 50 and original_data.count("]") >= 50) or
+                    original_data.count("4") >= 250 or
+                    original_data.count("_") >= 250 or
+                    original_data.count("D") >= 250 or
+                    original_data.count("C") >= 200 or
+                    original_data.count("K") >= 200 or
+                    original_data.count("O") >= 200 or
+                    original_data.count(":") >= 100 or
+                    original_data.count(";") >= 100 or
+                    original_data.count(",") >= 100 or
+                    (original_data.count("(") >= 50 and original_data.count(")") >= 50) or
+                    (original_data.count("[") >= 50 and original_data.count("]") >= 50) or
                 (original_data.count("{") >= 50 and original_data.count("}") >= 50)
-            # Added a line count length to try and stop this triggering on long benigns.
-            ) and len(re.findall(r"(\n|\r\n)", original_data.strip())) <= 50:
+                    # Added a line count length to try and stop this triggering on long benigns.
+                ) and len(re.findall(r"(\n|\r\n)", original_data.strip())) <= 50:
 
                 if behaviour not in behaviour_tags:
                     behaviour_tags[behaviour] = {"marks": []}
@@ -642,7 +642,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     if len(behaviour_tags.keys()) == 2 and "One Liner" in behaviour_tags and (
             "http://" in alternative_data.lower() or "https://" in alternative_data.lower()) and \
             ("Script Execution" in behaviour_tags or "Starts Process" in behaviour_tags
-            ):
+             ):
         behaviour_tags["Downloader"] = {"marks": []}
         behaviour_tags["Obfuscation"] = {"marks": []}
         obf_type = "Hidden Commands"
@@ -700,8 +700,8 @@ def family_finder(content_data):
     # Family: ICMP Shell
     # Reference: https://github.com/inquisb/icmpsh
     if all(entry in content_data.lower() for entry in ["buffer", "getstring", "getbytes", "networkinformation.ping", "dontfragment"]) or \
-        all(entry in content_data.lower() for entry in ["icmpsh", "nishang"]) or \
-        "invoke-powershellicmp" in content_data.lower():
+            all(entry in content_data.lower() for entry in ["icmpsh", "nishang"]) or \
+            "invoke-powershellicmp" in content_data.lower():
         families.append("ICMP Shell")
 
     # Family: Social Engineering Toolkit (SET)
@@ -728,7 +728,7 @@ def family_finder(content_data):
 
     if all(entry in content_data.lower() for entry in [
         "invoke-expression $(new-object io.streamreader ($(new-object io.compression.deflatestream",
-        ")))), [io.compression.compressionmode]::decompress)), [text.encoding]::ascii)).readtoend();"]):
+            ")))), [io.compression.compressionmode]::decompress)), [text.encoding]::ascii)).readtoend();"]):
         families.append("Veil Stream")
 
     # Family: PowerWorm
@@ -752,19 +752,20 @@ def family_finder(content_data):
         "invoke-winenum",
         "invoke-postexfil",
         "invoke-empire",
-        "get-posthashdumpscript",]) or \
+        "get-posthashdumpscript", ]) or \
         all(entry in content_data.lower() for entry in [
             "schtasks.exe",
             'powershell.exe -noni -w hidden -c "iex ([text.encoding]::unicode.getstring([convert]::frombase64string']) or \
             re.search(r"\$RegPath = .+\$parts = \$RegPath\.split.+\$path = \$RegPath\.split", content_data, re.IGNORECASE) or \
             all(entry in content_data.lower() for entry in ["shellcode1", "shellcode2", "getcommandlineaaddr"]) or \
             all(entry in content_data.lower() for entry in ["empireip", "empireport", "empirekey"]):
-            families.append("PowerShell Empire")
+        families.append("PowerShell Empire")
 
     # Family: Powerfun
     # Reference: https://github.com/rapid7/metasploit-framework/blob/cac890a797d0d770260074dfe703eb5cfb63bd46/data/exploits/powershell/powerfun.ps1
     # Reference: https://github.com/rapid7/metasploit-framework/pull/5194
-    if all(entry in content_data.lower() for entry in ["new-object system.net.sockets.tcpclient", "$sendback2 = $sendback"]):
+    if all(entry in content_data.lower()
+           for entry in ["new-object system.net.sockets.tcpclient", "$sendback2 = $sendback"]):
         families.append("Powerfun Bind")
 
     if re.search(r"\$s=New-Object IO\.MemoryStream\(,\[Convert]::FromBase64String\([\'\"]{1,2}H4sIA[a-zA-Z0-9+/=]+"
@@ -789,11 +790,18 @@ def family_finder(content_data):
     # Family: PowerSploit
     # Reference: https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-TimedScreenshot.ps1
     # Reference: https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1
-    if all(entry in content_data.lower() for entry in ["function get-timedscreenshot", "#load required assembly"]) or \
-            any(entry in content_data.lower() for entry in ["invoke-reflectivepeinjection", "powersploit", "invoke-privesc", "invoke-dllinjection"]):
+    if all(
+            entry in content_data.lower() for entry in ["function get-timedscreenshot", "#load required assembly"]) or any(
+            entry in content_data.lower()
+            for entry in ["invoke-reflectivepeinjection", "powersploit", "invoke-privesc", "invoke-dllinjection"]):
         families.append("PowerSploit")
 
-    if any(entry in content_data.lower() for entry in ["powerview", "invoke-userhunter", "invoke-stealthuserhunter", "invoke-processhunter", "invoke-usereventhunter"]):
+    if any(
+        entry in content_data.lower()
+        for entry
+        in
+        ["powerview", "invoke-userhunter", "invoke-stealthuserhunter", "invoke-processhunter",
+         "invoke-usereventhunter"]):
         families.append("PowerSploit PowerView")
 
     # Family: DynAmite Launcher (DynAmite Keylogger function is an old version of PowerSploit Get-Keystrokes)
@@ -823,8 +831,10 @@ def family_finder(content_data):
 
     # Family: Cobalt Strike
     # Reference: https://www.cobaltstrike.com/
-    if any(entry in content_data.lower() for entry in ["$doit = @"]) or \
-            all(entry in content_data.lower() for entry in ["func_get_proc_address", "func_get_delegate_type", "getdelegateforfunctionpointer", "start-job"]):
+    if any(
+            entry in content_data.lower() for entry in ["$doit = @"]) or all(
+            entry in content_data.lower()
+            for entry in ["func_get_proc_address", "func_get_delegate_type", "getdelegateforfunctionpointer", "start-job"]):
         families.append("Cobalt Strike")
 
     # Family: vdw0rm
@@ -859,9 +869,10 @@ def family_finder(content_data):
 
     # Family: MuddyWater
     # Reference: https://blog.talosintelligence.com/2019/05/recent-muddywater-associated-blackwater.html
-    if all(entry in content_data.lower() for entry in ["clientfrontLine", "helloserver", "getcommand"]) or \
-            all(entry in content_data.lower() for entry in ["projectcode", "projectfirsthit", "getcmdresult"]) or \
-            all(entry in content_data.lower() for entry in ["basicinfocollector", "getclientidentity", "executecommandandsetcommandresultrequest"]):
+    if all(entry in content_data.lower() for entry in ["clientfrontLine", "helloserver", "getcommand"]) or all(
+            entry in content_data.lower() for entry in ["projectcode", "projectfirsthit", "getcmdresult"]) or all(
+            entry in content_data.lower()
+            for entry in ["basicinfocollector", "getclientidentity", "executecommandandsetcommandresultrequest"]):
         families.append("MuddyWater")
 
     # Family: Tennc Webshell
@@ -871,8 +882,10 @@ def family_finder(content_data):
 
     # Family: PoshC2
     # Reference: https://github.com/nettitude/PoshC2
-    if all(entry in content_data.lower() for entry in ["function get-key", "importdll", "check for keys not mapped by virtual keyboard"]) or \
-            any(entry in content_data.lower() for entry in ["poshc2", "powershellc2"]):
+    if all(
+            entry in content_data.lower()
+            for entry in ["function get-key", "importdll", "check for keys not mapped by virtual keyboard"]) or any(
+            entry in content_data.lower() for entry in ["poshc2", "powershellc2"]):
         families.append("PoshC2")
 
     # Family: Posh-SecMod
@@ -882,7 +895,9 @@ def family_finder(content_data):
 
     # Family: Invoke-TheHash
     # Reference: https://github.com/Kevin-Robertson/Invoke-TheHash
-    if any(entry in content_data.lower() for entry in ["new-packetsmb2findrequestfile", "packet_smb2b_header", "new-packetntlmssp"]):
+    if any(
+            entry in content_data.lower()
+            for entry in ["new-packetsmb2findrequestfile", "packet_smb2b_header", "new-packetntlmssp"]):
         families.append("Invoke-TheHash")
 
     # Family: Nishang
@@ -1019,7 +1034,7 @@ def remove_escape_quote(output, content_data, modification_flag):
     for entry in re.findall(r"([^'])(\\\')", content_data):
         content_data = content_data.replace("".join(entry), entry[0] + "'")
         modification_flag = True
-        counter +=1
+        counter += 1
 
     for entry in re.findall(r'([^"])(\\\")', content_data):
         content_data = content_data.replace("".join(entry), entry[0] + '"')
@@ -1150,7 +1165,9 @@ def type_conversion(output, content_data, modification_flag):
 
         base_string = str()
 
-        for entry in re.findall(r"([1-2]?[0-9][0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data.replace(" ", "")):
+        for entry in re.findall(
+            r"([1-2]?[0-9][0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data.replace(
+                " ", "")):
             entry = re.search("[A-Fa-f0-9]+", entry.replace("0x", "")).group()
             if entry != "0":
                 try:
@@ -1164,7 +1181,8 @@ def type_conversion(output, content_data, modification_flag):
         base_string = strip_ascii(base_string)
 
         # Additional checks to make sure we're not in a loop
-        if base_string not in garbage_list and not any(x in base_string for x in garbage_list) and len(base_string) > 50:
+        if base_string not in garbage_list and not any(
+                x in base_string for x in garbage_list) and len(base_string) > 50:
             content_data += "\n\n##### TYPE CONVERSION #####\n\n%s\n\n" % (base_string)
             garbage_list.append(base_string)
             modification_flag = True
@@ -1254,8 +1272,9 @@ def replace_decoder(output, content_data):
 
     # Group 0 = Full Line, Group 3 = First, Group 6 = Second.
     # Second replace can be empty so * instead of +, first may never be empty.
-    replace_strings = re.findall(r"((?:\.replace)(?:\s*)\(?(?:\s*)\(?(?:([^(\'|\")])*)(\'|\")([^\3]*?)\3(?:[^,]*?),(?:\s*)\(?(?:([^(\'|\")])*)(\'|\")([^\6]*?)\6(?:\s*)\)?(?:\s*)\)?)",
-                                 content_data, re.IGNORECASE)
+    replace_strings = re.findall(
+        r"((?:\.replace)(?:\s*)\(?(?:\s*)\(?(?:([^(\'|\")])*)(\'|\")([^\3]*?)\3(?:[^,]*?),(?:\s*)\(?(?:([^(\'|\")])*)(\'|\")([^\6]*?)\6(?:\s*)\)?(?:\s*)\)?)",
+        content_data, re.IGNORECASE)
 
     for entry in replace_strings:
         # Length check to compensate for replace statements without a defined replacement.
@@ -1526,7 +1545,7 @@ def normalize(output: Dict[str, Any], content_data):
                 r'\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(?!.*{\d})(?:(\"|\').+?(\"|\'))(?:\s*)\)',
                 content_data) or re.search(
             r'\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(\"|\').+?(\"|\')(?:\s*)\)',
-            content_data.replace("\n", "")):
+                content_data.replace("\n", "")):
             content_data, modification_flag = format_replace(output, content_data)
 
         # Un-Escape Quotes - Changes STATE
@@ -1554,7 +1573,8 @@ def normalize(output: Dict[str, Any], content_data):
             content_data, modification_flag = char_replace(output, content_data, modification_flag)
 
         # Type conversions - Changes STATE
-        if re.search(r"([1-2]?[0-9]?[0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data):
+        if re.search(
+                r"([1-2]?[0-9]?[0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data):
             content_data, modification_flag = type_conversion(output, content_data, modification_flag)
 
         # String Splits - Changes STATE
@@ -1657,7 +1677,7 @@ def profile_ps1(sample_path, working_dir):
     original_data = original_data.replace("\x00", "")
 
     # Launches the primary unraveling loop to begin cleaning up the script for profiling.
-    alternative_data = f"{unravel_content(output, original_data)}\n"
+    alternative_data = f"{unravel_content(output, original_data)}"
     output["deobfuscated"] = alternative_data
 
     # Launches family specific profiling function over original_data and alternative_data
