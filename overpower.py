@@ -53,7 +53,7 @@ class Overpower(ServiceBase):
         self.patterns = PatternMatch()
 
     def execute(self, request: ServiceRequest) -> None:
-        self.artifact_hashes = {request.sha256}
+        self.artifact_hashes = set()
         self.artifact_list: List[Dict[str, Any]] = []
         tool_timeout = request.get_param("tool_timeout")
         add_supplementary = request.get_param("add_supplementary")
@@ -154,9 +154,14 @@ class Overpower(ServiceBase):
         if len(suspicious_res_sec.subsections) > 0 or suspicious_res_sec.heuristic is not None:
             result.add_section(suspicious_res_sec)
 
+        extracted_cap = 10
+        number_of_extracted = 0
         for index, extracted in enumerate(output["extracted"]):
+            if number_of_extracted >= extracted_cap:
+                break
             with open(path.join(self.working_directory, f"ps1profiler_{extracted['type']}_{index}"), "wb") as f:
                 f.write(extracted["data"])
+            number_of_extracted += 1
 
         if output["deobfuscated"]:
             static_file_lines = []
