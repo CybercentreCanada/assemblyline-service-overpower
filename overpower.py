@@ -12,7 +12,7 @@ from assemblyline_v4_service.common.balbuzard.patterns import PatternMatch
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultSection, Heuristic
+from assemblyline_v4_service.common.result import Result, ResultSection
 
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
 
@@ -146,10 +146,9 @@ class Overpower(ServiceBase):
                 parent=suspicious_res_sec,
                 body=f"Marks: {', '.join(details['marks'])}" if details['marks'] else None
             )
-            sec_heur = Heuristic(3)
+            profiler_sig_section.set_heuristic(3)
             translated_score = TRANSLATE_SCORE[details["score"]]
-            sec_heur.add_signature_id(tag, score=translated_score)
-            profiler_sig_section.heuristic = sec_heur
+            profiler_sig_section.heuristic.add_signature_id(tag, score=translated_score)
 
         if len(suspicious_res_sec.subsections) > 0 or suspicious_res_sec.heuristic is not None:
             result.add_section(suspicious_res_sec)
