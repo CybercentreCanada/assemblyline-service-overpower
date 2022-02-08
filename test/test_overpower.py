@@ -39,24 +39,24 @@ def check_section_equality(this, that) -> bool:
     # Heuristics also need their own equality checks
     if this.heuristic and that.heuristic:
         heuristic_equality = this.heuristic.definition.attack_id == that.heuristic.definition.attack_id and \
-                             this.heuristic.definition.classification == that.heuristic.definition.classification and \
-                             this.heuristic.definition.description == that.heuristic.definition.description and \
-                             this.heuristic.definition.filetype == that.heuristic.definition.filetype and \
-                             this.heuristic.definition.heur_id == that.heuristic.definition.heur_id and \
-                             this.heuristic.definition.id == that.heuristic.definition.id and \
-                             this.heuristic.definition.max_score == that.heuristic.definition.max_score and \
-                             this.heuristic.definition.name == that.heuristic.definition.name and \
-                             this.heuristic.definition.score == that.heuristic.definition.score and \
-                             this.heuristic.definition.signature_score_map == \
-                             that.heuristic.definition.signature_score_map
+            this.heuristic.definition.classification == that.heuristic.definition.classification and \
+            this.heuristic.definition.description == that.heuristic.definition.description and \
+            this.heuristic.definition.filetype == that.heuristic.definition.filetype and \
+            this.heuristic.definition.heur_id == that.heuristic.definition.heur_id and \
+            this.heuristic.definition.id == that.heuristic.definition.id and \
+            this.heuristic.definition.max_score == that.heuristic.definition.max_score and \
+            this.heuristic.definition.name == that.heuristic.definition.name and \
+            this.heuristic.definition.score == that.heuristic.definition.score and \
+            this.heuristic.definition.signature_score_map == \
+            that.heuristic.definition.signature_score_map
 
         result_heuristic_equality = heuristic_equality and \
-                                    this.heuristic.attack_ids == that.heuristic.attack_ids and \
-                                    this.heuristic.frequency == that.heuristic.frequency and \
-                                    this.heuristic.heur_id == that.heuristic.heur_id and \
-                                    this.heuristic.score == that.heuristic.score and \
-                                    this.heuristic.score_map == that.heuristic.score_map and \
-                                    this.heuristic.signatures == that.heuristic.signatures
+            this.heuristic.attack_ids == that.heuristic.attack_ids and \
+            this.heuristic.frequency == that.heuristic.frequency and \
+            this.heuristic.heur_id == that.heuristic.heur_id and \
+            this.heuristic.score == that.heuristic.score and \
+            this.heuristic.score_map == that.heuristic.score_map and \
+            this.heuristic.signatures == that.heuristic.signatures
 
     elif not this.heuristic and not that.heuristic:
         result_heuristic_equality = True
@@ -65,13 +65,13 @@ def check_section_equality(this, that) -> bool:
 
     # Assuming we are given the "root section" at all times, it is safe to say that we don't need to confirm parent
     current_section_equality = result_heuristic_equality and \
-                               this.body == that.body and \
-                               this.body_format == that.body_format and \
-                               this.classification == that.classification and \
-                               this.depth == that.depth and \
-                               len(this.subsections) == len(that.subsections) and \
-                               this.title_text == that.title_text and \
-                               this.tags == that.tags
+        this.body == that.body and \
+        this.body_format == that.body_format and \
+        this.classification == that.classification and \
+        this.depth == that.depth and \
+        len(this.subsections) == len(that.subsections) and \
+        this.title_text == that.title_text and \
+        this.tags == that.tags
 
     if not current_section_equality:
         return False
@@ -203,14 +203,16 @@ class TestOverpower:
     @staticmethod
     def test_handle_ps1_profiler_output(overpower_class_instance):
         from os import path
-        from assemblyline_v4_service.common.result import Result, ResultSection, Heuristic
-        output = {"deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}}, "score": 3, "families": [], "extracted": []}
+        from assemblyline_v4_service.common.result import Result, ResultSection
+        output = {
+            "deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}},
+            "score": 3, "families": [],
+            "extracted": []}
         res = Result()
         correct_res_sec = ResultSection("Suspicious Content Detected in blah")
         correct_sig_res_sec = ResultSection("Signature: blah", parent=correct_res_sec)
-        sig_heur = Heuristic(3)
-        sig_heur.add_signature_id("blah", score=100)
-        correct_sig_res_sec.heuristic = sig_heur
+        correct_sig_res_sec.set_heuristic(3)
+        correct_sig_res_sec.heuristic.add_signature_id("blah", score=100)
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert check_section_equality(res.sections[0], correct_res_sec)
 
@@ -231,7 +233,8 @@ class TestOverpower:
         correct_ioc_res_sec.set_heuristic(1)
         assert check_section_equality(res.sections[2], correct_ioc_res_sec)
 
-        output = {"deobfuscated": "blah.com;", "behaviour": {"blah": {"score": 2.0, "marks": []}}, "score": 3, "families": [], "extracted": [{"type": "base64_decoded", "data": b"blah"}]}
+        output = {"deobfuscated": "blah.com;", "behaviour": {"blah": {"score": 2.0, "marks": []}},
+                  "score": 3, "families": [], "extracted": [{"type": "base64_decoded", "data": b"blah"}]}
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert len(res.sections) == 3
         assert path.exists(path.join(overpower_class_instance.working_directory, "ps1profiler_base64_decoded_0"))
@@ -242,7 +245,7 @@ class TestOverpower:
         res = Result()
         correct_res_sec = ResultSection("Actions detected with PSDecode")
         output = ["blah", "############################## Actions ##############################", "blah.com"]
-        correct_res_sec.body = "blah.com"
+        correct_res_sec.set_body("blah.com")
         correct_res_sec.set_heuristic(1)
         correct_res_sec.add_tag("network.dynamic.domain", "blah.com")
         overpower_class_instance._handle_psdecode_output(output, res)
@@ -254,7 +257,8 @@ class TestOverpower:
         from json import dumps
         ps1_profiler_output = {"blah": "blah"}
         psdecode_output = ["blah"]
-        suppl_ps1_profiler_output = path.join(overpower_class_instance.working_directory, "suppl_ps1_profiler_output.json")
+        suppl_ps1_profiler_output = path.join(
+            overpower_class_instance.working_directory, "suppl_ps1_profiler_output.json")
         suppl_psdecode_output = path.join(overpower_class_instance.working_directory, "suppl_psdecode_output.txt")
         overpower_class_instance._extract_supplementary(ps1_profiler_output, psdecode_output)
         assert path.exists(suppl_ps1_profiler_output)
@@ -326,21 +330,27 @@ class TestOverpower:
     @staticmethod
     @pytest.mark.parametrize(
         "blob, file_ext, correct_tags",
-        [
-            ("", "", {}),
-            ("192.168.100.1", "", {'network.dynamic.ip': ['192.168.100.1']}),
-            ("blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca']}),
-            ("https://blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca'], 'network.dynamic.uri': ['https://blah.ca']}),
-            ("https://blah.ca/blah", ".exe", {'network.dynamic.domain': ['blah.ca'], 'network.dynamic.uri': ['https://blah.ca/blah'], "network.dynamic.uri_path": ["/blah"]}),
-            ("drive:\\\\path to\\\\microsoft office\\\\officeverion\\\\winword.exe", ".exe", {}),
-            ("DRIVE:\\\\PATH TO\\\\MICROSOFT OFFICE\\\\OFFICEVERION\\\\WINWORD.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.DOC", ".exe", {}),
-            ("DRIVE:\\\\PATH TO\\\\PYTHON27.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.py", ".py", {}),
-            ("POST /some/thing/bad.exe HTTP/1.0\nUser-Agent: Mozilla\nHost: evil.ca\nAccept: */*\nContent-Type: application/octet-stream\nContent-Encoding: binary\n\nConnection: close", "", {"network.dynamic.domain": ["evil.ca"]}),
-            ("evil.ca/some/thing/bad.exe", "", {"network.dynamic.domain": ["evil.ca"], "network.dynamic.uri": ["evil.ca/some/thing/bad.exe"], "network.dynamic.uri_path": ["/some/thing/bad.exe"]}),
-            ("blah.ca", ".ca", {}),
-            ("blah@blah.ca", ".ca", {"network.email.address": ["blah@blah.ca"]}),
-        ]
-    )
+        [("", "", {}),
+         ("192.168.100.1", "", {'network.dynamic.ip': ['192.168.100.1']}),
+         ("blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca']}),
+         ("https://blah.ca", ".exe",
+          {'network.dynamic.domain': ['blah.ca'],
+           'network.dynamic.uri': ['https://blah.ca']}),
+         ("https://blah.ca/blah", ".exe",
+          {'network.dynamic.domain': ['blah.ca'],
+           'network.dynamic.uri': ['https://blah.ca/blah'],
+           "network.dynamic.uri_path": ["/blah"]}),
+         ("drive:\\\\path to\\\\microsoft office\\\\officeverion\\\\winword.exe", ".exe", {}),
+         (
+            "DRIVE:\\\\PATH TO\\\\MICROSOFT OFFICE\\\\OFFICEVERION\\\\WINWORD.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.DOC",
+            ".exe", {}),
+         ("DRIVE:\\\\PATH TO\\\\PYTHON27.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.py", ".py", {}),
+         (
+            "POST /some/thing/bad.exe HTTP/1.0\nUser-Agent: Mozilla\nHost: evil.ca\nAccept: */*\nContent-Type: application/octet-stream\nContent-Encoding: binary\n\nConnection: close",
+            "", {"network.dynamic.domain": ["evil.ca"]}),
+         ("evil.ca/some/thing/bad.exe", "", {"network.dynamic.domain": ["evil.ca"]}),
+         ("blah.ca", ".ca", {}),
+         ("blah@blah.ca", ".ca", {"network.email.address": ["blah@blah.ca"]}), ])
     def test_extract_iocs_from_text_blob(blob, file_ext, correct_tags, overpower_class_instance):
         from assemblyline_v4_service.common.result import ResultSection
         test_result_section = ResultSection("blah")
