@@ -206,7 +206,6 @@ class TestOverpower:
         correct_res_sec.title_text = "Malicious Content Detected in blah"
         correct_res_sec.set_heuristic(2)
         correct_res_sec.add_tag("attribution.family", "blah")
-        correct_res_sec.subsections = []
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert check_section_equality(res.sections[1], correct_res_sec)
 
