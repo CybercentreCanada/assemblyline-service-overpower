@@ -38,20 +38,7 @@ def check_section_equality(this, that) -> bool:
 
     # Heuristics also need their own equality checks
     if this.heuristic and that.heuristic:
-        heuristic_equality = this.heuristic.definition.attack_id == that.heuristic.definition.attack_id and \
-            this.heuristic.definition.classification == that.heuristic.definition.classification and \
-            this.heuristic.definition.description == that.heuristic.definition.description and \
-            this.heuristic.definition.filetype == that.heuristic.definition.filetype and \
-            this.heuristic.definition.heur_id == that.heuristic.definition.heur_id and \
-            this.heuristic.definition.id == that.heuristic.definition.id and \
-            this.heuristic.definition.max_score == that.heuristic.definition.max_score and \
-            this.heuristic.definition.name == that.heuristic.definition.name and \
-            this.heuristic.definition.score == that.heuristic.definition.score and \
-            this.heuristic.definition.signature_score_map == \
-            that.heuristic.definition.signature_score_map
-
-        result_heuristic_equality = heuristic_equality and \
-            this.heuristic.attack_ids == that.heuristic.attack_ids and \
+        result_heuristic_equality = this.heuristic.attack_ids == that.heuristic.attack_ids and \
             this.heuristic.frequency == that.heuristic.frequency and \
             this.heuristic.heur_id == that.heuristic.heur_id and \
             this.heuristic.score == that.heuristic.score and \
@@ -141,13 +128,10 @@ class TestOverpower:
     @pytest.mark.parametrize("sample", samples)
     def test_execute(sample, overpower_class_instance, dummy_completed_process_instance, mocker):
         from assemblyline_v4_service.common.task import Task
-        from assemblyline_v4_service.common.result import Result
         from assemblyline.odm.messages.task import Task as ServiceTask
         from assemblyline_v4_service.common.request import ServiceRequest
         from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
-        from tools import ps1_profiler
         from json import loads
-        from os import path, mkdir
         from subprocess import TimeoutExpired
 
         mocker.patch("overpower.profile_ps1", return_value=[])
