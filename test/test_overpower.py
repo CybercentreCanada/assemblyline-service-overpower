@@ -203,7 +203,7 @@ class TestOverpower:
         output["behaviour"]["minus"] = {"score": -1, "marks": []}
         output["families"] = ["blah"]
         output["deobfuscated"] = "http://blah.com/blah.exe"
-        correct_res_sec.title_text = "Malicious Content Detected in blah"
+        correct_res_sec = ResultSection("Malicious Content Detected in blah")
         correct_res_sec.set_heuristic(2)
         correct_res_sec.add_tag("attribution.family", "blah")
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
