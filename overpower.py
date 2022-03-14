@@ -12,7 +12,7 @@ from assemblyline_v4_service.common.balbuzard.patterns import PatternMatch
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultSection
+from assemblyline_v4_service.common.result import Result, ResultSection, ResultTextSection
 
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
 
@@ -141,11 +141,12 @@ class Overpower(ServiceBase):
             # If a signature was raised in a previous layer profile, then don't report it
             if tag in previous_signatures:
                 continue
-            profiler_sig_section = ResultSection(
+            profiler_sig_section = ResultTextSection(
                 title_text=f"Signature: {tag}",
                 parent=suspicious_res_sec,
-                body=f"Marks: {', '.join(details['marks'])}" if details['marks'] else None
             )
+            if details['marks']:
+                profiler_sig_section.add_line(f"Marks: {', '.join(details['marks'])}")
             profiler_sig_section.set_heuristic(3)
             translated_score = TRANSLATE_SCORE[details["score"]]
             profiler_sig_section.heuristic.add_signature_id(tag, score=translated_score)
@@ -200,7 +201,7 @@ class Overpower(ServiceBase):
         for index, line in enumerate(output):
             if "############################## Actions ##############################" in line:
                 actions = output[index + 1:]
-        psdecode_actions_res_sec = ResultSection("Actions detected with PSDecode")
+        psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
         psdecode_actions_res_sec.add_lines(actions)
         for action in actions:
             self._extract_iocs_from_text_blob(action, psdecode_actions_res_sec, ".ps1")
