@@ -145,7 +145,7 @@ class Overpower(ServiceBase):
                 title_text=f"Signature: {tag}",
                 parent=suspicious_res_sec,
             )
-            if details['marks']:
+            if details.get('marks'):
                 profiler_sig_section.add_line(f"Marks: {', '.join(details['marks'])}")
             profiler_sig_section.set_heuristic(3)
             translated_score = TRANSLATE_SCORE[details["score"]]
