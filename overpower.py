@@ -12,7 +12,7 @@ from assemblyline_v4_service.common.balbuzard.patterns import PatternMatch
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultSection, ResultTextSection
+from assemblyline_v4_service.common.result import Result, ResultSection, ResultTextSection, ResultTableSection, TableRow
 
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
 
@@ -122,13 +122,14 @@ class Overpower(ServiceBase):
                         if (tag, value) not in previous_iocs:
                             previous_iocs.append((tag, value))
 
-        suspicious_res_sec = ResultSection("Placeholder")
+        suspicious_res_sec = ResultTextSection("Placeholder")
         # Check if there is a malware family detected
         if len(output["families"]) > 0 and not all(family in previous_families for family in output["families"]):
             suspicious_res_sec.title_text = f"Malicious Content Detected in {file_name}"
             suspicious_res_sec.set_heuristic(2)
             for family in output["families"]:
                 suspicious_res_sec.add_tag("attribution.family", family)
+                suspicious_res_sec.add_line(f"Attribution family: {family}")
         # Otherwise, the behaviour is just suspicious
         else:
             suspicious_res_sec.title_text = f"Suspicious Content Detected in {file_name}"
@@ -170,7 +171,7 @@ class Overpower(ServiceBase):
                     static_file_lines.extend(line.split(";"))
                 else:
                     static_file_lines.append(line)
-            ioc_res_sec = ResultSection(f"IOC(s) extracted from {file_name}")
+            ioc_res_sec = ResultTableSection(f"IOC(s) extracted from {file_name}")
             for static_file_line in static_file_lines:
                 if len(static_file_line) < 1000:
                     self._extract_iocs_from_text_blob(static_file_line, ioc_res_sec, ".ps1")
@@ -203,8 +204,9 @@ class Overpower(ServiceBase):
                 actions = output[index + 1:]
         psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
         psdecode_actions_res_sec.add_lines(actions)
+        actions_ioc_table = ResultTableSection("IOCs found in actions", parent=psdecode_actions_res_sec)
         for action in actions:
-            self._extract_iocs_from_text_blob(action, psdecode_actions_res_sec, ".ps1")
+            self._extract_iocs_from_text_blob(action, actions_ioc_table, ".ps1")
         if psdecode_actions_res_sec.body:
             result.add_section(psdecode_actions_res_sec)
 
@@ -258,7 +260,7 @@ class Overpower(ServiceBase):
                 f"Adding extracted file: {file_path}"
                 if to_be_extracted else f"Adding supplementary file: {file_path}")
 
-    def _extract_iocs_from_text_blob(self, blob: str, result_section: ResultSection, file_ext: str = "") -> None:
+    def _extract_iocs_from_text_blob(self, blob: str, result_section: ResultTableSection, file_ext: str = "") -> None:
         """
         This method searches for domains, IPs and URIs used in blobs of text and tags them
         :param blob: The blob of text that we will be searching through
@@ -280,6 +282,7 @@ class Overpower(ServiceBase):
             safe_ip = safe_str(ip)
             ioc_extracted = True
             result_section.add_tag("network.dynamic.ip", safe_ip)
+            result_section.add_row(TableRow(ioc_type="ip", ioc=safe_ip))
         for domain in domains:
             # File names match the domain and URI regexes, so we need to avoid tagging them
             # Note that get_tld only takes URLs so we will prepend http:// to the domain to work around this
@@ -292,10 +295,12 @@ class Overpower(ServiceBase):
             safe_domain = safe_str(domain)
             ioc_extracted = True
             result_section.add_tag("network.dynamic.domain", safe_domain)
+            result_section.add_row(TableRow(ioc_type="domain", ioc=safe_domain))
         for email in emails:
             safe_email = safe_str(email)
             ioc_extracted = True
             result_section.add_tag("network.email.address", safe_email)
+            result_section.add_row(TableRow(ioc_type="email", ioc=safe_email))
         for uri in uris:
             # If there is a domain in the uri, then do
             if not any(ip in uri for ip in ips):
@@ -313,10 +318,12 @@ class Overpower(ServiceBase):
                 continue
             ioc_extracted = True
             result_section.add_tag("network.dynamic.uri", safe_uri)
+            result_section.add_row(TableRow(ioc_type="uri", ioc=safe_uri))
             if "//" in safe_uri:
                 safe_uri = safe_uri.split("//")[1]
             for uri_path in findall(URI_PATH, safe_uri):
                 ioc_extracted = True
                 result_section.add_tag("network.dynamic.uri_path", uri_path)
+                result_section.add_row(TableRow(ioc_type="uri_path", ioc=uri_path))
         if ioc_extracted and result_section.heuristic is None:
             result_section.set_heuristic(1)
