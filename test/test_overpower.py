@@ -61,6 +61,8 @@ def check_section_equality(this, that) -> bool:
         this.tags == that.tags
 
     if not current_section_equality:
+        print(this.body)
+        print(that.body)
         return False
 
     for index, subsection in enumerate(this.subsections):
@@ -187,7 +189,7 @@ class TestOverpower:
     @staticmethod
     def test_handle_ps1_profiler_output(overpower_class_instance):
         from os import path
-        from assemblyline_v4_service.common.result import Result, ResultSection
+        from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
         output = {
             "deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}},
             "score": 3, "families": [],
@@ -206,14 +208,20 @@ class TestOverpower:
         correct_res_sec = ResultSection("Malicious Content Detected in blah")
         correct_res_sec.set_heuristic(2)
         correct_res_sec.add_tag("attribution.family", "blah")
+        correct_res_sec.add_line("Attribution family: blah")
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert check_section_equality(res.sections[1], correct_res_sec)
 
-        correct_ioc_res_sec = ResultSection("IOC(s) extracted from blah")
+        correct_ioc_res_sec = ResultTableSection("IOC(s) extracted from blah")
         correct_ioc_res_sec.add_tag("network.dynamic.domain", "blah.com")
         correct_ioc_res_sec.add_tag("network.dynamic.uri", "http://blah.com/blah.exe")
         correct_ioc_res_sec.add_tag("network.dynamic.uri_path", "/blah.exe")
         correct_ioc_res_sec.set_heuristic(1)
+        table_data = [{"ioc_type": "domain", "ioc": "blah.com"},
+                      {"ioc_type": "uri", "ioc": "http://blah.com/blah.exe"},
+                      {"ioc_type": "uri_path", "ioc": "/blah.exe"}]
+        for item in table_data:
+            correct_ioc_res_sec.add_row(TableRow(**item))
         assert check_section_equality(res.sections[2], correct_ioc_res_sec)
 
         output = {"deobfuscated": "blah.com;", "behaviour": {"blah": {"score": 2.0, "marks": []}},
@@ -224,13 +232,17 @@ class TestOverpower:
 
     @staticmethod
     def test_handle_psdecode_output(overpower_class_instance):
-        from assemblyline_v4_service.common.result import Result, ResultSection
+        from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
         res = Result()
         correct_res_sec = ResultSection("Actions detected with PSDecode")
         output = ["blah", "############################## Actions ##############################", "blah.com"]
         correct_res_sec.set_body("blah.com")
-        correct_res_sec.set_heuristic(1)
-        correct_res_sec.add_tag("network.dynamic.domain", "blah.com")
+        actions_ioc_table = ResultTableSection("IOCs found in actions", parent=correct_res_sec)
+        table_data = [{"ioc_type": "domain", "ioc": "blah.com"}]
+        for item in table_data:
+            actions_ioc_table.add_row(TableRow(**item))
+        actions_ioc_table.add_tag("network.dynamic.domain", "blah.com")
+        actions_ioc_table.set_heuristic(1)
         overpower_class_instance._handle_psdecode_output(output, res)
         assert check_section_equality(res.sections[0], correct_res_sec)
 
@@ -312,33 +324,36 @@ class TestOverpower:
 
     @staticmethod
     @pytest.mark.parametrize(
-        "blob, file_ext, correct_tags",
-        [("", "", {}),
-         ("192.168.100.1", "", {'network.dynamic.ip': ['192.168.100.1']}),
-         ("blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca']}),
+        "blob, file_ext, correct_tags, correct_body",
+        [("", "", {}, []),
+         ("192.168.100.1", "", {'network.dynamic.ip': ['192.168.100.1']}, [{"ioc_type": "ip", "ioc": "192.168.100.1"}]),
+         ("blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca']}, [{"ioc_type": "domain", "ioc": "blah.ca"}]),
          ("https://blah.ca", ".exe",
           {'network.dynamic.domain': ['blah.ca'],
-           'network.dynamic.uri': ['https://blah.ca']}),
+           'network.dynamic.uri': ['https://blah.ca']}, [{"ioc_type": "domain", "ioc": "blah.ca"}, {"ioc_type": "uri", "ioc": "https://blah.ca"}]),
          ("https://blah.ca/blah", ".exe",
           {'network.dynamic.domain': ['blah.ca'],
            'network.dynamic.uri': ['https://blah.ca/blah'],
-           "network.dynamic.uri_path": ["/blah"]}),
-         ("drive:\\\\path to\\\\microsoft office\\\\officeverion\\\\winword.exe", ".exe", {}),
+           "network.dynamic.uri_path": ["/blah"]}, [{"ioc_type": "domain", "ioc": "blah.ca"}, {"ioc_type": "uri", "ioc": "https://blah.ca/blah"}, {"ioc_type": "uri_path", "ioc": "/blah"}]),
+         ("drive:\\\\path to\\\\microsoft office\\\\officeverion\\\\winword.exe", ".exe", {}, []),
          (
             "DRIVE:\\\\PATH TO\\\\MICROSOFT OFFICE\\\\OFFICEVERION\\\\WINWORD.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.DOC",
-            ".exe", {}),
-         ("DRIVE:\\\\PATH TO\\\\PYTHON27.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.py", ".py", {}),
+            ".exe", {}, []),
+         ("DRIVE:\\\\PATH TO\\\\PYTHON27.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.py", ".py", {}, []),
          (
             "POST /some/thing/bad.exe HTTP/1.0\nUser-Agent: Mozilla\nHost: evil.ca\nAccept: */*\nContent-Type: application/octet-stream\nContent-Encoding: binary\n\nConnection: close",
-            "", {"network.dynamic.domain": ["evil.ca"]}),
-         ("evil.ca/some/thing/bad.exe", "", {"network.dynamic.domain": ["evil.ca"]}),
-         ("blah.ca", ".ca", {}),
-         ("blah@blah.ca", ".ca", {"network.email.address": ["blah@blah.ca"]}), ])
-    def test_extract_iocs_from_text_blob(blob, file_ext, correct_tags, overpower_class_instance):
-        from assemblyline_v4_service.common.result import ResultSection
-        test_result_section = ResultSection("blah")
-        correct_result_section = ResultSection("blah", tags=correct_tags)
+            "", {"network.dynamic.domain": ["evil.ca"]}, [{"ioc_type": "domain", "ioc": "evil.ca"}]),
+         ("evil.ca/some/thing/bad.exe", "", {"network.dynamic.domain": ["evil.ca"]}, [{"ioc_type": "domain", "ioc": "evil.ca"}]),
+         ("blah.ca", ".ca", {}, []),
+         ("blah@blah.ca", ".ca", {"network.email.address": ["blah@blah.ca"]}, [{"ioc_type": "email", "ioc": "blah@blah.ca"}]), ])
+    def test_extract_iocs_from_text_blob(blob, file_ext, correct_tags, correct_body, overpower_class_instance):
+        from assemblyline_v4_service.common.result import ResultTableSection, TableRow
+        test_result_section = ResultTableSection("blah")
+        correct_result_section = ResultTableSection("blah", tags=correct_tags)
         if correct_tags:
             correct_result_section.set_heuristic(1)
+        if correct_body:
+            for item in correct_body:
+                correct_result_section.add_row(TableRow(**item))
         overpower_class_instance._extract_iocs_from_text_blob(blob, test_result_section, file_ext)
         assert check_section_equality(test_result_section, correct_result_section)
