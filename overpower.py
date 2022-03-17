@@ -12,7 +12,7 @@ from assemblyline_v4_service.common.balbuzard.patterns import PatternMatch
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultSection, ResultTextSection, ResultTableSection, TableRow
+from assemblyline_v4_service.common.result import Result, ResultTextSection, ResultTableSection, TableRow
 
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
 
@@ -204,9 +204,11 @@ class Overpower(ServiceBase):
                 actions = output[index + 1:]
         psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
         psdecode_actions_res_sec.add_lines(actions)
-        actions_ioc_table = ResultTableSection("IOCs found in actions", parent=psdecode_actions_res_sec)
+        actions_ioc_table = ResultTableSection("IOCs found in actions")
         for action in actions:
             self._extract_iocs_from_text_blob(action, actions_ioc_table, ".ps1")
+        if actions_ioc_table.body:
+            psdecode_actions_res_sec.add_subsection(actions_ioc_table)
         if psdecode_actions_res_sec.body:
             result.add_section(psdecode_actions_res_sec)
 
