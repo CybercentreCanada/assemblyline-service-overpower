@@ -14,7 +14,7 @@ from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntolog
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultTextSection, ResultTableSection, TableRow
 
-from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE
+from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS
 
 TRANSLATE_SCORE = {
     1.0: 10,  # Low Risk
@@ -127,9 +127,17 @@ class Overpower(ServiceBase):
         if len(output["families"]) > 0 and not all(family in previous_families for family in output["families"]):
             suspicious_res_sec.title_text = f"Malicious Content Detected in {file_name}"
             suspicious_res_sec.set_heuristic(2)
-            for family in output["families"]:
+            for family, values in output["families"].items():
                 suspicious_res_sec.add_tag("attribution.family", family)
                 suspicious_res_sec.add_line(f"Attribution family: {family}")
+                if len(values[REGEX_INDICATORS]) > 0:
+                    suspicious_res_sec.add_line("\tMatched regular expressions:")
+                    for regex_indicator in values[REGEX_INDICATORS]:
+                        suspicious_res_sec.add_line(f"\t\t{regex_indicator}")
+                if len(values[STR_INDICATORS]) > 0:
+                    suspicious_res_sec.add_line("\tMatched any or all strings:")
+                    for str_indicator in values[STR_INDICATORS]:
+                        suspicious_res_sec.add_line(f"\t\t{str_indicator}")
         # Otherwise, the behaviour is just suspicious
         else:
             suspicious_res_sec.title_text = f"Suspicious Content Detected in {file_name}"

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import base64
 import binascii
+from collections import defaultdict
 import os
 import re
-from typing import Dict, Any
+from typing import Any, Dict, List
 import zlib
 from Crypto.Cipher import AES
 from assemblyline_v4_service.common.extractor.base64 import base64_search
@@ -19,6 +20,9 @@ __date__ = "X"
 garbage_list = list()
 
 DEOBFUS_FILE = "deobfuscated.ps1"
+
+REGEX_INDICATORS = "regex_indicators"
+STR_INDICATORS = "str_indicators"
 
 #####################
 # Support Functions #
@@ -288,8 +292,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["attackcode"],
         ["namespace PingCastle"],
         ["br.bat", "Breach.exe", "syspull.ps1"],
-        #["Bruteforce", "password"],
-        #["Brute-force", "password"],
+        # ["Bruteforce", "password"],
+        # ["Brute-force", "password"],
         ["exploit", "vulnerbility", "cve-"],
         ["Privilege Escalation"],
         ["Net.WebClient", "DownloadString", "IEX", "New-Object"],
@@ -525,15 +529,15 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Downloader", "Script Execution", "Persistence", "Enumeration"],
         ["Downloader", "Script Execution", "Starts Process", "Enumeration"],
         ["Script Execution", "One Liner", "Variable Extension"],
-        #["Script Execution", "Starts Process", "Downloader"],
+        # ["Script Execution", "Starts Process", "Downloader"],
         ['Script Execution', 'Starts Process', 'Downloader', 'One Liner'],
         ['Script Execution', 'Downloader', 'Custom Web Fields'],
-        #['Script Execution', 'Downloader', 'One Liner'],
+        # ['Script Execution', 'Downloader', 'One Liner'],
         ["Script Execution", "Hidden Window", "Downloader"],
         ['Script Execution', 'Crypto', 'Obfuscation'],
-        #['Starts Process', 'Downloader', 'Custom Web Fields'],
-        #['Starts Process', 'Downloader', 'One Liner'],
-        #["Starts Process", "Downloader", "Enumeration", "One Liner"],
+        # ['Starts Process', 'Downloader', 'Custom Web Fields'],
+        # ['Starts Process', 'Downloader', 'One Liner'],
+        # ["Starts Process", "Downloader", "Enumeration", "One Liner"],
         ["Hidden Window", "Persistence", "Downloader"],
     ]
 
@@ -668,7 +672,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     return behaviour_tags
 
 
-def family_finder(content_data):
+def family_finder(content_data: str) -> Dict[str, Dict[str, List]]:
     """
     Attempts to profile a Malware Family (typically PowerShell Attack Frameworks) via keywords or REGEX.
     In general, preference is to match against all lowercase strings, this way CaMeL CaSe is ignored.
@@ -679,62 +683,80 @@ def family_finder(content_data):
     Returns:
         families: ["PowerSploit"]
     """
-    families = []
+    families: Dict[str, Dict[str, List]] = defaultdict(defaultdict(list).copy)
 
     # Family: Magic Unicorn
     # Reference: https://github.com/trustedsec/unicorn
-    if re.search(r"\$w = Add-Type -memberDefinition \$[a-zA-Z0-9]{3,4} -Name", content_data) or \
-        (all(entry in content_data.lower() for entry in ["sv", "gv", "value.tostring"]) and
-         re.search(r"[a-zA-Z0-9+/=]{250,}", content_data)):
-        families.append("Magic Unicorn")
+    if re.search(r"\$w = Add-Type -memberDefinition \$[a-zA-Z0-9]{3,4} -Name", content_data):
+        families["Magic Unicorn"][REGEX_INDICATORS].append("\$w = Add-Type -memberDefinition \$[a-zA-Z0-9]{3,4} -Name")
+
+    if (all(entry in content_data.lower() for entry in ["sv", "gv", "value.tostring"]) and
+            re.search(r"[a-zA-Z0-9+/=]{250,}", content_data)):
+        families["Magic Unicorn"][REGEX_INDICATORS].append("[a-zA-Z0-9+/=]{250,}")
+        families["Magic Unicorn"][STR_INDICATORS].extend(["sv", "gv", "value.tostring"])
 
     if re.search(r"\$[a-zA-Z0-9]{5,7} = \'\[DllImport.+Start-sleep 60};", content_data):
-        families.append("Magic Unicorn Modified")
+        families["Magic Unicorn Modified"][REGEX_INDICATORS].append(
+            "\$[a-zA-Z0-9]{5,7} = \'\[DllImport.+Start-sleep 60};")
 
     # Family: Shellcode Injector (variant of Unicorn prior to randomization)
     # Reference: N/A
     if re.search(r"(\$c = |\$1 = [\"\']\$c = )", content_data) and \
             all(entry in content_data.lower() for entry in ["$g = 0x1000", "$z.length -gt 0x1000", "$z[$i]"]):
-        families.append("Shellcode Injector")
+        families["Shellcode Injector"][REGEX_INDICATORS].append("(\$c = |\$1 = [\"\']\$c = )")
+        families["Shellcode Injector"][STR_INDICATORS].extend(["$g = 0x1000", "$z.length -gt 0x1000", "$z[$i]"])
 
     # Family: ICMP Shell
     # Reference: https://github.com/inquisb/icmpsh
-    if all(entry in content_data.lower() for entry in ["buffer", "getstring", "getbytes", "networkinformation.ping", "dontfragment"]) or \
-            all(entry in content_data.lower() for entry in ["icmpsh", "nishang"]) or \
-            "invoke-powershellicmp" in content_data.lower():
-        families.append("ICMP Shell")
+    if all(
+            entry in content_data.lower()
+            for entry in ["buffer", "getstring", "getbytes", "networkinformation.ping", "dontfragment"]):
+        families["ICMP Shell"][STR_INDICATORS].extend(
+            ["buffer", "getstring", "getbytes", "networkinformation.ping", "dontfragment"])
+
+    if all(entry in content_data.lower() for entry in ["icmpsh", "nishang"]):
+        families["ICMP Shell"][STR_INDICATORS].extend(["icmpsh", "nishang"])
+
+    if "invoke-powershellicmp" in content_data.lower():
+        families["ICMP Shell"][STR_INDICATORS].append("invoke-powershellicmp")
 
     # Family: Social Engineering Toolkit (SET)
     # Reference: https://github.com/trustedsec/social-engineer-toolkit
-    if re.search(r"\$code = [\']{1,2}\[DllImport", content_data) or \
-            any(entry in content_data.lower() for entry in ["$sc.length -gt 0x1000)", "$winfunc::memset"]):
-        families.append("SET")
+    if re.search(r"\$code = [\']{1,2}\[DllImport", content_data):
+        families["SET"][REGEX_INDICATORS].append("\$code = [\']{1,2}\[DllImport")
+
+    if any(entry in content_data.lower() for entry in ["$sc.length -gt 0x1000)", "$winfunc::memset"]):
+        families["SET"][STR_INDICATORS].extend(["$sc.length -gt 0x1000)", "$winfunc::memset"])
 
     # Family: PowerDump
     # Reference: https://github.com/trustedsec/social-engineer-toolkit/blob/master/src/powershell/powerdump.powershell
-    if all(entry in content_data.lower() for entry in ["function loadapi", "$code = @"]) or \
-            "invoke-powerdump" in content_data.lower():
-        families.append("PowerDump")
+    if all(entry in content_data.lower() for entry in ["function loadapi", "$code = @"]):
+        families["PowerDump"][STR_INDICATORS].extend(["function loadapi", "$code = @"])
+
+    if "invoke-powerdump" in content_data.lower():
+        families["PowerDump"][STR_INDICATORS].append("invoke-powerdump")
 
     # Family: BashBunny
     # Reference: https://github.com/hak5/bashbunny-payloads/blob/master/payloads/library/Incident_Response/Hidden_Images/run.ps1
     if any(entry in content_data.lower() for entry in ["bashbunny", "loot\hidden-image-files"]):
-        families.append("BashBunny")
+        families["BashBunny"][STR_INDICATORS].extend(["bashbunny", "loot\hidden-image-files"])
 
     # Family: Veil
     # Reference: https://github.com/yanser237/https-github.com-Veil-Framework-Veil-Evasion/blob/master/modules/payloads/powershell/shellcode_inject/virtual.py
     if any(entry in content_data.lower() for entry in ["0x1000,0x3000,0x40", "start-sleep -second 100000"]):
-        families.append("Veil Embed")
+        families["Veil Embed"][STR_INDICATORS].extend(["0x1000,0x3000,0x40", "start-sleep -second 100000"])
 
     if all(entry in content_data.lower() for entry in [
         "invoke-expression $(new-object io.streamreader ($(new-object io.compression.deflatestream",
             ")))), [io.compression.compressionmode]::decompress)), [text.encoding]::ascii)).readtoend();"]):
-        families.append("Veil Stream")
+        families["Veil Stream"][STR_INDICATORS].extend([
+            "invoke-expression $(new-object io.streamreader ($(new-object io.compression.deflatestream",
+            ")))), [io.compression.compressionmode]::decompress)), [text.encoding]::ascii)).readtoend();"])
 
     # Family: PowerWorm
     # Reference: https://github.com/mattifestation/PowerWorm/blob/master/PowerWorm_Part_5.ps1
     if all(entry in content_data.lower() for entry in ["bootstrapped 100%", ".onion/get.php?s=setup"]):
-        families.append("PowerWorm")
+        families["PowerWorm"][STR_INDICATORS].extend(["bootstrapped 100%", ".onion/get.php?s=setup"])
 
     # Family: PowerShell Empire
     # Reference: https://github.com/EmpireProject/Empire/blob/293f06437520f4747e82e4486938b1a9074d3d51/lib/common/stagers.py#L344
@@ -752,49 +774,85 @@ def family_finder(content_data):
         "invoke-winenum",
         "invoke-postexfil",
         "invoke-empire",
-        "get-posthashdumpscript", ]) or \
-        all(entry in content_data.lower() for entry in [
+            "get-posthashdumpscript"]):
+        families["PowerShell Empire"][STR_INDICATORS].extend([
+            "|%{$_-bxor$k[$i++%$k.length]};iex",
+            "$wc=new-object system.net.webclient;$u='mozilla/5.0 (windows nt 6.1; wow64; trident/7.0; rv:11.0) like gecko';$wc.headers.add('user-agent',$u);$wc.proxy = [system.net.webrequest]::defaultwebproxy;$wc.proxy.credentials = [system.net.credentialcache]::defaultnetworkcredentials;",
+            "{$gps['scriptblockLogging']['enablescriptblocklogging']=0;$gps['scriptblockLogging']['enablescriptblockinvocationlogging']=0}else{[scriptblock]",
+            "$r={$d,$k=$args;$S=0..255;0..255|%{$J=($j+$s[$_]",
+            "$iv=$data[0..3];$data=$data[4..$data.length];-join[char[]](& $r $data ($iv+$k)",
+            "invoke-winenum",
+            "invoke-postexfil",
+            "invoke-empire",
+            "get-posthashdumpscript"])
+
+    if all(entry in content_data.lower() for entry in [
             "schtasks.exe",
-            'powershell.exe -noni -w hidden -c "iex ([text.encoding]::unicode.getstring([convert]::frombase64string']) or \
-            re.search(r"\$RegPath = .+\$parts = \$RegPath\.split.+\$path = \$RegPath\.split", content_data, re.IGNORECASE) or \
-            all(entry in content_data.lower() for entry in ["shellcode1", "shellcode2", "getcommandlineaaddr"]) or \
-            all(entry in content_data.lower() for entry in ["empireip", "empireport", "empirekey"]):
-        families.append("PowerShell Empire")
+            'powershell.exe -noni -w hidden -c "iex ([text.encoding]::unicode.getstring([convert]::frombase64string']):
+        families["PowerShell Empire"][STR_INDICATORS].extend([
+            "schtasks.exe",
+            'powershell.exe -noni -w hidden -c "iex ([text.encoding]::unicode.getstring([convert]::frombase64string'])
+
+    if re.search(r"\$RegPath = .+\$parts = \$RegPath\.split.+\$path = \$RegPath\.split", content_data, re.IGNORECASE):
+        families["PowerShell Empire"][REGEX_INDICATORS].append(
+            "\$RegPath = .+\$parts = \$RegPath\.split.+\$path = \$RegPath\.split")
+
+    if all(entry in content_data.lower() for entry in ["shellcode1", "shellcode2", "getcommandlineaaddr"]):
+        families["PowerShell Empire"][STR_INDICATORS].extend(["shellcode1", "shellcode2", "getcommandlineaaddr"])
+
+    if all(entry in content_data.lower() for entry in ["empireip", "empireport", "empirekey"]):
+        families["PowerShell Empire"][STR_INDICATORS].extend(["empireip", "empireport", "empirekey"])
 
     # Family: Powerfun
     # Reference: https://github.com/rapid7/metasploit-framework/blob/cac890a797d0d770260074dfe703eb5cfb63bd46/data/exploits/powershell/powerfun.ps1
     # Reference: https://github.com/rapid7/metasploit-framework/pull/5194
     if all(entry in content_data.lower()
            for entry in ["new-object system.net.sockets.tcpclient", "$sendback2 = $sendback"]):
-        families.append("Powerfun Bind")
+        families["Powerfun Bind"][STR_INDICATORS].extend(
+            ["new-object system.net.sockets.tcpclient", "$sendback2 = $sendback"])
 
     if re.search(r"\$s=New-Object IO\.MemoryStream\(,\[Convert]::FromBase64String\([\'\"]{1,2}H4sIA[a-zA-Z0-9+/=]+"
                  r"[\'\"]{1,2}\)\);IEX \(New-Object IO\.StreamReader\(New-Object IO\.Compression\.GzipStream"
                  r"\(\$s,\[IO\.Compression\.CompressionMode]::Decompress\)\)\)\.ReadToEnd\(\)",
                  content_data, re.IGNORECASE):
-        families.append("Powerfun Reverse")
+        families["Powerfun Reverse"][REGEX_INDICATORS].append(
+            "\$s=New-Object IO\.MemoryStream\(,\[Convert]::FromBase64String\([\'\"]{1,2}H4sIA[a-zA-Z0-9+/=]+[\'\"]{1,2}\)\);IEX \(New-Object IO\.StreamReader\(New-Object IO\.Compression\.GzipStream\(\$s,\[IO\.Compression\.CompressionMode]::Decompress\)\)\)\.ReadToEnd\(\)")
 
     # Family: Mimikatz
     # Reference: https://github.com/gentilkiwi/mimikatz
-    if all(entry in content_data.lower() for entry in ["dumpcred", "dumpcert", "customcommand"]) or \
-        all(entry in content_data.lower() for entry in ["virtualprotect.invoke", "memcpy.invoke", "getcommandlineaaddr"]) or \
-        all(entry in content_data.lower() for entry in ["[parameter(parametersetname = ", ", position = 1)]", "[switch]", "autolayout", "ansiclass"]) or \
-            any(entry in content_data.lower() for entry in ["invoke-mimikatz", "$thisisnotthestringyouarelookingfor"]):
-        families.append("Mimikatz")
+    if all(entry in content_data.lower() for entry in ["dumpcred", "dumpcert", "customcommand"]):
+        families["Mimikatz"][STR_INDICATORS].extend(["dumpcred", "dumpcert", "customcommand"])
+
+    if all(entry in content_data.lower() for entry in
+           ["virtualprotect.invoke", "memcpy.invoke", "getcommandlineaaddr"]):
+        families["Mimikatz"][STR_INDICATORS].extend(["virtualprotect.invoke", "memcpy.invoke", "getcommandlineaaddr"])
+
+    if all(
+            entry in content_data.lower()
+            for entry in ["[parameter(parametersetname = ", ", position = 1)]", "[switch]", "autolayout", "ansiclass"]):
+        families["Mimikatz"][STR_INDICATORS].extend(["[parameter(parametersetname = ", ", position = 1)]",
+                                                     "[switch]", "autolayout", "ansiclass"])
+
+    if any(entry in content_data.lower() for entry in ["invoke-mimikatz", "$thisisnotthestringyouarelookingfor"]):
+        families["Mimikatz"][STR_INDICATORS].extend(["invoke-mimikatz", "$thisisnotthestringyouarelookingfor"])
 
     # Family: Mimikittenz
     # Reference: https://github.com/putterpanda/mimikittenz/
     if any(entry in content_data.lower() for entry in ["inspectproc", "readprocessmemory", "mimikittenz"]):
-        families.append("Mimikittenz")
+        families["Mimikittenz"][STR_INDICATORS].extend(["inspectproc", "readprocessmemory", "mimikittenz"])
 
     # Family: PowerSploit
     # Reference: https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-TimedScreenshot.ps1
     # Reference: https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1
     if all(
-            entry in content_data.lower() for entry in ["function get-timedscreenshot", "#load required assembly"]) or any(
+            entry in content_data.lower() for entry in ["function get-timedscreenshot", "#load required assembly"]):
+        families["PowerSploit"][STR_INDICATORS].extend(["function get-timedscreenshot", "#load required assembly"])
+
+    if any(
             entry in content_data.lower()
             for entry in ["invoke-reflectivepeinjection", "powersploit", "invoke-privesc", "invoke-dllinjection"]):
-        families.append("PowerSploit")
+        families["PowerSploit"][STR_INDICATORS].extend(
+            ["invoke-reflectivepeinjection", "powersploit", "invoke-privesc", "invoke-dllinjection"])
 
     if any(
         entry in content_data.lower()
@@ -802,118 +860,135 @@ def family_finder(content_data):
         in
         ["powerview", "invoke-userhunter", "invoke-stealthuserhunter", "invoke-processhunter",
          "invoke-usereventhunter"]):
-        families.append("PowerSploit PowerView")
+        families["PowerSploit"][STR_INDICATORS].extend(
+            ["powerview", "invoke-userhunter", "invoke-stealthuserhunter", "invoke-processhunter", "invoke-usereventhunter"])
 
     # Family: DynAmite Launcher (DynAmite Keylogger function is an old version of PowerSploit Get-Keystrokes)
     # Reference: https://webcache.googleusercontent.com/search?q=cache:yKX6QDiuHHMJ:https://leakforums.net/thread-712268+&cd=3&hl=en&ct=clnk&gl=us
     # Reference: https://github.com/PowerShellMafia/PowerSploit/commit/717950d00c7cc352efe8b05c3db84d0e6250474c#diff-8a834e13c96d5508df5ee11bc92c82dd
     if any(entry in content_data.lower() for entry in ['schtasks.exe /create /tn "microsoft\\windows\\dynamite']):
-        families.append("DynAmite Launcher")
+        families["DynAmite Launcher"][STR_INDICATORS].extend(['schtasks.exe /create /tn "microsoft\\windows\\dynamite'])
 
     if any(entry in content_data.lower() for entry in ["function dynakey"]):
-        families.append("DynAmite KeyLogger")
+        families["DynAmite KeyLogger"][STR_INDICATORS].extend(["function dynakey"])
 
     # Family: Invoke-Obfuscation
     # Reference: https://github.com/danielbohannon/Invoke-Obfuscation/blob/master/Out-ObfuscatedStringCommand.ps1
     if all(entry in content_data.lower() for entry in ["shellid[1]", "shellid[13]"]):
-        families.append("Invoke-Obfuscation")
+        families["Invoke-Obfuscation"][STR_INDICATORS].extend(["shellid[1]", "shellid[13]"])
 
     # Family: TXT C2
     # Reference: N/A
     if re.search(r"if\([\"\']{2}\+\(nslookup -q=txt", content_data) and \
             re.search(r"\) -match [\"\']{1}@\(\.\*\)@[\"\']{1}\){iex \$matches\[1]}", content_data):
-        families.append("TXT C2")
+        families["TXT C2"][REGEX_INDICATORS].append("if\([\"\']{2}\+\(nslookup -q=txt")
+        families["TXT C2"][REGEX_INDICATORS].append("\) -match [\"\']{1}@\(\.\*\)@[\"\']{1}\){iex \$matches\[1]}")
 
     # Family: Remote DLL
     # Reference: N/A
     if any(entry in content_data.lower() for entry in ["regsvr32 /u /s /i:http"]):
-        families.append("Remote DLL")
+        families["Remote DLL"][STR_INDICATORS].extend(["regsvr32 /u /s /i:http"])
 
     # Family: Cobalt Strike
     # Reference: https://www.cobaltstrike.com/
     if any(
-            entry in content_data.lower() for entry in ["$doit = @"]) or all(
+            entry in content_data.lower() for entry in ["$doit = @"]):
+        families["Cobalt Strike"][STR_INDICATORS].extend(["$doit = @"])
+
+    if all(
             entry in content_data.lower()
             for entry in ["func_get_proc_address", "func_get_delegate_type", "getdelegateforfunctionpointer", "start-job"]):
-        families.append("Cobalt Strike")
+        families["Cobalt Strike"][STR_INDICATORS].extend(["func_get_proc_address", "func_get_delegate_type",
+                                                          "getdelegateforfunctionpointer", "start-job"])
 
     # Family: vdw0rm
     # Reference: N/A
     if any(entry in content_data.lower() for entry in ["vdw0rm", "*-]nk[-*"]):
-        families.append("vdw0rm")
+        families["vdw0rm"][STR_INDICATORS].extend(["vdw0rm", "*-]nk[-*"])
 
     # Family: Emotet
     # Reference: N/A
     if all(entry in content_data.lower() for entry in ["invoke-item", "get-item", "length -ge 40000", "break"]):
-        families.append("Emotet")
+        families["Emotet"][STR_INDICATORS].extend(["invoke-item", "get-item", "length -ge 40000", "break"])
 
     # Family: mateMiner 2.0
     # Reference: http://wolvez.club/2018/11/10/mateMinerKiller/
     if all(entry in content_data.lower() for entry in ["killbot", "mimi", "sc"]):
-        families.append("mateMiner")
+        families["mateMiner"][STR_INDICATORS].extend(["killbot", "mimi", "sc"])
 
     # Family: DownAndExec
     # Reference: https://www.welivesecurity.com/2017/09/13/downandexec-banking-malware-cdns-brazil/
     if all(entry in content_data.lower() for entry in ["downandexec", "cdn", "set cms="]):
-        families.append("DownAndExec")
+        families["DownAndExec"][STR_INDICATORS].extend(["downandexec", "cdn", "set cms="])
 
     # Family: Buckeye / Filensfer
     # Reference: https://www.kernelmode.info/forum/viewtopic.php?t=5533
     if all(entry in content_data.lower() for entry in ["error, byebye!", "string re_info", "sockargs"]):
-        families.append("Buckeye")
+        families["Buckeye"][STR_INDICATORS].extend(["error, byebye!", "string re_info", "sockargs"])
 
     # Family: APT34
     # Reference: https://www.jishuwen.com/d/2K6t
     if any(entry in content_data.lower() for entry in ["global:$cca", "$ffa = $eea", "$ssa = $qqa"]):
-        families.append("APT34")
+        families["APT34"][STR_INDICATORS].extend(["global:$cca", "$ffa = $eea", "$ssa = $qqa"])
 
     # Family: MuddyWater
     # Reference: https://blog.talosintelligence.com/2019/05/recent-muddywater-associated-blackwater.html
-    if all(entry in content_data.lower() for entry in ["clientfrontLine", "helloserver", "getcommand"]) or all(
-            entry in content_data.lower() for entry in ["projectcode", "projectfirsthit", "getcmdresult"]) or all(
+    if all(entry in content_data.lower() for entry in ["clientfrontLine", "helloserver", "getcommand"]):
+        families["MuddyWater"][STR_INDICATORS].extend(["clientfrontLine", "helloserver", "getcommand"])
+
+    if all(
+            entry in content_data.lower() for entry in ["projectcode", "projectfirsthit", "getcmdresult"]):
+        families["MuddyWater"][STR_INDICATORS].extend(["projectcode", "projectfirsthit", "getcmdresult"])
+
+    if all(
             entry in content_data.lower()
             for entry in ["basicinfocollector", "getclientidentity", "executecommandandsetcommandresultrequest"]):
-        families.append("MuddyWater")
+        families["MuddyWater"][STR_INDICATORS].extend(
+            ["basicinfocollector", "getclientidentity", "executecommandandsetcommandresultrequest"])
 
     # Family: Tennc Webshell
     # Reference: https://github.com/tennc/webshell
     if all(entry in content_data.lower() for entry in ['getparameter("z0")', 'import="java.io.*']):
-        families.append("Tennc Webshell")
+        families["Tennc Webshell"][STR_INDICATORS].extend(['getparameter("z0")', 'import="java.io.*'])
 
     # Family: PoshC2
     # Reference: https://github.com/nettitude/PoshC2
     if all(
             entry in content_data.lower()
-            for entry in ["function get-key", "importdll", "check for keys not mapped by virtual keyboard"]) or any(
-            entry in content_data.lower() for entry in ["poshc2", "powershellc2"]):
-        families.append("PoshC2")
+            for entry in ["function get-key", "importdll", "check for keys not mapped by virtual keyboard"]):
+        families["PoshC2"][STR_INDICATORS].extend(
+            ["function get-key", "importdll", "check for keys not mapped by virtual keyboard"])
+
+    if any(entry in content_data.lower() for entry in ["poshc2", "powershellc2"]):
+        families["PoshC2"][STR_INDICATORS].extend(["poshc2", "powershellc2"])
 
     # Family: Posh-SecMod
     # Reference: https://github.com/darkoperator/Posh-SecMod
-    if any(entry in content_data.lower() for entry in ["posh-secmod", ]):
-        families.append("Posh-SecMod")
+    if any(entry in content_data.lower() for entry in ["posh-secmod"]):
+        families["Posh-SecMod"][STR_INDICATORS].extend(["posh-secmod"])
 
     # Family: Invoke-TheHash
     # Reference: https://github.com/Kevin-Robertson/Invoke-TheHash
     if any(
             entry in content_data.lower()
             for entry in ["new-packetsmb2findrequestfile", "packet_smb2b_header", "new-packetntlmssp"]):
-        families.append("Invoke-TheHash")
+        families["Invoke-TheHash"][STR_INDICATORS].extend(
+            ["new-packetsmb2findrequestfile", "packet_smb2b_header", "new-packetntlmssp"])
 
     # Family: Nishang
     # Reference: https://github.com/samratashok/nishang
     if any(entry in content_data.lower() for entry in ["nishang"]):
-        families.append("Nishang")
+        families["Nishang"][STR_INDICATORS].extend(["nishang"])
 
     # Family: Invoke-CradleCrafter
     # Reference:
     if any(entry in content_data.lower() for entry in ["invoke-cradlecrafter", "postcradlecommand"]):
-        families.append("Invoke-CradleCrafter")
+        families["Invoke-CradleCrafter"][STR_INDICATORS].extend(["invoke-cradlecrafter", "postcradlecommand"])
 
     # Family: Invoke-SharpHound
     # Reference: https://github.com/BloodHoundAD/SharpHound3
     if any(entry in content_data.lower() for entry in ["invokesharphound", "sharphound"]):
-        families.append("Invoke-SharpHound")
+        families["Invoke-SharpHound"][STR_INDICATORS].extend(["invokesharphound", "sharphound"])
 
     return families
 
