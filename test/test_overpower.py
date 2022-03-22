@@ -192,7 +192,7 @@ class TestOverpower:
         from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
         output = {
             "deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}},
-            "score": 3, "families": [],
+            "score": 3, "families": {},
             "extracted": []}
         res = Result()
         correct_res_sec = ResultSection("Suspicious Content Detected in blah")
@@ -203,12 +203,16 @@ class TestOverpower:
         assert check_section_equality(res.sections[0], correct_res_sec)
 
         output["behaviour"]["minus"] = {"score": -1, "marks": []}
-        output["families"] = ["blah"]
+        output["families"] = {"blah": {"regex_indicators": ["blah"], "str_indicators": ["blah"]}}
         output["deobfuscated"] = "http://blah.com/blah.exe"
         correct_res_sec = ResultSection("Malicious Content Detected in blah")
         correct_res_sec.set_heuristic(2)
         correct_res_sec.add_tag("attribution.family", "blah")
         correct_res_sec.add_line("Attribution family: blah")
+        correct_res_sec.add_line("\tMatched regular expressions:")
+        correct_res_sec.add_line("\t\tblah")
+        correct_res_sec.add_line("\tMatched any or all strings:")
+        correct_res_sec.add_line("\t\tblah")
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert check_section_equality(res.sections[1], correct_res_sec)
 
