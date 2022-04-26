@@ -29,6 +29,11 @@ samples = [
         min_classification='TLP:WHITE',
         max_files=501,  # TODO: get the actual value
         ttl=3600,
+        safelist_config={
+            "enabled": False,
+            "hash_types": ['sha1', 'sha256'],
+            "enforce_safelist_service": False
+        }
     ),
 ]
 
