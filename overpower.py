@@ -1,4 +1,3 @@
-from hashlib import sha256
 from json import dumps
 from os import path, listdir
 from re import findall, match
@@ -6,6 +5,7 @@ from subprocess import run, TimeoutExpired
 from tld import get_tld
 from typing import Optional, Dict, Any, List, Tuple, Set
 
+from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.str_utils import safe_str
 from assemblyline.odm.base import DOMAIN_REGEX, URI_PATH, IP_REGEX, FULL_URI, EMAIL_REGEX as EMAIL_ONLY_REGEX
 from assemblyline_v4_service.common.balbuzard.patterns import PatternMatch
@@ -26,22 +26,6 @@ TRANSLATE_SCORE = {
 }
 
 EMAIL_REGEX = EMAIL_ONLY_REGEX.lstrip("^").rstrip("$")
-
-
-def get_id_from_data(file_path: str) -> str:
-    """
-    This method generates a sha256 hash for the file contents of a file
-    :param file_path: The file path
-    :return hash: The sha256 hash of the file
-    """
-    sha256_hash = sha256()
-    # stream it in so we don't load the whole file in memory
-    with open(file_path, 'rb') as f:
-        data = f.read(4096)
-        while data:
-            sha256_hash.update(data)
-            data = f.read(4096)
-    return sha256_hash.hexdigest()
 
 
 class Overpower(ServiceBase):
@@ -244,7 +228,7 @@ class Overpower(ServiceBase):
         # Retrieve artifacts
         for file in sorted(listdir(self.working_directory)):
             file_path = path.join(self.working_directory, file)
-            artifact_sha256 = get_id_from_data(file_path)
+            artifact_sha256 = get_sha256_for_file(file_path)
             if artifact_sha256 in self.artifact_hashes:
                 continue
             else:

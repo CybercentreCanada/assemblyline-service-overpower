@@ -29,6 +29,11 @@ samples = [
         min_classification='TLP:WHITE',
         max_files=501,  # TODO: get the actual value
         ttl=3600,
+        safelist_config={
+            "enabled": False,
+            "hash_types": ['sha1', 'sha256'],
+            "enforce_safelist_service": False
+        }
     ),
 ]
 
@@ -312,19 +317,6 @@ class TestOverpower:
             "description": "Output from PowerShell tool",
             "to_be_extracted": False
         }
-
-    @staticmethod
-    @pytest.mark.parametrize("data, expected_result", [
-        (b"blah", '8b7df143d91c716ecfa5fc1730022f6b421b05cedee8fd52b1fc65a96030ad52')
-    ])
-    def test_get_id_from_data(data, expected_result):
-        from os import remove
-        from overpower import get_id_from_data
-        some_file = "/tmp/some_file.txt"
-        with open(some_file, "wb") as f:
-            f.write(data)
-        assert get_id_from_data(some_file) == expected_result
-        remove(some_file)
 
     @staticmethod
     @pytest.mark.parametrize(
