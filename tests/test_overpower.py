@@ -319,19 +319,6 @@ class TestOverpower:
         }
 
     @staticmethod
-    @pytest.mark.parametrize("data, expected_result", [
-        (b"blah", '8b7df143d91c716ecfa5fc1730022f6b421b05cedee8fd52b1fc65a96030ad52')
-    ])
-    def test_get_id_from_data(data, expected_result):
-        from os import remove
-        from overpower import get_id_from_data
-        some_file = "/tmp/some_file.txt"
-        with open(some_file, "wb") as f:
-            f.write(data)
-        assert get_id_from_data(some_file) == expected_result
-        remove(some_file)
-
-    @staticmethod
     @pytest.mark.parametrize(
         "blob, file_ext, correct_tags, correct_body",
         [("", "", {}, []),
