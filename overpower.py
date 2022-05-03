@@ -1,18 +1,14 @@
 from json import dumps
 from os import path, listdir
-from re import findall, match
 from subprocess import run, TimeoutExpired
-from tld import get_tld
-from typing import Optional, Dict, Any, List, Tuple, Set
+from typing import Optional, Dict, Any, List, Set, Tuple
 
 from assemblyline.common.digests import get_sha256_for_file
-from assemblyline.common.str_utils import safe_str
-from assemblyline.odm.base import DOMAIN_REGEX, URI_PATH, IP_REGEX, FULL_URI, EMAIL_REGEX as EMAIL_ONLY_REGEX
-from assemblyline_v4_service.common.balbuzard.patterns import PatternMatch
+from assemblyline.common.str_utils import safe_str, truncate
 from assemblyline_v4_service.common.base import ServiceBase
-from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
+from assemblyline_v4_service.common.dynamic_service_helper import extract_iocs_from_text_blob, SandboxOntology
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultTextSection, ResultTableSection, TableRow
+from assemblyline_v4_service.common.result import Result, ResultTextSection, ResultTableSection
 
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS
 
@@ -25,8 +21,6 @@ TRANSLATE_SCORE = {
     6.0: 1000,  # Malware
 }
 
-EMAIL_REGEX = EMAIL_ONLY_REGEX.lstrip("^").rstrip("$")
-
 
 class Overpower(ServiceBase):
 
@@ -34,7 +28,6 @@ class Overpower(ServiceBase):
         super(Overpower, self).__init__(config)
         self.artifact_hashes = None
         self.artifact_list = None
-        self.patterns = PatternMatch()
 
     def execute(self, request: ServiceRequest) -> None:
         self.artifact_hashes = set()
@@ -165,9 +158,8 @@ class Overpower(ServiceBase):
                     static_file_lines.append(line)
             ioc_res_sec = ResultTableSection(f"IOC(s) extracted from {file_name}")
             for static_file_line in static_file_lines:
-                if len(static_file_line) < 1000:
-                    self._extract_iocs_from_text_blob(static_file_line, ioc_res_sec, ".ps1")
-            if ioc_res_sec.heuristic:
+                extract_iocs_from_text_blob(truncate(static_file_line, 1000), ioc_res_sec)
+            if ioc_res_sec.body:
                 # Removing duplicate IOCs
                 for tag, values in ioc_res_sec.tags.items():
                     for value in values[:]:
@@ -181,6 +173,7 @@ class Overpower(ServiceBase):
                 for tag in tags_to_remove:
                     ioc_res_sec.tags.pop(tag)
                 if ioc_res_sec.tags:
+                    ioc_res_sec.set_heuristic(1)
                     result.add_section(ioc_res_sec)
 
     def _handle_psdecode_output(self, output: List[str], result: Result) -> None:
@@ -198,8 +191,9 @@ class Overpower(ServiceBase):
         psdecode_actions_res_sec.add_lines(actions)
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         for action in actions:
-            self._extract_iocs_from_text_blob(action, actions_ioc_table, ".ps1")
+            extract_iocs_from_text_blob(action, actions_ioc_table)
         if actions_ioc_table.body:
+            actions_ioc_table.set_heuristic(1)
             psdecode_actions_res_sec.add_subsection(actions_ioc_table)
         if psdecode_actions_res_sec.body:
             result.add_section(psdecode_actions_res_sec)
@@ -253,71 +247,3 @@ class Overpower(ServiceBase):
             self.log.debug(
                 f"Adding extracted file: {file_path}"
                 if to_be_extracted else f"Adding supplementary file: {file_path}")
-
-    def _extract_iocs_from_text_blob(self, blob: str, result_section: ResultTableSection, file_ext: str = "") -> None:
-        """
-        This method searches for domains, IPs and URIs used in blobs of text and tags them
-        :param blob: The blob of text that we will be searching through
-        :param result_section: The result section that that tags will be added to
-        :param file_ext: The file extension of the file to be submitted
-        :return: None
-        """
-        blob = blob.lower()
-        ips = set(findall(IP_REGEX, blob))
-        # There is overlap here between regular expressions, so we want to isolate domains that are not ips
-        domains = set(findall(DOMAIN_REGEX, blob)) - ips
-        emails = set(findall(EMAIL_REGEX, blob))
-        # There is overlap here between regular expressions, so we want to isolate uris that are not domains
-        uris = set(findall(self.patterns.PAT_URI_NO_PROTOCOL, blob.encode()))
-        uris = {uri.decode() for uri in uris} - domains - ips - emails
-        ioc_extracted = False
-
-        for ip in ips:
-            safe_ip = safe_str(ip)
-            ioc_extracted = True
-            result_section.add_tag("network.dynamic.ip", safe_ip)
-            result_section.add_row(TableRow(ioc_type="ip", ioc=safe_ip))
-        for domain in domains:
-            # File names match the domain and URI regexes, so we need to avoid tagging them
-            # Note that get_tld only takes URLs so we will prepend http:// to the domain to work around this
-            try:
-                tld = get_tld(f"http://{domain}", fail_silently=True)
-            except ValueError:
-                continue
-            if tld is None or f".{tld}" == file_ext:
-                continue
-            safe_domain = safe_str(domain)
-            ioc_extracted = True
-            result_section.add_tag("network.dynamic.domain", safe_domain)
-            result_section.add_row(TableRow(ioc_type="domain", ioc=safe_domain))
-        for email in emails:
-            safe_email = safe_str(email)
-            ioc_extracted = True
-            result_section.add_tag("network.email.address", safe_email)
-            result_section.add_row(TableRow(ioc_type="email", ioc=safe_email))
-        for uri in uris:
-            # If there is a domain in the uri, then do
-            if not any(ip in uri for ip in ips):
-                try:
-                    if not any(protocol in uri for protocol in ["http", "ftp", "icmp", "ssh"]):
-                        tld = get_tld(f"http://{uri}", fail_silently=True)
-                    else:
-                        tld = get_tld(uri, fail_silently=True)
-                except ValueError:
-                    continue
-                if tld is None or f".{tld}" == file_ext:
-                    continue
-            safe_uri = safe_str(uri)
-            if not match(FULL_URI, safe_uri):
-                continue
-            ioc_extracted = True
-            result_section.add_tag("network.dynamic.uri", safe_uri)
-            result_section.add_row(TableRow(ioc_type="uri", ioc=safe_uri))
-            if "//" in safe_uri:
-                safe_uri = safe_uri.split("//")[1]
-            for uri_path in findall(URI_PATH, safe_uri):
-                ioc_extracted = True
-                result_section.add_tag("network.dynamic.uri_path", uri_path)
-                result_section.add_row(TableRow(ioc_type="uri_path", ioc=uri_path))
-        if ioc_extracted and result_section.heuristic is None:
-            result_section.set_heuristic(1)
