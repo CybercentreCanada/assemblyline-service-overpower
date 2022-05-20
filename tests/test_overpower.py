@@ -29,6 +29,11 @@ samples = [
         min_classification='TLP:WHITE',
         max_files=501,  # TODO: get the actual value
         ttl=3600,
+        safelist_config={
+            "enabled": False,
+            "hash_types": ['sha1', 'sha256'],
+            "enforce_safelist_service": False
+        }
     ),
 ]
 
@@ -45,9 +50,45 @@ def check_section_equality(this, that) -> bool:
             this.heuristic.score_map == that.heuristic.score_map and \
             this.heuristic.signatures == that.heuristic.signatures
 
+        if not result_heuristic_equality:
+            print("The heuristics are not equal:")
+            if this.heuristic.attack_ids != that.heuristic.attack_ids:
+                print("The attack_ids are different:")
+                print(f"{this.heuristic.attack_ids}")
+                print(f"{that.heuristic.attack_ids}")
+            if this.heuristic.frequency != that.heuristic.frequency:
+                print("The frequencies are different:")
+                print(f"{this.heuristic.frequency}")
+                print(f"{that.heuristic.frequency}")
+            if this.heuristic.heur_id != that.heuristic.heur_id:
+                print("The heur_ids are different:")
+                print(f"{this.heuristic.heur_id}")
+                print(f"{that.heuristic.heur_id}")
+            if this.heuristic.score != that.heuristic.score:
+                print("The scores are different:")
+                print(f"{this.heuristic.score}")
+                print(f"{that.heuristic.score}")
+            if this.heuristic.score_map != that.heuristic.score_map:
+                print("The score_maps are different:")
+                print(f"{this.heuristic.score_map}")
+                print(f"{that.heuristic.score_map}")
+            if this.heuristic.signatures != that.heuristic.signatures:
+                print("The signatures are different:")
+                print(f"{this.heuristic.signatures}")
+                print(f"{that.heuristic.signatures}")
+
     elif not this.heuristic and not that.heuristic:
         result_heuristic_equality = True
     else:
+        print("The heuristics are not equal:")
+        if this.heuristic:
+            print(f"{this.heuristic.__dict__}")
+        else:
+            print("this.heuristic is None")
+        if that.heuristic:
+            print(f"{that.heuristic.__dict__}")
+        else:
+            print("that.heuristic is None")
         result_heuristic_equality = False
 
     # Assuming we are given the "root section" at all times, it is safe to say that we don't need to confirm parent
@@ -58,11 +99,45 @@ def check_section_equality(this, that) -> bool:
         this.depth == that.depth and \
         len(this.subsections) == len(that.subsections) and \
         this.title_text == that.title_text and \
-        this.tags == that.tags
+        this.tags == that.tags and \
+        this.auto_collapse == that.auto_collapse
 
     if not current_section_equality:
-        print(this.body)
-        print(that.body)
+        print("The current sections are not equal:")
+        if not result_heuristic_equality:
+            print("The result heuristics are not equal")
+        if this.body != that.body:
+            print("The bodies are different:")
+            print(f"{this.body}")
+            print(f"{that.body}")
+        if this.body_format != that.body_format:
+            print("The body formats are different:")
+            print(f"{this.body_format}")
+            print(f"{that.body_format}")
+        if this.classification != that.classification:
+            print("The classifications are different:")
+            print(f"{this.classifications}")
+            print(f"{that.classifications}")
+        if this.depth != that.depth:
+            print("The depths are different:")
+            print(f"{this.depths}")
+            print(f"{that.depths}")
+        if len(this.subsections) != len(that.subsections):
+            print("The number of subsections are different:")
+            print(f"{len(this.subsections)}")
+            print(f"{len(that.subsections)}")
+        if this.title_text != that.title_text:
+            print("The title texts are different:")
+            print(f"{this.title_text}")
+            print(f"{that.title_text}")
+        if this.tags != that.tags:
+            print("The tags are different:")
+            print(f"{this.tags}")
+            print(f"{that.tags}")
+        if this.auto_collapse != that.auto_collapse:
+            print("The auto_collapse settings are different:")
+            print(f"{this.auto_collapse}")
+            print(f"{that.auto_collapse}")
         return False
 
     for index, subsection in enumerate(this.subsections):
@@ -312,52 +387,3 @@ class TestOverpower:
             "description": "Output from PowerShell tool",
             "to_be_extracted": False
         }
-
-    @staticmethod
-    @pytest.mark.parametrize("data, expected_result", [
-        (b"blah", '8b7df143d91c716ecfa5fc1730022f6b421b05cedee8fd52b1fc65a96030ad52')
-    ])
-    def test_get_id_from_data(data, expected_result):
-        from os import remove
-        from overpower import get_id_from_data
-        some_file = "some_file.txt"
-        with open(some_file, "wb") as f:
-            f.write(b"blah")
-        assert get_id_from_data(some_file) == expected_result
-        remove(some_file)
-
-    @staticmethod
-    @pytest.mark.parametrize(
-        "blob, file_ext, correct_tags, correct_body",
-        [("", "", {}, []),
-         ("192.168.100.1", "", {'network.dynamic.ip': ['192.168.100.1']}, [{"ioc_type": "ip", "ioc": "192.168.100.1"}]),
-         ("blah.ca", ".exe", {'network.dynamic.domain': ['blah.ca']}, [{"ioc_type": "domain", "ioc": "blah.ca"}]),
-         ("https://blah.ca", ".exe",
-          {'network.dynamic.domain': ['blah.ca'],
-           'network.dynamic.uri': ['https://blah.ca']}, [{"ioc_type": "domain", "ioc": "blah.ca"}, {"ioc_type": "uri", "ioc": "https://blah.ca"}]),
-         ("https://blah.ca/blah", ".exe",
-          {'network.dynamic.domain': ['blah.ca'],
-           'network.dynamic.uri': ['https://blah.ca/blah'],
-           "network.dynamic.uri_path": ["/blah"]}, [{"ioc_type": "domain", "ioc": "blah.ca"}, {"ioc_type": "uri", "ioc": "https://blah.ca/blah"}, {"ioc_type": "uri_path", "ioc": "/blah"}]),
-         ("drive:\\\\path to\\\\microsoft office\\\\officeverion\\\\winword.exe", ".exe", {}, []),
-         (
-            "DRIVE:\\\\PATH TO\\\\MICROSOFT OFFICE\\\\OFFICEVERION\\\\WINWORD.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.DOC",
-            ".exe", {}, []),
-         ("DRIVE:\\\\PATH TO\\\\PYTHON27.EXE C:\\\\USERS\\\\BUDDY\\\\APPDATA\\\\LOCAL\\\\TEMP\\\\BLAH.py", ".py", {}, []),
-         (
-            "POST /some/thing/bad.exe HTTP/1.0\nUser-Agent: Mozilla\nHost: evil.ca\nAccept: */*\nContent-Type: application/octet-stream\nContent-Encoding: binary\n\nConnection: close",
-            "", {"network.dynamic.domain": ["evil.ca"]}, [{"ioc_type": "domain", "ioc": "evil.ca"}]),
-         ("evil.ca/some/thing/bad.exe", "", {"network.dynamic.domain": ["evil.ca"]}, [{"ioc_type": "domain", "ioc": "evil.ca"}]),
-         ("blah.ca", ".ca", {}, []),
-         ("blah@blah.ca", ".ca", {"network.email.address": ["blah@blah.ca"]}, [{"ioc_type": "email", "ioc": "blah@blah.ca"}]), ])
-    def test_extract_iocs_from_text_blob(blob, file_ext, correct_tags, correct_body, overpower_class_instance):
-        from assemblyline_v4_service.common.result import ResultTableSection, TableRow
-        test_result_section = ResultTableSection("blah")
-        correct_result_section = ResultTableSection("blah", tags=correct_tags)
-        if correct_tags:
-            correct_result_section.set_heuristic(1)
-        if correct_body:
-            for item in correct_body:
-                correct_result_section.add_row(TableRow(**item))
-        overpower_class_instance._extract_iocs_from_text_blob(blob, test_result_section, file_ext)
-        assert check_section_equality(test_result_section, correct_result_section)
