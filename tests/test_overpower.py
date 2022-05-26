@@ -176,6 +176,7 @@ def dummy_completed_process_instance():
     class DummyCompletedProcess:
         def __init__(self):
             self.stdout = b"blah\nblah"
+            self.stderr = b"blah\nblah"
     yield DummyCompletedProcess()
 
 
