@@ -52,6 +52,9 @@ class Overpower(ServiceBase):
         psdecode_output = []
         if completed_process:
             psdecode_output = completed_process.stdout.decode().split("\n")
+            psdecode_error = completed_process.stderr.decode()
+            if psdecode_error:
+                self.log.warning(f"When running PSDecode, the following error was raised: {psdecode_error}")
         self._handle_psdecode_output(psdecode_output, request.result)
 
         # PowerShellProfiler
