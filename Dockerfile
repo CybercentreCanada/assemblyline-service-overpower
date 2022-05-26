@@ -29,8 +29,8 @@ RUN pip install --no-cache-dir --user tld && rm -rf ~/.cache/pip
 WORKDIR /opt/al_service
 COPY . .
 
-RUN mkdir -p ~/.local/share/powershell/Modules/PSDecode
-COPY tools/PSDecode.psm1 ~/.local/share/powershell/Modules/PSDecode
+RUN mkdir -p /var/lib/assemblyline/.local/share/powershell/Modules/PSDecode
+COPY tools/PSDecode.psm1 /var/lib/assemblyline/.local/share/powershell/Modules/PSDecode
 
 # Patch version in manifest
 ARG version=4.0.0.dev1
