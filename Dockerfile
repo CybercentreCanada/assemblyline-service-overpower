@@ -22,9 +22,6 @@ RUN rm packages-microsoft-prod.deb
 # Switch to assemblyline user
 USER assemblyline
 
-# Install pip packages
-RUN pip install --no-cache-dir --user tld && rm -rf ~/.cache/pip
-
 # Copy Overpower service code
 WORKDIR /opt/al_service
 COPY . .
