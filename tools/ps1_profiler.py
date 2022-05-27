@@ -310,6 +310,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     ]
 
     behaviour_col["Downloader"] = [
+        ["Net.WebClient"],
         ["DownloadFile"],
         ["DownloadString"],
         ["DownloadData"],
