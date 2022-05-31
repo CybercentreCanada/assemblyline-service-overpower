@@ -227,7 +227,7 @@ class Overpower(ServiceBase):
         # Retrieve artifacts
         for file in sorted(listdir(self.working_directory)):
             file_path = path.join(self.working_directory, file)
-            print(file_path)
+
             artifact_sha256 = get_sha256_for_file(file_path)
             if artifact_sha256 in self.artifact_hashes:
                 continue

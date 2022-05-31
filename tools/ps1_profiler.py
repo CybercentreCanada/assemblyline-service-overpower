@@ -1773,6 +1773,6 @@ def profile_ps1(sample_path, working_dir):
     # Write what we've parsed out for further analysis
     alt_data = os.path.join(working_dir, DEOBFUS_FILE)
     with open(alt_data, "w") as f:
-        f.write(output["deobfuscated"])
+        f.write(output["deobfuscated"].rstrip())
 
     return output
