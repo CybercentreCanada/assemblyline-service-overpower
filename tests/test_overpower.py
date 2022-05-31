@@ -388,3 +388,13 @@ class TestOverpower:
             "description": "Output from PowerShell tool",
             "to_be_extracted": False
         }
+
+        overpower_class_instance.artifact_list = []
+        overpower_class_instance.artifact_hashes = set()
+        overpower_class_instance._prepare_artifacts(False)
+        assert overpower_class_instance.artifact_list[0] == {
+            "name": "suppl",
+            "path": item_2,
+            "description": "Output from PowerShell tool",
+            "to_be_extracted": False
+        }

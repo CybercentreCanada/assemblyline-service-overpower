@@ -71,7 +71,8 @@ class Overpower(ServiceBase):
         if add_supplementary:
             self._extract_supplementary(total_ps1_profiler_output, psdecode_output)
 
-        self._prepare_artifacts()
+        worth_extracting = len(request.result.sections) > 0
+        self._prepare_artifacts(worth_extracting)
 
         # Adding sandbox artifacts using the SandboxOntology helper class
         _ = SandboxOntology.handle_artifacts(self.artifact_list, request)
@@ -217,14 +218,16 @@ class Overpower(ServiceBase):
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
 
-    def _prepare_artifacts(self) -> None:
+    def _prepare_artifacts(self, worth_extracting: bool = True) -> None:
         """
         This method prepares artifacts that have been dumped by PowerShell de-obfuscation tools
+        :param worth_extracting: A flag indicating if we should extract files or not.
         :return: None
         """
         # Retrieve artifacts
         for file in sorted(listdir(self.working_directory)):
             file_path = path.join(self.working_directory, file)
+            print(file_path)
             artifact_sha256 = get_sha256_for_file(file_path)
             if artifact_sha256 in self.artifact_hashes:
                 continue
@@ -241,6 +244,11 @@ class Overpower(ServiceBase):
             else:
                 description = "Overpower Dump"
                 to_be_extracted = True
+
+            if not worth_extracting and to_be_extracted:
+                self.log.debug(f"Ignoring {file_path} since the parent file is not interesting.")
+                continue
+
             self.artifact_list.append({
                 "name": file,
                 "path": file_path,
