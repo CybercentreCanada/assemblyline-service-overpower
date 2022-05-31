@@ -166,6 +166,13 @@ function Set-MpPreference {
 }
 '@
 
+$Start_Process = @'
+function Start-Process {
+    Write-Host $args
+    Write-Host "%#[Start-Process] $($args)%#"
+}
+'@
+
 function Get_Encoding_Type {
     param(
         [Parameter(Mandatory=$True)]
@@ -216,7 +223,7 @@ function Base64_Decode {
     if($b64_encoded_string -match '^TVqQ'){
         return [Byte[]][Convert]::FromBase64String($b64_encoded_string)
     }
-    
+
     try{
         $b64_decoded = [System.Convert]::FromBase64String($b64_encoded_string)
         }
@@ -224,7 +231,7 @@ function Base64_Decode {
         $ErrorMessage = $_.Exception.Message
         return $false
     }
-       
+
     $b64_decoded_ascii = [System.Text.Encoding]::ASCII.GetString($b64_decoded)
     if($b64_decoded_ascii -match '^(.\x00){8,}'){
         return [System.Text.Encoding]::UNICODE.GetString([System.Convert]::FromBase64String($b64_encoded_string))
@@ -243,16 +250,16 @@ function Replace_Quotes_FuncName
             [String]$Command
         )
        $str_format_pattern = [regex]"[\.&](\`"|')[a-zA-Z0-9]+(\`"|')\("
-       $matches = $str_format_pattern.Matches($Command) 
+       $matches = $str_format_pattern.Matches($Command)
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
                 Write-Verbose "[Replace_Quotes_FuncName] Replacing: $($match) With: $($match.ToString().replace('"', '').replace("'", ''))"
                 $Command = $Command.Replace($match, $match.ToString().replace('"','').replace("'",""))
                 }
-            $matches = $str_format_pattern.Matches($Command) 
+            $matches = $str_format_pattern.Matches($Command)
         }
-       
+
        return $Command
 
     }
@@ -266,16 +273,16 @@ function Replace_FuncParensWrappers
             [String]$Command
         )
        $str_format_pattern = [regex]"[\.&]\(('|`")[a-zA-Z-]+('|`")\)"
-       $matches = $str_format_pattern.Matches($Command) 
+       $matches = $str_format_pattern.Matches($Command)
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
                 Write-Verbose "[Replace_FuncParensWrappers] Replacing: $($match)`tWith: $($match.ToString().replace('.','').replace('&','').replace("('",'').replace("')",'').replace('("','').replace('")',''))"
                 $Command = $Command.Replace($match, $match.ToString().replace('.','').replace('&','').replace("('",'').replace("')",'').replace('("','').replace('")',''))
                 }
-            $matches = $str_format_pattern.Matches($Command) 
+            $matches = $str_format_pattern.Matches($Command)
         }
-       
+
        return $Command
 
     }
@@ -290,7 +297,7 @@ function Clean_Func_Calls
         )
 
        $str_format_pattern = [regex]"\.['`"][a-zA-Z0-9``]+['`"]"
-       $matches = $str_format_pattern.Matches($Command) 
+       $matches = $str_format_pattern.Matches($Command)
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
@@ -298,9 +305,9 @@ function Clean_Func_Calls
                 Write-Verbose "[Clean_Func_Calls] Replacing: $($match) With: $($replaced_val)"
                 $Command = $Command.Replace($match, $replaced_val )
                 }
-            $matches = $str_format_pattern.Matches($Command) 
+            $matches = $str_format_pattern.Matches($Command)
         }
-       
+
        return $Command
 
     }
@@ -314,16 +321,16 @@ function Replace_Parens
             [String]$Command
         )
        $str_format_pattern = [regex]"[^a-zA-Z0-9.&(]\(\s*'[^']*'\)"
-       $matches = $str_format_pattern.Matches($Command) 
+       $matches = $str_format_pattern.Matches($Command)
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
                 Write-Verbose "[Replace_Parens] Replacing: $($match) With: $($match.ToString().replace('(','').replace(')',''))"
                 $Command = $Command.Replace($match, $match.ToString().replace('(','').replace(')',''))
                 }
-            $matches = $str_format_pattern.Matches($Command) 
+            $matches = $str_format_pattern.Matches($Command)
         }
-       
+
        return $Command
 
     }
@@ -363,7 +370,7 @@ function Replace_NonEscapes
 
         [System.Collections.ArrayList]$newCommand = $Command
         $idx_offset = 0
-        
+
         if($char_idx_arr.Length -gt 0){
             Write-Verbose "$($char_idx_arr.Length) Non-escape characters detected... Removing"
             }
@@ -392,10 +399,10 @@ function Replace_MultiLineEscapes
                 Write-Verbose "$($matches.Count) instances of multi-line escape characters detected... Removing"
             }
             ForEach($match in $matches){
-                
+
                 $Command = $Command.Replace($match, ' ')
                 }
-            $matches = $str_format_pattern.Matches($Command) 
+            $matches = $str_format_pattern.Matches($Command)
         }
     return $Command
 }
@@ -410,7 +417,7 @@ function Resolve_String_Formats
         )
        $str_format_pattern = [regex]"\(`"({\d+})+`"\s*-[fF]\s*(('[^']*'|\('[^']*'\))\s*,?\s*)*\)"
        #$str_format_pattern = [regex]"\(`"({\d+})+`"\s*-[fF]\s*('[^']*',?)+\)"
-       $matches = $str_format_pattern.Matches($Command) 
+       $matches = $str_format_pattern.Matches($Command)
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
@@ -418,9 +425,9 @@ function Resolve_String_Formats
                 Write-Verbose "[Resolve_String_Formats] Replacing: $($match)`tWith: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
                 }
-            $matches = $str_format_pattern.Matches($Command) 
+            $matches = $str_format_pattern.Matches($Command)
         }
-       
+
        return $Command
     }
 
@@ -444,9 +451,9 @@ function Resolve_Replaces
                 Write-Verbose "[Resolve_Replaces] Replacing: $($match) With: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
                 }
-            $matches = $str_format_pattern.Matches($Command) 
+            $matches = $str_format_pattern.Matches($Command)
         }
-       
+
        return $Command
     }
 
@@ -534,7 +541,7 @@ function Code_Cleanup
             $new_command = Resolve_Replaces($new_command)
             $new_command = Resolves_PowerShell_On_Linux($new_command)
         }
-        
+
         return $new_command
 
     }
@@ -599,8 +606,8 @@ function Extract_Executables {
             [Parameter(Mandatory=$True)]
             [System.Text.RegularExpressions.MatchCollection]$exe_pattern_matches
          )
-    
-    $b64_decoded_exes = New-Object System.Collections.ArrayList  
+
+    $b64_decoded_exes = New-Object System.Collections.ArrayList
     forEach($match in $exe_pattern_matches){
         $b64_decoded = Base64_Decode($match)
         if($b64_decoded){
@@ -620,14 +627,15 @@ function Dump_Files {
 
     ForEach ($layer in $layers)
         {
+            $layer = $layer.Trim()
             $out_filename = "$dump/layer_$($layers.IndexOf($layer)+1).ps1"
-            $layer | Out-File $out_filename
+            $layer | Out-File $out_filename -NoNewline
         }
 
     if($beautify)
         {
             $out_filename = "$dump/layer_$($layers.count + 1).ps1"
-            Beautify($str_fmt_res) | Out-File $out_filename
+            Beautify($str_fmt_res) | Out-File $out_filename -NoNewline
         }
 
     $exe_str_format_pattern = [regex]"TVqQ[^'`"]{100,}"
@@ -678,7 +686,7 @@ function PSDecode {
 
 .PARAMETER timeout
     Sets the maximum number of seconds the decoder should be allowed to run before it is timed out and terminated. Default is 60 seconds.
-    
+
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM
@@ -693,7 +701,7 @@ function PSDecode {
     PSDecode -verbose -dump -beautify .\encoded_ps.ps1
 
 .EXAMPLE
-    Get-Content .\encoded_ps.ps1 | PSDecode 
+    Get-Content .\encoded_ps.ps1 | PSDecode
 .COMPONENT
 #>
 
@@ -707,7 +715,7 @@ function PSDecode {
     )
     $layers  = New-Object System.Collections.Generic.List[System.Object]
     $actions = New-Object System.Collections.Generic.List[System.Object]
-    $action_pattern = [regex]'%#\[[^\]]+\][^%]+%#'
+    $action_pattern = [regex]'%#\[[^\]]+\].+?%#'
 
     $override_functions = @()
     $encoded_script = ""
@@ -770,13 +778,14 @@ function PSDecode {
     $override_functions += $Start
     $override_functions += $Uninstall_WindowsFeature
     $override_functions += $Set_MpPreference
+    $override_functions += $Start_Process
 
     if(!$x){
         $override_functions += $New_Object_Override
     }
-    
+
     $override_functions  = ($override_functions -join "`r`n") + "`r`n`r`n"
-    
+
     $clean_code = Code_Cleanup($encoded_script)
 
     if($encoded_script -ne $clean_code){
@@ -789,7 +798,7 @@ function PSDecode {
 
     while($layers -notcontains ($encoded_script) -and -not [string]::IsNullOrEmpty($encoded_script)){
         $layers.Add($encoded_script)
-        
+
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo
         $pinfo.FileName = "pwsh"
         $pinfo.CreateNoWindow = $true
@@ -801,8 +810,8 @@ function PSDecode {
             $pinfo.Arguments = "-EncodedCommand $($b64_decoder)"
         }
         else{
-            
-            $tmp_file = [System.IO.Path]::GetTempPath() + [GUID]::NewGuid().ToString() + ".ps1"; 
+
+            $tmp_file = [System.IO.Path]::GetTempPath() + [GUID]::NewGuid().ToString() + ".ps1";
             Base64_Decode($b64_decoder) | Out-File $tmp_file
             $pinfo.Arguments = "-File $($tmp_file)"
         }
