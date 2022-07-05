@@ -7,7 +7,7 @@ accepts: code/ps1
 rejects: empty|metadata/.*
 
 stage: CORE
-category: Dynamic Analysis
+category: Static Analysis
 
 file_required: true
 timeout: 180
