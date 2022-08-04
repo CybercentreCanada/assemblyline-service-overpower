@@ -13,12 +13,12 @@ from assemblyline_v4_service.common.result import Result, ResultTextSection, Res
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS
 
 TRANSLATE_SCORE = {
-    1.0: 10,  # Low Risk
-    2.0: 100,  # Mild Risk
-    3.0: 500,  # Moderate Risk
-    4.0: 750,  # Moderate Risk
-    5.0: 900,  # Elevated Risk
-    6.0: 1000,  # Malware
+    1.0: 10,  # Low Risk (0-14% hit rate)
+    2.0: 100,  # Mild Risk (15-34% hit rate)
+    3.0: 500,  # Moderate Risk (35-64% hit rate)
+    4.0: 750,  # Moderate Risk (65-84% hit rate)
+    5.0: 900,  # Elevated Risk (85-94% hit rate)
+    6.0: 1000,  # Malware (95-100% hit rate)
 }
 
 
