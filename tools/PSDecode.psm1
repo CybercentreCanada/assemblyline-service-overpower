@@ -301,7 +301,7 @@ function Clean_Func_Calls
 
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
-                $replaced_val = $match.ToString().replace('"','').replace("'",'')
+                $replaced_val = $match.ToString().replace('"','').replace("'",'').replace("``",'')
                 Write-Verbose "[Clean_Func_Calls] Replacing: $($match) With: $($replaced_val)"
                 $Command = $Command.Replace($match, $replaced_val )
                 }
@@ -422,9 +422,24 @@ function Resolve_String_Formats
        While ($matches.Count -gt 0){
             ForEach($match in $matches){
                 $resolved_string = IEX($match)
-                Write-Verbose "[Resolve_String_Formats] Replacing: $($match)`tWith: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
+                $truncated = $false;
+                $match = "$($match)"
+                if ($match.Length -gt 500) {
+                    $truncated = $true;
+                    $match = $match.substring(0, 500)
                 }
+                if ($resolved_string.Length -gt 500) {
+                    $truncated = $true;
+                    $resolved_string = $resolved_string.substring(0, 500)
+                }
+                if ($truncated) {
+                    Write-Verbose "[Resolve_String_Formats] Replacing: $($match)... With: $($resolved_string)..."
+                }
+                else {
+                    Write-Verbose "[Resolve_String_Formats] Replacing: $($match) With: $($resolved_string)"
+                }
+            }
             $matches = $str_format_pattern.Matches($Command)
         }
 
@@ -440,13 +455,19 @@ function Resolve_Replaces
             [String]$Command
         )
 
-        $str_format_pattern = [regex]"\(?['`"][^'`"]+['`"]\)?\.(?i)replace\((?:(?:'.+?')|(?:[^,]+)),(?:(?:'.+?')|(?:[^\)]+))\)"
+        $str_format_pattern = [regex]"(?i)\(?['`"][^'`"]+['`"]\)?\.replace\((?:(?:'.+?')|(?:[^,]+)),(?:(?:'.+?')|(?:[^\)]+))\)"
         $matches = $str_format_pattern.Matches($Command)
         While ($matches.Count -gt 0){
             ForEach($match in $matches){
                 Write-Verbose "match: $match"
-                try {$resolved_string = IEX($match)}
-                catch {continue}
+                try {
+                    $resolved_string = IEX($match)
+                }
+                catch {
+                    $ErrorMessage = $_.Exception.Message
+                    write-Verbose "$($ErrorMessage)"
+                    continue
+                }
                 $resolved_string = $resolved_string.replace("'","''")
                 Write-Verbose "[Resolve_Replaces] Replacing: $($match) With: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
