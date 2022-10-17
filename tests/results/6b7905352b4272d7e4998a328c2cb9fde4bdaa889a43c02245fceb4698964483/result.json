@@ -1,0 +1,82 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 1,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/ixbabmh0i2clm3qq1gvv/\"}]",
+        "body_format": "TABLE",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "focusmedica.in"
+              ],
+              "uri": [
+                "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+              ],
+              "uri_path": [
+                "/fmlib/ixbabmh0i2clm3qq1gvv/"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from 6b7905352b4272d7e4998a328c2cb9fde4bdaa889a43c02245fceb4698964483",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "6b7905352b4272d7e4998a328c2cb9fde4bdaa889a43c02245fceb4698964483"
+      }
+    ],
+    "supplementary": []
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      }
+    ],
+    "tags": {
+      "network.dynamic.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "focusmedica.in"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/fmlib/ixbabmh0i2clm3qq1gvv/"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
+}

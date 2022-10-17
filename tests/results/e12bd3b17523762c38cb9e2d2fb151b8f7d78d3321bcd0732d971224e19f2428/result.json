@@ -1,0 +1,176 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 711,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "Attribution family: SET\n\tMatched any or all strings:\n\t\t$sc.length -gt 0x1000)\n\t\t$winfunc::memset",
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 2,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "attribution": {
+            "family": [
+              "SET"
+            ]
+          }
+        },
+        "title_text": "Malicious Content Detected in e12bd3b17523762c38cb9e2d2fb151b8f7d78d3321bcd0732d971224e19f2428",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: VirtualAlloc, memset, CreateThread",
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 500,
+          "score_map": {
+            "Code Injection": 500
+          },
+          "signatures": {
+            "Code Injection": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Code Injection",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Start-Sleep",
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Sleeps": 10
+          },
+          "signatures": {
+            "Sleeps": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Sleeps",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Byte Usage": 100
+          },
+          "signatures": {
+            "Byte Usage": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Byte Usage",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Obfuscation:Char Frequency": 100
+          },
+          "signatures": {
+            "Obfuscation:Char Frequency": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Obfuscation:Char Frequency",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "64be933d42ac4186ea3fb0e6bd85adbcf86d8c7f4339d7c62c5ac567a23b0393"
+      }
+    ],
+    "supplementary": []
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 2,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Code Injection"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Sleeps"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Byte Usage"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Obfuscation:Char Frequency"
+        ]
+      }
+    ],
+    "tags": {
+      "attribution.family": [
+        {
+          "heur_id": 2,
+          "signatures": [],
+          "value": "SET"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
+}

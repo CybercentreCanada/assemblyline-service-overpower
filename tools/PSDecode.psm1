@@ -465,7 +465,7 @@ function Resolve_Replaces
                 }
                 catch {
                     $ErrorMessage = $_.Exception.Message
-                    write-Verbose "$($ErrorMessage)"
+                    Write-Verbose "$($ErrorMessage)"
                     continue
                 }
                 $resolved_string = $resolved_string.replace("'","''")
