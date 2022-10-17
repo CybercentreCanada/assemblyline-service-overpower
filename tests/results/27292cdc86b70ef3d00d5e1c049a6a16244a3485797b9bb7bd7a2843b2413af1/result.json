@@ -1,0 +1,138 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 2,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"docs.microsoft.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://docs.microsoft.com/en-us//scripting/samples/sorting-objects?view=-7.1\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/en-us\"}]",
+        "body_format": "TABLE",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "docs.microsoft.com"
+              ],
+              "uri": [
+                "https://docs.microsoft.com/en-us//scripting/samples/sorting-objects?view=-7.1"
+              ],
+              "uri_path": [
+                "/en-us"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from 27292cdc86b70ef3d00d5e1c049a6a16244a3485797b9bb7bd7a2843b2413af1",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"contributing.md\"}, {\"ioc_type\": \"domain\", \"ioc\": \"licence.md\"}, {\"ioc_type\": \"domain\", \"ioc\": \"readme.md\"}]",
+        "body_format": "TABLE",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "contributing.md",
+                "licence.md",
+                "readme.md"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from layer_0.ps1",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "layer_0.ps1",
+        "sha256": "27813f94e4de4839243733b9b81a8734b0165063d4c1d75944b8a36b82e35472"
+      },
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "43be17d80bc9fe03fcacf99d8d1f4fe2c970c73aa16983d163da15f23c853f1a"
+      },
+      {
+        "name": "layer_1.ps1",
+        "sha256": "d7c3ad73a7d43dcf725391348c40b4246ec26aed0cbcc839064fa14ccc462425"
+      }
+    ],
+    "supplementary": []
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      }
+    ],
+    "tags": {
+      "network.dynamic.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "contributing.md"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "docs.microsoft.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "licence.md"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "readme.md"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://docs.microsoft.com/en-us//scripting/samples/sorting-objects?view=-7.1"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/en-us"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
+}
