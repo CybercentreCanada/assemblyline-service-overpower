@@ -67,9 +67,12 @@ jobs:
           rm packages-microsoft-prod.deb
           echo "Create the directory for the PSDecode module"
           sudo mkdir -p /home/$USER/.local/share/powershell/Modules/PSDecode
+          sudo mkdir -p /var/lib/$USER/.local/share/powershell/Modules/PSDecode
           echo "Move the PSDecode module to the correct directory"
           sudo cp $(pwd)/tools/PSDecode.psm1 /home/$USER/.local/share/powershell/Modules/PSDecode
+          sudo cp $(pwd)/tools/PSDecode.psm1 /var/lib/$USER/.local/share/powershell/Modules/PSDecode
           ls "/home/$USER/.local/share/powershell/Modules/PSDecode"
+          ls "/var/lib/$USER/.local/share/powershell/Modules/PSDecode"
           echo "Testing pwsh if PSDecode exists"
           pwsh -Command printenv PSModulePath
           pwsh -Command Get-Module -ListAvailable -Name PSDecode
