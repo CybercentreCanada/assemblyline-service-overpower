@@ -24,12 +24,12 @@ RUN mkdir -p /home/assemblyline/.local/share/powershell/Modules/PSDecode
 # Move the PSDecode module to the correct directory
 COPY tools/PSDecode.psm1 /home/assemblyline/.local/share/powershell/Modules/PSDecode
 
+# Switch to assemblyline user
+USER assemblyline
+
 RUN echo "Testing pwsh if PSDecode exists"
 RUN pwsh -Command printenv PSModulePath
 RUN pwsh -Command Get-Module -ListAvailable -Name PSDecode
-
-# Switch to assemblyline user
-USER assemblyline
 
 # Copy Overpower service code
 WORKDIR /opt/al_service
