@@ -10,7 +10,7 @@ stage: CORE
 category: Static Analysis
 
 file_required: true
-timeout: 180
+timeout: 300
 disable_cache: false
 
 enabled: false
@@ -18,10 +18,10 @@ is_external: false
 licence_count: 0
 
 submission_params:
-  - default: 30
+  - default: 90
     name: tool_timeout
     type: int
-    value: 30
+    value: 90
 
   - default: false
     name: add_supplementary

@@ -1,6 +1,8 @@
 from json import dumps
-from os import path, listdir
+from os import path, listdir, walk, remove, getcwd, rmdir
+from shutil import copy
 from subprocess import run, TimeoutExpired
+from time import time
 from typing import Optional, Dict, Any, List, Set, Tuple
 
 from assemblyline.common.digests import get_sha256_for_file
@@ -28,6 +30,7 @@ class Overpower(ServiceBase):
         super(Overpower, self).__init__(config)
         self.artifact_hashes = None
         self.artifact_list = None
+        self.safe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
 
     def execute(self, request: ServiceRequest) -> None:
         self.artifact_hashes = set()
@@ -43,12 +46,16 @@ class Overpower(ServiceBase):
             "-dump", self.working_directory,
             "-timeout", f"{tool_timeout}"
         ]
+        start_time = time()
         try:
+            # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform the deobfuscation when setting the tool_timeout param...
             completed_process = run(args=args, capture_output=True, timeout=tool_timeout)
         except TimeoutExpired:
             self.log.debug(f"PSDecode took longer than {tool_timeout}s to complete.")
             completed_process = None
 
+        time_elapsed = time() - start_time
+        self.log.debug(f"PSDecode took {round(time_elapsed)}s to complete.")
         psdecode_output = []
         if completed_process:
             psdecode_output = completed_process.stdout.decode().split("\n")
@@ -62,11 +69,15 @@ class Overpower(ServiceBase):
         files_to_profile.extend([(layer, path.join(self.working_directory, layer))
                                 for layer in sorted(listdir(self.working_directory)) if "layer" in layer])
         total_ps1_profiler_output: Dict[str, Any] = {}
+        start_time = time()
         for file_to_profile, file_path in files_to_profile:
             total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
             self._handle_ps1_profiler_output(
                 total_ps1_profiler_output[file_to_profile],
                 request.result, file_to_profile)
+
+        time_elapsed = time() - start_time
+        self.log.debug(f"PS1Profiler took {round(time_elapsed)}s to complete.")
 
         if add_supplementary:
             self._extract_supplementary(total_ps1_profiler_output, psdecode_output)
@@ -224,6 +235,22 @@ class Overpower(ServiceBase):
         :param worth_extracting: A flag indicating if we should extract files or not.
         :return: None
         """
+        # Since we are running samples right on the Docker container, there is a chance that samples could drop
+        # files to the root directory of execution
+
+        unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
+        files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
+        for file_to_move in files_to_move:
+            copy(file_to_move, self.working_directory)
+            remove(file_to_move)
+
+        # Remove empty dirs
+        for root, dirs, _ in walk(getcwd()):
+            for d in dirs:
+                dir_path = path.join(root, d)
+                if len(listdir(dir_path)) == 0:
+                    rmdir(dir_path)
+
         # Retrieve artifacts
         for file in sorted(listdir(self.working_directory)):
             file_path = path.join(self.working_directory, file)
