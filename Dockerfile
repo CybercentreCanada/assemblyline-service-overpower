@@ -26,7 +26,9 @@ USER assemblyline
 WORKDIR /opt/al_service
 COPY . .
 
+# Create the directory for the PSDecode module
 RUN mkdir -p /var/lib/assemblyline/.local/share/powershell/Modules/PSDecode
+# Move the PSDecode module to the correct directory
 COPY tools/PSDecode.psm1 /var/lib/assemblyline/.local/share/powershell/Modules/PSDecode
 
 # Patch version in manifest

@@ -53,11 +53,21 @@ jobs:
       - script: |
           [ ! -d "$(pwd)/tests" ] && echo "No tests found" && exit
           sudo apt-get update
-          sudo apt-get install -y libfuzzy-dev libfuzzy2
+          sudo apt-get install -y libfuzzy-dev libfuzzy2 wget apt-transport-https software-properties-common
           if [[ -f "$(pwd)/pkglist.txt" ]]; then
             grep -vE '^#' "$(pwd)/pkglist.txt" | xargs sudo apt install -y
           fi
+          echo "Download the Microsoft repository GPG keys"
+          wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+          echo "Update the list of packages after we added packages.microsoft.com"
+          sudo apt-get update
+          echo "Install PowerShell"
+          sudo apt-get install -y powershell
+          echo "Cleanup packages-microsoft-prod.deb"
+          rm packages-microsoft-prod.deb
+          echo "Create the directory for the PSDecode module"
           sudo mkdir -p /var/lib/$USER/.local/share/powershell/Modules/PSDecode
+          echo "Move the PSDecode module to the correct directory"
           sudo cp $(pwd)/tools/PSDecode.psm1 /var/lib/$USER/.local/share/powershell/Modules/PSDecode
           sudo rm -rf /var/lib/apt/lists/*
           sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir assemblyline assemblyline_v4_service
