@@ -57,6 +57,8 @@ jobs:
           if [[ -f "$(pwd)/pkglist.txt" ]]; then
             grep -vE '^#' "$(pwd)/pkglist.txt" | xargs sudo apt install -y
           fi
+          sudo mkdir -p /var/lib/$USER/.local/share/powershell/Modules/PSDecode
+          sudo cp $(pwd)/tools/PSDecode.psm1 /var/lib/$USER/.local/share/powershell/Modules/PSDecode
           sudo rm -rf /var/lib/apt/lists/*
           sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir assemblyline assemblyline_v4_service
           [ -f $(pwd)/requirements.txt ] && sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r $(pwd)/requirements.txt
