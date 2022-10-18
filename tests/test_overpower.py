@@ -176,7 +176,13 @@ def dummy_completed_process_instance():
     class DummyCompletedProcess:
         def __init__(self):
             self.stdout = b"blah\nblah"
-            self.stderr = b"blah\nblah"
+
+        def __enter__(self, *args, **kwargs):
+            pass
+
+        def __exit__(self, *args, **kwargs):
+            return self
+
     yield DummyCompletedProcess()
 
 
@@ -209,7 +215,6 @@ class TestOverpower:
         from assemblyline.odm.messages.task import Task as ServiceTask
         from assemblyline_v4_service.common.request import ServiceRequest
         from assemblyline_v4_service.common.dynamic_service_helper import SandboxOntology
-        from json import loads
         from subprocess import TimeoutExpired
 
         mocker.patch("overpower.profile_ps1", return_value=[])
@@ -217,7 +222,7 @@ class TestOverpower:
         mocker.patch.object(overpower_class_instance, "_handle_psdecode_output")
         mocker.patch.object(overpower_class_instance, "_extract_supplementary")
         mocker.patch.object(overpower_class_instance, "_prepare_artifacts")
-        mocker.patch("overpower.run", return_value=dummy_completed_process_instance)
+        mocker.patch("overpower.Popen", return_value=dummy_completed_process_instance)
         mocker.patch.object(SandboxOntology, "handle_artifacts")
 
         service_task = ServiceTask(sample)
@@ -234,7 +239,7 @@ class TestOverpower:
         assert overpower_class_instance.artifact_list == []
 
         # Code coverage
-        mocker.patch("overpower.run", side_effect=TimeoutExpired("blah", 1))
+        mocker.patch("overpower.Popen", side_effect=TimeoutExpired("blah", 1))
         overpower_class_instance.execute(service_request)
 
     @staticmethod
