@@ -1,7 +1,7 @@
 from json import dumps
 from os import path, listdir, walk, remove, getcwd, rmdir
 from shutil import copy
-from subprocess import run, TimeoutExpired
+from subprocess import PIPE, Popen, TimeoutExpired
 from time import time
 from typing import Optional, Dict, Any, List, Set, Tuple
 
@@ -47,21 +47,19 @@ class Overpower(ServiceBase):
             "-timeout", f"{tool_timeout}"
         ]
         start_time = time()
+        psdecode_output: List[str] = []
+        self.log.debug("Starting PSDecode...")
         try:
             # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform the deobfuscation when setting the tool_timeout param...
-            completed_process = run(args=args, capture_output=True, timeout=tool_timeout)
+            # Stream stdout to resp rather than waiting for process to finish
+            with Popen(args=args, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+                for line in p.stdout:
+                    psdecode_output.append(line)
         except TimeoutExpired:
             self.log.debug(f"PSDecode took longer than {tool_timeout}s to complete.")
-            completed_process = None
 
         time_elapsed = time() - start_time
         self.log.debug(f"PSDecode took {round(time_elapsed)}s to complete.")
-        psdecode_output = []
-        if completed_process:
-            psdecode_output = completed_process.stdout.decode().split("\n")
-            psdecode_error = completed_process.stderr.decode()
-            if psdecode_error:
-                self.log.warning(f"When running PSDecode, the following error was raised: {psdecode_error}")
         self._handle_psdecode_output(psdecode_output, request.result)
 
         # PowerShellProfiler
@@ -70,11 +68,14 @@ class Overpower(ServiceBase):
                                 for layer in sorted(listdir(self.working_directory)) if "layer" in layer])
         total_ps1_profiler_output: Dict[str, Any] = {}
         start_time = time()
+        self.log.debug("Starting PowerShellProfiler...")
         for file_to_profile, file_path in files_to_profile:
+            self.log.debug(f"Profiling {file_to_profile}")
             total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
             self._handle_ps1_profiler_output(
                 total_ps1_profiler_output[file_to_profile],
                 request.result, file_to_profile)
+            self.log.debug(f"Completed profiling {file_to_profile}")
 
         time_elapsed = time() - start_time
         self.log.debug(f"PS1Profiler took {round(time_elapsed)}s to complete.")
