@@ -1651,7 +1651,11 @@ def normalize(output: Dict[str, Any], content_data):
         # Type conversions - Changes STATE
         if re.search(
                 r"([1-2]?[0-9]?[0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data):
-            content_data, modification_flag = type_conversion(output, content_data, modification_flag)
+            # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
+            if len(content_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", content_data)) >= 5000:
+                pass
+            else:
+                content_data, modification_flag = type_conversion(output, content_data, modification_flag)
 
         # String Splits - Changes STATE
         if re.search(r"\.split\((\'|\")[^\'\"]+?\1\)", content_data, re.IGNORECASE):
@@ -1707,12 +1711,20 @@ def unravel_content(output, original_data):
         if all(entry in content_data.lower() for entry in ["streamreader", "frombase64string"]) or \
                 all(entry in content_data.lower() for entry in ["deflatestream", "decompress"]) or \
                 all(entry in content_data.lower() for entry in ["memorystream", "frombase64string"]):
-            content_data, modification_flag = decompress_content(output, content_data, modification_flag)
+            # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
+            if len(content_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", content_data)) >= 5000:
+                pass
+            else:
+                content_data, modification_flag = decompress_content(output, content_data, modification_flag)
 
         # Base64 Decodes - Changes STATE
         entries = base64_search(content_data.encode())
         if len(entries):
-            modification_flag = decode_base64(output, entries, modification_flag)
+            # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
+            if len(content_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", content_data)) >= 5000:
+                pass
+            else:
+                modification_flag = decode_base64(output, entries, modification_flag)
 
         # Decrypts SecureStrings - Changes STATE
         if "convertto-securestring" in content_data.lower() and \
