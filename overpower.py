@@ -8,7 +8,7 @@ from typing import Optional, Dict, Any, List, Set, Tuple
 from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.str_utils import safe_str, truncate
 from assemblyline_v4_service.common.base import ServiceBase
-from assemblyline_v4_service.common.dynamic_service_helper import extract_iocs_from_text_blob, SandboxOntology
+from assemblyline_v4_service.common.dynamic_service_helper import extract_iocs_from_text_blob, OntologyResults
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultTextSection, ResultTableSection
 
@@ -86,8 +86,8 @@ class Overpower(ServiceBase):
         worth_extracting = len(request.result.sections) > 0
         self._prepare_artifacts(worth_extracting)
 
-        # Adding sandbox artifacts using the SandboxOntology helper class
-        _ = SandboxOntology.handle_artifacts(self.artifact_list, request)
+        # Adding sandbox artifacts using the OntologyResults helper class
+        _ = OntologyResults.handle_artifacts(self.artifact_list, request)
 
     def _handle_ps1_profiler_output(self, output: Dict[str, Any], result: Result, file_name: str) -> None:
         """
