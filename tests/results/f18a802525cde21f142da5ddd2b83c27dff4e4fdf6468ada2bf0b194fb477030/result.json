@@ -191,7 +191,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"www.4sync.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580'\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580'\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"www.4sync.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580\"}]",
         "body_format": "TABLE",
         "classification": "TLP:W",
         "depth": 0,
@@ -210,10 +210,10 @@
                 "www.4sync.com"
               ],
               "uri": [
-                "https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580'"
+                "https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580"
               ],
               "uri_path": [
-                "/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580'"
+                "/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580"
               ]
             }
           }
@@ -309,7 +309,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580'"
+          "value": "https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580"
         }
       ],
       "network.dynamic.uri_path": [
@@ -321,7 +321,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580'"
+          "value": "/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580"
         }
       ]
     },
