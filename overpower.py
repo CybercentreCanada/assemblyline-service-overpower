@@ -84,6 +84,7 @@ class Overpower(ServiceBase):
             self._extract_supplementary(total_ps1_profiler_output, psdecode_output)
 
         worth_extracting = len(request.result.sections) > 0
+        self.artifact_hashes.add(request.sha256)
         self._prepare_artifacts(worth_extracting)
 
         # Adding sandbox artifacts using the OntologyResults helper class
