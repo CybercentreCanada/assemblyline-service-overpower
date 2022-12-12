@@ -38,12 +38,7 @@
     ]
   },
   "files": {
-    "extracted": [
-      {
-        "name": "deobfuscated.ps1",
-        "sha256": "6b7905352b4272d7e4998a328c2cb9fde4bdaa889a43c02245fceb4698964483"
-      }
-    ],
+    "extracted": [],
     "supplementary": []
   },
   "results": {
