@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 140,
+    "score": 220,
     "sections": [
       {
         "auto_collapse": false,
@@ -11,12 +11,12 @@
         "depth": 0,
         "heuristic": null,
         "tags": {},
-        "title_text": "Suspicious Content Detected in c538472cd9af46f9f72ec09194aecada626acfde0506e07e3a872a6e95a8f0a2",
+        "title_text": "Suspicious Content Detected in 8f17242fd8a6ffbdda9969e09c04ae54f499ef9768693e29068f41bc54ea4bcd",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: .Invoke(",
+        "body": "Marks: Start-Process",
         "body_format": "TEXT",
         "classification": "TLP:W",
         "depth": 1,
@@ -26,19 +26,19 @@
           "heur_id": 3,
           "score": 10,
           "score_map": {
-            "Script Execution": 10
+            "Starts Process": 10
           },
           "signatures": {
-            "Script Execution": 1
+            "Starts Process": 1
           }
         },
         "tags": {},
-        "title_text": "Signature: Script Execution",
+        "title_text": "Signature: Starts Process",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Convert, FromBase64String, Text.Encoding",
+        "body": "Marks: [-1..-, [array]::Reverse",
         "body_format": "TEXT",
         "classification": "TLP:W",
         "depth": 1,
@@ -46,38 +46,16 @@
           "attack_ids": [],
           "frequency": 1,
           "heur_id": 3,
-          "score": 10,
+          "score": 100,
           "score_map": {
-            "Compression": 10
+            "Obfuscation": 100
           },
           "signatures": {
-            "Compression": 1
+            "Obfuscation": 1
           }
         },
         "tags": {},
-        "title_text": "Signature: Compression",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "Marks: Start-Sleep, sleep -s",
-        "body_format": "TEXT",
-        "classification": "TLP:W",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 10,
-          "score_map": {
-            "Sleeps": 10
-          },
-          "signatures": {
-            "Sleeps": 1
-          }
-        },
-        "tags": {},
-        "title_text": "Signature: Sleeps",
+        "title_text": "Signature: Obfuscation",
         "zeroize_on_tag_safe": false
       },
       {
@@ -104,7 +82,7 @@
       },
       {
         "auto_collapse": false,
-        "body": null,
+        "body": "Marks: IO.File, WriteAllBytes",
         "body_format": "TEXT",
         "classification": "TLP:W",
         "depth": 1,
@@ -114,33 +92,20 @@
           "heur_id": 3,
           "score": 100,
           "score_map": {
-            "Obfuscation:Char Frequency": 100
+            "Byte Usage": 100
           },
           "signatures": {
-            "Obfuscation:Char Frequency": 1
+            "Byte Usage": 1
           }
         },
         "tags": {},
-        "title_text": "Signature: Obfuscation:Char Frequency",
+        "title_text": "Signature: Byte Usage",
         "zeroize_on_tag_safe": false
       }
     ]
   },
   "files": {
-    "extracted": [
-      {
-        "name": "layer_1.ps1",
-        "sha256": "775c3f2cafd0ac60c4f0e89795922f8b252efe614083eaf9ae98cd0158106169"
-      },
-      {
-        "name": "deobfuscated.ps1",
-        "sha256": "d1c16918303b278ab716a340157033ae852b9a4c72e7d45f7644f68c66078703"
-      },
-      {
-        "name": "layer_0.ps1",
-        "sha256": "fd9f8274377a534461c76b4e374dc2e153267fc6c28fbe2e5ba4087d895850b0"
-      }
-    ],
+    "extracted": [],
     "supplementary": []
   },
   "results": {
@@ -149,21 +114,14 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Script Execution"
+          "Starts Process"
         ]
       },
       {
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Compression"
-        ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "Sleeps"
+          "Obfuscation"
         ]
       },
       {
@@ -177,7 +135,7 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Obfuscation:Char Frequency"
+          "Byte Usage"
         ]
       }
     ],

@@ -105,6 +105,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, A
         "Sleeps": 1.0,
         "Uninstalls Apps": 1.0,
         "Obfuscation": 2.0,
+        "Deobfuscation": 1.0,
         "Crypto": 2.0,
         "Enumeration": 1.0,
         "Registry": 1.0,
@@ -397,6 +398,12 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["-Join", "[int]", "-as", "[char]"],
         ["-bxor"],
         ["PtrToStringAnsi"],
+        ["[-1..-"],
+        ["[array]::Reverse"],
+    ]
+
+    behaviour_col["Deobfuscation"] = [
+        ["[Convert]::FromBase64String("],
     ]
 
     behaviour_col["Crypto"] = [
