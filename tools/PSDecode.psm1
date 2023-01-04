@@ -320,7 +320,7 @@ function Replace_Parens
                 Valuefrompipeline = $True)]
             [String]$Command
         )
-       $str_format_pattern = [regex]"[^a-zA-Z0-9.&(]\(\s*'[^']*'\)"
+       $str_format_pattern = [regex]"[^a-zA-Z0-9.&()]\(\s*'[^']*'\)"
        $matches = $str_format_pattern.Matches($Command)
 
        While ($matches.Count -gt 0){
