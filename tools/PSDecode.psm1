@@ -1,3 +1,4 @@
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3
 $Invoke_Expression_Override = @'
 function Invoke-Expression()
     {
@@ -11,6 +12,7 @@ function Invoke-Expression()
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/invoke-command?view=powershell-7.3
 $Invoke_Command_Override = @'
 function Invoke-Command ()
     {
@@ -24,6 +26,7 @@ function Invoke-Command ()
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/invoke-item?view=powershell-7.3
 $Invoke_Item_Override = @'
 function Invoke-Item()
     {
@@ -37,28 +40,15 @@ function Invoke-Item()
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-item?view=powershell-7.3
 $Get_Item_Override = @'
-function Get-Item()
+function Get-Item
     {
-        param(
-            [Parameter( `
-                Mandatory=$True, `
-                Valuefrompipeline = $True)]
-            [String]$Item
-        )
-        $myHashtable = @{
-                            Item = $Item
-                        }
-        $getitem_obj = [PsCustomObject]$myHashtable
-        Add-Member -Membertype ScriptProperty -InputObject $getitem_obj -Name Length -Value {
-            $get_item_return_val = 100000
-            Write-Host "%#[Get-Item.length] Returning length of $($get_item_return_val) for: $($this.Item)%#"
-            return $get_item_return_val
-            }
-        return $getitem_obj
+        Microsoft.PowerShell.Management\Get-Item $args
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.3
 $New_Object_Override = @'
 function new-object {
         param(
@@ -107,7 +97,8 @@ function new-object {
     }
 '@
 
-$Sleep_Override = @'
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/start-sleep?view=powershell-7.3
+$Start_Sleep_Override = @'
 function start-sleep {
         param(
             [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
@@ -117,7 +108,8 @@ function start-sleep {
     }
 '@
 
-$Start_Job = @'
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/start-job?view=powershell-7.3
+$Start_Job_Override = @'
 function start-job {
         param(
             [Parameter(Mandatory=$True, Valuefrompipeline = $True)][ScriptBlock]$ScriptBlock
@@ -126,49 +118,56 @@ function start-job {
     }
 '@
 
-$Receive_Job = @'
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/receive-job?view=powershell-7.3
+$Receive_Job_Override = @'
 function receive-job {}
 '@
 
-$Task_Kill = @'
+# https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/taskkill
+$Task_Kill_Override = @'
 function taskkill {
     Write-Host "%#[taskkill] $($args)%#"
 }
 '@
 
-$Net = @'
+# https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/net-commands-on-operating-systems
+$Net_Override = @'
 function net {
     Write-Host "%#[net] $($args)%#"
 }
 '@
 
-$SC = @'
+# https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc754599(v=ws.11)
+$SC_Override = @'
 function sc {
     Write-Host "%#[sc] $($args)%#"
 }
 '@
 
-$Start = @'
+# https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/start
+$Start_Override = @'
 function start {
     Write-Host "%#[start] $($args)%#"
 }
 '@
 
-$Uninstall_WindowsFeature = @'
+# https://learn.microsoft.com/en-us/powershell/module/servermanager/uninstall-windowsfeature?view=windowsserver2022-ps
+$Uninstall_WindowsFeature_Override = @'
 function Uninstall-WindowsFeature {
     Write-Host "%#[Uninstall-WindowsFeature] $($args)%#"
 }
 '@
 
-$Set_MpPreference = @'
+# https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps
+$Set_MpPreference_Override = @'
 function Set-MpPreference {
     Write-Host "%#[Set-MpPreference] $($args)%#"
 }
 '@
 
-$Start_Process = @'
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process?view=powershell-7.3
+$Start_Process_Override = @'
 function Start-Process {
-    Write-Host $args
     Write-Host "%#[Start-Process] $($args)%#"
 }
 '@
@@ -790,16 +789,16 @@ function PSDecode {
     $override_functions += $Invoke_Command_Override
     $override_functions += $Invoke_Item_Override
     $override_functions += $Get_Item_Override
-    $override_functions += $Sleep_Override
-    $override_functions += $Start_Job
-    $override_functions += $Receive_Job
-    $override_functions += $Task_Kill
-    $override_functions += $Net
-    $override_functions += $SC
-    $override_functions += $Start
-    $override_functions += $Uninstall_WindowsFeature
-    $override_functions += $Set_MpPreference
-    $override_functions += $Start_Process
+    $override_functions += $Start_Sleep_Override
+    $override_functions += $Start_Job_Override
+    $override_functions += $Receive_Job_Override
+    $override_functions += $Task_Kill_Override
+    $override_functions += $Net_Override
+    $override_functions += $SC_Override
+    $override_functions += $Start_Override
+    $override_functions += $Uninstall_WindowsFeature_Override
+    $override_functions += $Set_MpPreference_Override
+    $override_functions += $Start_Process_Override
 
     if(!$x){
         $override_functions += $New_Object_Override
@@ -907,7 +906,11 @@ function PSDecode {
         ForEach ($layer in $layers){
             $heading = "`r`n`r`n" + "#"*30 + " Layer " + ($layers.IndexOf($layer)+1) + " " + "#"*30
             Write-Host $heading
-            Write-Host $layer
+            if($layer.length -gt 10000) {
+                Write-Host $layer.substring(0, 10000) "..."
+            } else {
+                Write-Host $layer
+            }
         }
     }
 
