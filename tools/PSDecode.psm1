@@ -9,6 +9,7 @@ function Invoke-Expression()
             [String]$Command
         )
         Write-Host $Command
+        Microsoft.PowerShell.Utility\Invoke-Expression $Command
     }
 '@
 
@@ -23,6 +24,7 @@ function Invoke-Command ()
             [String]$Command
         )
         Write-Host "%#[Invoke-Command] Execute/Open: $($Command)%#"
+        Microsoft.PowerShell.Core\Invoke-Command $Command
     }
 '@
 
@@ -37,6 +39,7 @@ function Invoke-Item()
             [String]$Item
         )
         Write-Host "%#[Invoke-Item] Execute/Open: $($Item)%#"
+        Microsoft.PowerShell.Management\Invoke-Item $Item
     }
 '@
 
@@ -219,6 +222,7 @@ function Base64_Decode {
         [String[]]$b64_encoded_string
        )
 
+    # This clause is for converting base64-encoded executables
     if($b64_encoded_string -match '^TVqQ'){
         return [Byte[]][Convert]::FromBase64String($b64_encoded_string)
     }
@@ -228,6 +232,7 @@ function Base64_Decode {
         }
     catch{
         $ErrorMessage = $_.Exception.Message
+        Write-Verbose "$($ErrorMessage)"
         return $false
     }
 
@@ -470,7 +475,7 @@ function Resolve_Replaces
                 $resolved_string = $resolved_string.replace("'","''")
                 Write-Verbose "[Resolve_Replaces] Replacing: $($match) With: $($resolved_string)"
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
-                }
+            }
             $matches = $str_format_pattern.Matches($Command)
         }
 
@@ -623,20 +628,26 @@ function Get_SHA256
 
 function Extract_Executables {
     param(
-            [Parameter(Mandatory=$True)]
-            [System.Text.RegularExpressions.MatchCollection]$exe_pattern_matches
+            [Parameter(Mandatory=$True)][String]$dump,
+            [Parameter(Mandatory=$True)][System.Text.RegularExpressions.MatchCollection]$exe_pattern_matches
          )
 
-    $b64_decoded_exes = New-Object System.Collections.ArrayList
-    forEach($match in $exe_pattern_matches){
+    $count = 0
+    forEach($match in $exe_pattern_matches) {
         $b64_decoded = Base64_Decode($match)
-        if($b64_decoded){
-            $b64_decoded_exes.Add($b64_decoded) | Out-Null
+        if (!$b64_decoded) {
+            continue
         }
+        $out_filename = "$dump/psdecode_executable_$($count).bin"
+        if ($PSVersionTable.PSVersion.Major -gt 6) {
+            $b64_decoded | Set-Content $out_filename -AsByteStream
+        }
+        else {
+            $b64_decoded | Set-Content $out_filename -Encoding Byte
+        }
+        Write-Verbose "Writing $($out_filename)"
+        $count += 1
     }
-
-    return $b64_decoded_exes
-
 }
 
 function Dump_Files {
@@ -645,17 +656,21 @@ function Dump_Files {
             [Parameter(Mandatory=$True)][String]$dump
          )
 
+    $layer_count = 0
     ForEach ($layer in $layers)
         {
             $layer = $layer.Trim()
-            $out_filename = "$dump/layer_$($layers.IndexOf($layer)+1).ps1"
+            $out_filename = "$dump/layer_$($layer_count).ps1"
             $layer | Out-File $out_filename -NoNewline
+            Write-Verbose "Writing $($out_filename)"
+            $layer_count += 1
         }
 
     if($beautify)
         {
             $out_filename = "$dump/layer_$($layers.count + 1).ps1"
             Beautify($str_fmt_res) | Out-File $out_filename -NoNewline
+            Write-Verbose "Writing $($out_filename)"
         }
 
     $exe_str_format_pattern = [regex]"TVqQ[^'`"]{100,}"
@@ -663,19 +678,8 @@ function Dump_Files {
 
     if($exe_matches.Count -gt 0)
         {
-            $extracted_exes = Extract_Executables($exe_matches)
-            Write-Host "Identified $($exe_matches.Count) potential executable(s)"
-
-            ForEach($exe in $extracted_exes) {
-                $exe_sha256 = Get_SHA256($exe)
-                $out_filename = "$dump/psdecode_executable_$($extracted_exes.IndexOf($exe)+1).bin"
-                if ($PSVersionTable.PSVersion.Major -gt 6) {
-                    $exe | Set-Content $out_filename -AsByteStream
-                }
-                else {
-                    $exe | Set-Content $out_filename -Encoding Byte
-                }
-            }
+            Write-Verbose "Identified $($exe_matches.Count) potential executable(s)"
+            $extracted_exes = Extract_Executables $dump $exe_matches
         }
 }
 
@@ -735,7 +739,7 @@ function PSDecode {
     )
     $layers  = New-Object System.Collections.Generic.List[System.Object]
     $actions = New-Object System.Collections.Generic.List[System.Object]
-    $action_pattern = [regex]'%#\[[^\]]+\].+?%#'
+    $action_pattern = [regex]'%#\[([^\]]+)\]\s([^%]+)%#'
 
     $override_functions = @()
     $encoded_script = ""
@@ -753,6 +757,8 @@ function PSDecode {
         }
     }
     catch {
+            $ErrorMessage = $_.Exception.Message
+            Write-Verbose "$($ErrorMessage)"
             throw "Error reading: $($InputObject)"
         }
 
@@ -806,6 +812,8 @@ function PSDecode {
 
     $override_functions  = ($override_functions -join "`r`n") + "`r`n`r`n"
 
+    Write-Verbose "Original file hash: $(Get_SHA256([System.Text.Encoding]::UNICODE.GetBytes($encoded_script)))"
+    $original_script = $encoded_script
     $clean_code = Code_Cleanup($encoded_script)
 
     if($encoded_script -ne $clean_code){
@@ -815,9 +823,13 @@ function PSDecode {
     $decoder = $override_functions + $encoded_script
     $b64_decoder = Base64_Encode($decoder)
 
-
     while($layers -notcontains ($encoded_script) -and -not [string]::IsNullOrEmpty($encoded_script)){
-        $layers.Add($encoded_script)
+        $encoded_script_hash = Get_SHA256([System.Text.Encoding]::UNICODE.GetBytes($encoded_script))
+        Write-Verbose "Running $($encoded_script_hash)"
+        if ($encoded_script -ne $original_script) {
+            Write-Verbose "Adding $($encoded_script_hash) to layers"
+            $layers.Add($encoded_script)
+        }
 
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo
         $pinfo.FileName = "pwsh"
@@ -830,7 +842,6 @@ function PSDecode {
             $pinfo.Arguments = "-EncodedCommand $($b64_decoder)"
         }
         else{
-
             $tmp_file = [System.IO.Path]::GetTempPath() + [GUID]::NewGuid().ToString() + ".ps1";
             Base64_Decode($b64_decoder) | Out-File $tmp_file
             $pinfo.Arguments = "-File $($tmp_file)"
@@ -839,7 +850,13 @@ function PSDecode {
         $p = New-Object System.Diagnostics.Process
         $p.StartInfo = $pinfo
         $p.Start() | Out-Null
+        Write-Verbose "Started process with encoded file..."
 
+        # Read stdin\stdout synchronously
+        # https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.process.standardoutput?view=net-7.0
+        $encoded_script = $p.StandardOutput.ReadToEnd()
+
+        # https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.process.waitforexit?view=net-7.0
         if(-not $p.WaitForExit($timeout*1000)){
             Write-Host -ForegroundColor Red "$($timeout) second timeout hit when executing decoder. Killing process and breaking out"
             Stop-Process $p
@@ -849,12 +866,13 @@ function PSDecode {
             break
         }
 
-        $encoded_script = $p.StandardOutput.ReadToEnd()
+        Write-Verbose "Process has finished..."
+
         $stderr = $p.StandardError.ReadToEnd()
 
         if ($tmp_file -and (Test-Path $tmp_file)){
             Remove-Item $tmp_file
-            }
+        }
 
         $action_matches = $action_pattern.Matches($encoded_script)
 
@@ -862,12 +880,23 @@ function PSDecode {
             $encoded_script = Code_Cleanup($encoded_script)
             $decoder = ($override_functions -join "`r`n`r`n") + "`r`n`r`n" + $encoded_script
             $b64_decoder = Base64_Encode($decoder)
-
         }
         ElseIf($p.ExitCode -eq 0 -and $action_matches.Count -gt 0){
             Write-Verbose 'Final layer processed. Successful exit with actions detected'
             ForEach($action in $action_matches){
-                $actions.Add(($action.ToString().Replace('%#','').Trim())) | Out-Null
+                $action_detected = ($action.ToString().Replace('%#','').Trim())
+                Write-Verbose "Action detected: $($action.groups[1].Value)"
+                $actions.Add($action_detected) | Out-Null
+                # Remove? overriden lines
+                if ($action.groups.count -eq 3) {
+                    Write-Verbose "Replacing action '$($action.groups[0].Value)' with ''"
+                    $encoded_script = $encoded_script.Replace($action.groups[0].Value, "").Trim()
+                }
+            }
+            if (-not [string]::IsNullOrEmpty($encoded_script) -and $layers -notcontains ($encoded_script)) {
+                $encoded_script_hash = Get_SHA256([System.Text.Encoding]::UNICODE.GetBytes($encoded_script))
+                Write-Verbose "Adding $($encoded_script_hash) to layers"
+                $layers.Add($encoded_script)
             }
             Break
         }
@@ -906,10 +935,20 @@ function PSDecode {
         ForEach ($layer in $layers){
             $heading = "`r`n`r`n" + "#"*30 + " Layer " + ($layers.IndexOf($layer)+1) + " " + "#"*30
             Write-Host $heading
-            if($layer.length -gt 10000) {
-                Write-Host $layer.substring(0, 10000) "..."
-            } else {
-                Write-Host $layer
+            $layer_lines = $layer -split '\r?\n';
+            $layer_line_count = 0
+            ForEach ($layer_line in $layer_lines) {
+                if ($layer_line_count -gt 100) {
+                    # After 100 lines, we get it
+                    Write-Host "..."
+                    break
+                }
+                if($layer_line.length -gt 1000) {
+                    Write-Host "$($layer_line.substring(0, 1000))..."
+                } else {
+                    Write-Host $layer_line
+                }
+                $layer_line_count += 1
             }
         }
     }
@@ -935,10 +974,24 @@ function PSDecode {
             $heading = "`r`n`r`n" + "#"*30 + " Actions " + "#"*30
             Write-Host $heading
             for ($counter=0; $counter -lt $actions.Count; $counter++){
-                $line = "$($actions[$counter])"
-                Write-Host $line
+                $action = "$($actions[$counter])"
+                $action_lines = $action -split "`n";
+                $action_line_count = 0
+                ForEach ($action_line in $action_lines) {
+                    if ($action_line_count -gt 100) {
+                        # After 100 lines, we get it
+                        Write-Host "..."
+                        break
+                    }
+                    if($action_line.length -gt 10000) {
+                        Write-Host $action_line.substring(0, 10000) "..."
+                    } else {
+                        Write-Host $action_line
+                    }
+                    $action_line_count += 1
                 }
             }
+        }
     }
     ElseIf($p.ExitCode -ne 0 -and -not $stderr){
         $heading = "`r`n`r`n" + "#"*30 + " Warning! " + "#"*31
