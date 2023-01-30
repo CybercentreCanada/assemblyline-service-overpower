@@ -1,11 +1,12 @@
 from json import dumps
-from os import path, listdir, walk, remove, getcwd, rmdir
+from os import environ, getcwd, listdir, path, remove, rmdir, walk
 from shutil import copy
 from subprocess import PIPE, Popen, TimeoutExpired
 from time import time
 from typing import Optional, Dict, Any, List, Set, Tuple
 
 from assemblyline.common.digests import get_sha256_for_file
+from assemblyline.common.forge import get_identify
 from assemblyline.common.str_utils import safe_str, truncate
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import extract_iocs_from_text_blob, OntologyResults
@@ -31,6 +32,7 @@ class Overpower(ServiceBase):
         self.artifact_hashes = None
         self.artifact_list = None
         self.safe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
+        self.identify = get_identify(use_cache=environ.get('PRIVILEGED', 'false').lower() == 'true')
 
     def execute(self, request: ServiceRequest) -> None:
         self.artifact_hashes = set()
@@ -162,8 +164,17 @@ class Overpower(ServiceBase):
         for index, extracted in enumerate(output["extracted"]):
             if number_of_extracted >= extracted_cap:
                 break
-            with open(path.join(self.working_directory, f"ps1profiler_{extracted['type']}_{index}"), "wb") as f:
+
+            path_to_write = path.join(self.working_directory, f"ps1profiler_{extracted['type']}_{index}")
+            with open(path_to_write, "wb") as f:
                 f.write(extracted["data"])
+
+            file_type_details = self.identify.fileinfo(path_to_write)
+            if file_type_details["type"] in ["unknown", "text/plain"]:
+                self.log.debug(f"{path_to_write} was identified as {file_type_details['type']}. Ignoring...")
+                remove(path_to_write)
+                continue
+
             number_of_extracted += 1
 
         if output["deobfuscated"]:

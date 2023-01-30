@@ -2,11 +2,12 @@
 import base64
 import binascii
 from collections import defaultdict
+from Crypto.Cipher import AES
 import os
 import re
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 import zlib
-from Crypto.Cipher import AES
+
 from assemblyline_v4_service.common.extractor.base64 import base64_search
 
 
@@ -61,7 +62,7 @@ def strip_ascii(content_data):
 #######################
 
 
-def score_behaviours(behaviour_tags: Dict[str, Any]) -> (float, str, Dict[str, Any]):
+def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[str, Any]]:
     """
     Scores the identified behaviours.
 
