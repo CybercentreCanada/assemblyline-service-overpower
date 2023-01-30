@@ -288,7 +288,7 @@ class TestOverpower:
                   "score": 3, "families": [], "extracted": [{"type": "base64_decoded", "data": b"blah"}]}
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert len(res.sections) == 3
-        assert path.exists(path.join(overpower_class_instance.working_directory, "ps1profiler_base64_decoded_0"))
+        assert not path.exists(path.join(overpower_class_instance.working_directory, "ps1profiler_base64_decoded_0"))
 
     @staticmethod
     def test_handle_psdecode_output(overpower_class_instance):
