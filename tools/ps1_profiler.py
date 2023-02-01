@@ -1752,6 +1752,8 @@ def unravel_content(output, original_data):
 
 
 def profile_ps1(sample_path, working_dir):
+    global garbage_list
+    garbage_list = list()
     output: Dict[str, Any] = {
         "behaviour": {"commands": [], "tags": []},
         "deobfuscated": None,

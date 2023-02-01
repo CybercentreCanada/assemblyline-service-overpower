@@ -175,6 +175,7 @@ class Overpower(ServiceBase):
                 remove(path_to_write)
                 continue
 
+            self.log.debug(f"Wrote {path_to_write} to disk for extraction...")
             number_of_extracted += 1
 
         if output["deobfuscated"]:
@@ -270,6 +271,12 @@ class Overpower(ServiceBase):
 
             artifact_sha256 = get_sha256_for_file(file_path)
             if artifact_sha256 in self.artifact_hashes:
+                self.log.debug(f"Ignoring {file_path} since it is a duplicate extracted file...")
+                # We also want to rename the artifact that this file is a duplicate of
+                # to avoid naming conflicts
+                artifact = next((artifact for artifact in self.artifact_list if artifact["sha256"] == artifact_sha256), None)
+                if artifact:
+                    artifact["name"] = artifact_sha256
                 continue
             else:
                 self.artifact_hashes.add(artifact_sha256)
@@ -293,7 +300,8 @@ class Overpower(ServiceBase):
                 "name": file,
                 "path": file_path,
                 "description": description,
-                "to_be_extracted": to_be_extracted
+                "to_be_extracted": to_be_extracted,
+                "sha256": artifact_sha256,
             })
             self.log.debug(
                 f"Adding extracted file: {file_path}"
