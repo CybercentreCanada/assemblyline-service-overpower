@@ -528,6 +528,32 @@ function Resolves_PowerShell_On_Linux
     return $Command
 }
 
+function Resolves_Windows_Directories_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+    $currdir = "./"
+    $windir_pattern = [regex]'(?i)([a-zA-Z]:\\(?:\w+\\)*)\w+\.\w+'
+    $matches = $windir_pattern.Matches($Command)
+    ForEach($match in $matches){
+        # Convert \\ -> / and join the path to the present working directory
+        $resolved_string = Join-Path -Path $currdir -ChildPath $match.groups[0].Value.Replace("\\", "/")
+        $directory_to_create = Join-Path -Path $currdir -ChildPath $match.groups[1].Value.Replace("\\", "/")
+        if (-not (Test-Path $directory_to_create)) {
+            Write-Verbose "Creating $($directory_to_create)"
+            New-Item -ItemType "Directory" -Path $directory_to_create | Out-Null
+        }
+
+        Write-Verbose "[Resolves_Windows_Directories_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+        $Command = $Command.Replace($match, "$($resolved_string)")
+    }
+    return $Command
+}
+
 function String_Concat_Cleanup
     {
         param(
@@ -565,6 +591,7 @@ function Code_Cleanup
             $new_command = Resolve_String_Formats($new_command)
             $new_command = Resolve_Replaces($new_command)
             $new_command = Resolves_PowerShell_On_Linux($new_command)
+            $new_command = Resolves_Windows_Directories_On_Linux($new_command)
         }
 
         return $new_command

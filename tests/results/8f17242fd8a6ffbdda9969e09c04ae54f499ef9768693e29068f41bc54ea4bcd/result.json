@@ -105,7 +105,12 @@
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "6983f9e85b94ff078cebd685167566f006949def14dbcc499fbf50c77f74c441",
+        "sha256": "6983f9e85b94ff078cebd685167566f006949def14dbcc499fbf50c77f74c441"
+      }
+    ],
     "supplementary": []
   },
   "results": {

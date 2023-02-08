@@ -47,6 +47,14 @@ heuristics:
     filetype: '*'
     description: PowerShellProfiler has detected suspicious content
 
+  - heur_id: 4
+    name: Batch file was written to disk
+    score: 1
+    filetype: '*'
+    description: PSDecode wrote a batch file to disk
+    signature_score_map:
+      suspicious_url_found: 500
+
 docker_config:
   allow_internet_access: false
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG

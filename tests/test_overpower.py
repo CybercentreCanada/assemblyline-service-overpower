@@ -336,6 +336,8 @@ class TestOverpower:
     def test_prepare_artifacts(overpower_class_instance):
         from os.path import join
         from tools.ps1_profiler import DEOBFUS_FILE
+        from assemblyline_v4_service.common.result import Result
+        res = Result()
         overpower_class_instance.artifact_list = []
         overpower_class_instance.artifact_hashes = set()
 
@@ -352,7 +354,7 @@ class TestOverpower:
         with open(item_4, "w") as f:
             f.write("blah_2")
 
-        overpower_class_instance._prepare_artifacts()
+        overpower_class_instance._prepare_artifacts(res)
         assert overpower_class_instance.artifact_list[0] == {
             "name": DEOBFUS_FILE,
             "path": item_0,
@@ -384,7 +386,7 @@ class TestOverpower:
 
         overpower_class_instance.artifact_list = []
         overpower_class_instance.artifact_hashes = set()
-        overpower_class_instance._prepare_artifacts(False)
+        overpower_class_instance._prepare_artifacts(res, False)
         assert overpower_class_instance.artifact_list[0] == {
             "name": "2d0bc6e82ff7dda5491eefc888ea9fae386f8460bf461fa763944149d0cd8caa",
             "path": item_2,

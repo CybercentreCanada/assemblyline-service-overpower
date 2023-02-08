@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[System.Net.WebClient.DownloadFile] Download From: https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580 --> Save To: C:\\Users\\Public\\WindowsKeys.ps1\n",
+        "body": "[System.Net.WebClient.DownloadFile] Download From: https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580 --> Save To: ./C:/Users/Public/WindowsKeys.ps1\n",
         "body_format": "TEXT",
         "classification": "TLP:W",
         "depth": 0,
@@ -248,8 +248,8 @@
   "files": {
     "extracted": [
       {
-        "name": "6cb5e117d3ad39580471773ed792d308832e2aed931dcdb98eb30e7d189f1afe",
-        "sha256": "6cb5e117d3ad39580471773ed792d308832e2aed931dcdb98eb30e7d189f1afe"
+        "name": "9894384ffe071b790a2b03b0b363da0515739b9e52ceec032a6244bde3539d29",
+        "sha256": "9894384ffe071b790a2b03b0b363da0515739b9e52ceec032a6244bde3539d29"
       }
     ],
     "supplementary": []
