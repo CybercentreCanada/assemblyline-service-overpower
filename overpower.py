@@ -87,7 +87,7 @@ class Overpower(ServiceBase):
 
         worth_extracting = len(request.result.sections) > 0
         self.artifact_hashes.add(request.sha256)
-        self._prepare_artifacts(worth_extracting)
+        self._prepare_artifacts(request.result, worth_extracting)
 
         # Adding sandbox artifacts using the OntologyResults helper class
         _ = OntologyResults.handle_artifacts(self.artifact_list, request)
@@ -243,7 +243,7 @@ class Overpower(ServiceBase):
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
 
-    def _prepare_artifacts(self, worth_extracting: bool = True) -> None:
+    def _prepare_artifacts(self, result: Result, worth_extracting: bool = True) -> None:
         """
         This method prepares artifacts that have been dumped by PowerShell de-obfuscation tools
         :param worth_extracting: A flag indicating if we should extract files or not.
@@ -306,3 +306,23 @@ class Overpower(ServiceBase):
             self.log.debug(
                 f"Adding extracted file: {file_path}"
                 if to_be_extracted else f"Adding supplementary file: {file_path}")
+
+            for f in files_to_move:
+                if "/" in f:
+                    file_name = f.split("/")[-1]
+                    if file == file_name:
+                        file_type_details = self.identify.fileinfo(file_path)
+                        self._handle_specific_written_files(file_type_details["type"], file_path, result)
+                        break
+
+    @staticmethod
+    def _handle_specific_written_files(file_type: str, file_path: str, result: Result) -> None:
+        if file_type == "code/batch":
+            with open(file_path, "r") as f:
+                body = f.read()
+            url_sec = ResultTableSection("IOCs found in extracted batch file")
+            extract_iocs_from_text_blob(body, url_sec, is_network_static=True)
+            if url_sec.body and url_sec.tags.get("network.static.uri"):
+                url_sec.set_heuristic(4)
+                url_sec.heuristic.add_signature_id("suspicious_url_found")
+                result.add_section(url_sec)
