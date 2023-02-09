@@ -276,9 +276,9 @@ class TestOverpower:
         assert check_section_equality(res.sections[1], correct_res_sec)
 
         correct_ioc_res_sec = ResultTableSection("IOC(s) extracted from blah")
-        correct_ioc_res_sec.add_tag("network.dynamic.domain", "blah.com")
-        correct_ioc_res_sec.add_tag("network.dynamic.uri", "http://blah.com/blah.exe")
-        correct_ioc_res_sec.add_tag("network.dynamic.uri_path", "/blah.exe")
+        correct_ioc_res_sec.add_tag("network.static.domain", "blah.com")
+        correct_ioc_res_sec.add_tag("network.static.uri", "http://blah.com/blah.exe")
+        correct_ioc_res_sec.add_tag("network.static.uri_path", "/blah.exe")
         correct_ioc_res_sec.set_heuristic(1)
         table_data = [{"ioc_type": "domain", "ioc": "blah.com"},
                       {"ioc_type": "uri", "ioc": "http://blah.com/blah.exe"},

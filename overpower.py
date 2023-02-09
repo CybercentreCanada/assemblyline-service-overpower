@@ -187,7 +187,7 @@ class Overpower(ServiceBase):
                     static_file_lines.append(line)
             ioc_res_sec = ResultTableSection(f"IOC(s) extracted from {file_name}")
             for static_file_line in static_file_lines:
-                extract_iocs_from_text_blob(truncate(static_file_line, 1000), ioc_res_sec)
+                extract_iocs_from_text_blob(truncate(static_file_line, 1000), ioc_res_sec, is_network_static=True)
             if ioc_res_sec.body:
                 # Removing duplicate IOCs
                 for tag, values in ioc_res_sec.tags.items():
