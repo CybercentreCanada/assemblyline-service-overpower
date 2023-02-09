@@ -239,7 +239,11 @@
   "files": {
     "extracted": [
       {
-        "name": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed",
+        "name": "44f8deafd834f09c7e21dfa57ab2fe462dae0bbd686b14d209e561146a41f5e2",
+        "sha256": "44f8deafd834f09c7e21dfa57ab2fe462dae0bbd686b14d209e561146a41f5e2"
+      },
+      {
+        "name": "layer_0.ps1",
         "sha256": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed"
       },
       {

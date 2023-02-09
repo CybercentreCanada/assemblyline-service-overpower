@@ -537,12 +537,12 @@ function Resolves_Windows_Directories_On_Linux
         [String]$Command
     )
     $currdir = "./"
-    $windir_pattern = [regex]'(?i)([a-zA-Z]:\\(?:\w+\\)*)\w+\.\w+'
+    $windir_pattern = [regex]'(?i)((?:[a-zA-Z]:|%\w+%)\\(?:\w+\\)*)\w+\.\w+'
     $matches = $windir_pattern.Matches($Command)
     ForEach($match in $matches){
-        # Convert \\ -> / and join the path to the present working directory
-        $resolved_string = Join-Path -Path $currdir -ChildPath $match.groups[0].Value.Replace("\\", "/")
-        $directory_to_create = Join-Path -Path $currdir -ChildPath $match.groups[1].Value.Replace("\\", "/")
+        # Convert \\ -> / and remove % and join the path to the present working directory
+        $resolved_string = Join-Path -Path $currdir -ChildPath $match.groups[0].Value.Replace("\\", "/").Replace("%", "")
+        $directory_to_create = Join-Path -Path $currdir -ChildPath $match.groups[1].Value.Replace("\\", "/").Replace("%", "")
         if (-not (Test-Path $directory_to_create)) {
             Write-Verbose "Creating $($directory_to_create)"
             New-Item -ItemType "Directory" -Path $directory_to_create | Out-Null
@@ -550,6 +550,24 @@ function Resolves_Windows_Directories_On_Linux
 
         Write-Verbose "[Resolves_Windows_Directories_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
         $Command = $Command.Replace($match, "$($resolved_string)")
+    }
+    return $Command
+}
+
+function Replace_Unusable_Args_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    $unusable_args_pattern = [regex]'(?i)(bypass|hidden|-(?:noprofile|windowstyle|executionpolicy))\b'
+    $matches = $unusable_args_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Replace_Unusable_Args_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
     }
     return $Command
 }
@@ -592,6 +610,7 @@ function Code_Cleanup
             $new_command = Resolve_Replaces($new_command)
             $new_command = Resolves_PowerShell_On_Linux($new_command)
             $new_command = Resolves_Windows_Directories_On_Linux($new_command)
+            $new_command = Replace_Unusable_Args_On_Linux($new_command)
         }
 
         return $new_command

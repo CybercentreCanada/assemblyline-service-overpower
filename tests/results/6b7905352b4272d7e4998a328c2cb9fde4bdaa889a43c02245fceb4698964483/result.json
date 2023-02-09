@@ -19,7 +19,7 @@
         },
         "tags": {
           "network": {
-            "dynamic": {
+            "static": {
               "domain": [
                 "focusmedica.in"
               ],
@@ -50,21 +50,21 @@
       }
     ],
     "tags": {
-      "network.dynamic.domain": [
+      "network.static.domain": [
         {
           "heur_id": 1,
           "signatures": [],
           "value": "focusmedica.in"
         }
       ],
-      "network.dynamic.uri": [
+      "network.static.uri": [
         {
           "heur_id": 1,
           "signatures": [],
           "value": "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
         }
       ],
-      "network.dynamic.uri_path": [
+      "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
