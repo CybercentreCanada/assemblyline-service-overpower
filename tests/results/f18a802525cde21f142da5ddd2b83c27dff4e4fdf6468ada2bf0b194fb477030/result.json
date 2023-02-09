@@ -227,7 +227,7 @@
         },
         "tags": {
           "network": {
-            "dynamic": {
+            "static": {
               "domain": [
                 "www.4sync.com"
               ],
@@ -248,8 +248,12 @@
   "files": {
     "extracted": [
       {
-        "name": "9894384ffe071b790a2b03b0b363da0515739b9e52ceec032a6244bde3539d29",
-        "sha256": "9894384ffe071b790a2b03b0b363da0515739b9e52ceec032a6244bde3539d29"
+        "name": "deobfuscated.ps1",
+        "sha256": "40d9d7227e8f12a093d193b987b923bbcb7bc16239bbee2d9529cf888ac9727c"
+      },
+      {
+        "name": "layer_0.ps1",
+        "sha256": "4297d02ac610c5aeae348803ee96f744cadb5770bdc9d471cd49f7f6631c5f6f"
       }
     ],
     "supplementary": []
@@ -322,19 +326,9 @@
           "heur_id": 1,
           "signatures": [],
           "value": "www.4sync.com"
-        },
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "www.4sync.com"
         }
       ],
       "network.dynamic.uri": [
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580"
-        },
         {
           "heur_id": 1,
           "signatures": [],
@@ -346,7 +340,23 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580"
-        },
+        }
+      ],
+      "network.static.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "www.4sync.com"
+        }
+      ],
+      "network.static.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580"
+        }
+      ],
+      "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
