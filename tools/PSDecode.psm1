@@ -554,7 +554,7 @@ function Resolves_Windows_Directories_On_Linux
     return $Command
 }
 
-function Replace_Unusable_Args_On_Linux
+function Remove_Unusable_Args_On_Linux
     {
     param(
         [Parameter( `
@@ -566,13 +566,13 @@ function Replace_Unusable_Args_On_Linux
     $unusable_args_pattern = [regex]'(?i)(bypass|hidden|-(?:noprofile|windowstyle|executionpolicy))\b'
     $matches = $unusable_args_pattern.Matches($Command)
     ForEach($match in $matches){
-        Write-Verbose "[Replace_Unusable_Args_On_Linux] Removing: $($match)"
+        Write-Verbose "[Remove_Unusable_Args_On_Linux] Removing: $($match)"
         $Command = $Command.Replace($match, "")
     }
     return $Command
 }
 
-function String_Concat_Cleanup
+function Remove_String_Concat
     {
         param(
             [Parameter( `
@@ -581,6 +581,17 @@ function String_Concat_Cleanup
             [String]$Command
         )
        return $Command.Replace("'+'", "").Replace('"+"','')
+    }
+
+function Remove_Carets
+    {
+        param(
+            [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+            [String]$Command
+        )
+       return $Command.Replace("^", "")
     }
 
 function Code_Cleanup
@@ -605,12 +616,13 @@ function Code_Cleanup
             $new_command = Clean_Func_Calls($new_command)
             $new_command = Replace_Parens($new_command)
             $new_command = Replace_FuncParensWrappers($new_command)
-            $new_command = String_Concat_Cleanup($new_command)
+            $new_command = Remove_String_Concat($new_command)
             $new_command = Resolve_String_Formats($new_command)
             $new_command = Resolve_Replaces($new_command)
             $new_command = Resolves_PowerShell_On_Linux($new_command)
             $new_command = Resolves_Windows_Directories_On_Linux($new_command)
-            $new_command = Replace_Unusable_Args_On_Linux($new_command)
+            $new_command = Remove_Unusable_Args_On_Linux($new_command)
+            $new_command = Remove_Carets($new_command)
         }
 
         return $new_command

@@ -1,0 +1,199 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 12,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[start] /min ./C:/Users/Public/agafX.cmd und https://thetwindollar.com/L7PJjN/01.png\n",
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"thetwindollar.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://thetwindollar.com/l7pjjn/01.png\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7pjjn/01.png\"}]",
+        "body_format": "TABLE",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "thetwindollar.com"
+              ],
+              "uri": [
+                "https://thetwindollar.com/l7pjjn/01.png"
+              ],
+              "uri_path": [
+                "/l7pjjn/01.png"
+              ]
+            }
+          }
+        },
+        "title_text": "IOCs found in actions",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in 924a5cc8a0b44c59625c42b8ef7b5804a73ddfab71e5271ad33b49b0709a68bf",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "One Liner": 10
+          },
+          "signatures": {
+            "One Liner": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: One Liner",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"thetwindollar.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://thetwindollar.com/l7pjjn/01.png\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7pjjn/01.png\"}]",
+        "body_format": "TABLE",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "static": {
+              "domain": [
+                "thetwindollar.com"
+              ],
+              "uri": [
+                "https://thetwindollar.com/l7pjjn/01.png"
+              ],
+              "uri_path": [
+                "/l7pjjn/01.png"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from 924a5cc8a0b44c59625c42b8ef7b5804a73ddfab71e5271ad33b49b0709a68bf",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "layer_0.ps1",
+        "sha256": "0868a5fa7445d05d75ed7c98970f90b4e9538e0fa5f492b9231e7869dd8c3cce"
+      },
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "34eb5c5354c0b835df51b08adb6ba1fa261d63bffb07bbdacd7f3e7b96a1ebf5"
+      },
+      {
+        "name": "agafX.cmd",
+        "sha256": "42db4fd148750f2e1bbb39ae373eaf3aacf11a4cea21b1759732ea78bc99368a"
+      }
+    ],
+    "supplementary": []
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "One Liner"
+        ]
+      }
+    ],
+    "tags": {
+      "network.dynamic.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "thetwindollar.com"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://thetwindollar.com/l7pjjn/01.png"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/l7pjjn/01.png"
+        }
+      ],
+      "network.static.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "thetwindollar.com"
+        }
+      ],
+      "network.static.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://thetwindollar.com/l7pjjn/01.png"
+        }
+      ],
+      "network.static.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/l7pjjn/01.png"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
+}
