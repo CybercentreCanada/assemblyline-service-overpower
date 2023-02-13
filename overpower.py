@@ -1,5 +1,6 @@
 from json import dumps
 from os import environ, getcwd, listdir, path, remove, rmdir, walk
+import re
 from shutil import copy
 from subprocess import PIPE, Popen, TimeoutExpired
 from time import time
@@ -12,6 +13,7 @@ from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.dynamic_service_helper import extract_iocs_from_text_blob, OntologyResults
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultTextSection, ResultTableSection
+from assemblyline_v4_service.common.tag_helper import add_tag
 
 from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS
 
@@ -23,6 +25,8 @@ TRANSLATE_SCORE = {
     5.0: 900,  # Elevated Risk (85-94% hit rate)
     6.0: 1000,  # Malware (95-100% hit rate)
 }
+
+DOWNLOAD_FILE_REGEX = "\[.+\] Download From: (.+) --> Save To: (.+)\n"
 
 
 class Overpower(ServiceBase):
@@ -221,6 +225,16 @@ class Overpower(ServiceBase):
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         for action in actions:
             extract_iocs_from_text_blob(action, actions_ioc_table)
+
+            match = re.search(DOWNLOAD_FILE_REGEX, action, re.IGNORECASE)
+            if match and len(match.regs) == 3:
+                url = match.group(1)
+                path = match.group(2)
+                was_tag_added = add_tag(psdecode_actions_res_sec, "network.dynamic.uri", url)
+                if not was_tag_added:
+                    psdecode_actions_res_sec.add_tag("file.string.extracted", url)
+                psdecode_actions_res_sec.add_tag("file.path", path)
+
         if actions_ioc_table.body:
             actions_ioc_table.set_heuristic(1)
             psdecode_actions_res_sec.add_subsection(actions_ioc_table)

