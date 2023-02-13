@@ -1,5 +1,6 @@
 from json import dumps
 from os import environ, getcwd, listdir, path, remove, rmdir, walk
+import re
 from shutil import copy
 from subprocess import PIPE, Popen, TimeoutExpired
 from time import time
@@ -23,6 +24,8 @@ TRANSLATE_SCORE = {
     5.0: 900,  # Elevated Risk (85-94% hit rate)
     6.0: 1000,  # Malware (95-100% hit rate)
 }
+
+DOWNLOAD_FILE_REGEX = "\[.+\] Download From: .+ --> Save To: (.+)\n"
 
 
 class Overpower(ServiceBase):
@@ -221,6 +224,12 @@ class Overpower(ServiceBase):
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         for action in actions:
             extract_iocs_from_text_blob(action, actions_ioc_table)
+
+            match = re.search(DOWNLOAD_FILE_REGEX, action, re.IGNORECASE)
+            if match and len(match.regs) == 2:
+                path = match.group(1)
+                psdecode_actions_res_sec.add_tag("file.path", path)
+
         if actions_ioc_table.body:
             actions_ioc_table.set_heuristic(1)
             psdecode_actions_res_sec.add_subsection(actions_ioc_table)

@@ -10,7 +10,13 @@
         "classification": "TLP:W",
         "depth": 0,
         "heuristic": null,
-        "tags": {},
+        "tags": {
+          "file": {
+            "path": [
+              "./C:/Users/Public/WindowsKeys.ps1"
+            ]
+          }
+        },
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
       },
@@ -321,6 +327,13 @@
       }
     ],
     "tags": {
+      "file.path": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "./C:/Users/Public/WindowsKeys.ps1"
+        }
+      ],
       "network.dynamic.domain": [
         {
           "heur_id": 1,
