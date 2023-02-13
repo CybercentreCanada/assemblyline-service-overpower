@@ -175,6 +175,13 @@ function Start-Process {
 }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.3
+$Invoke_WebRequest_Override = @'
+function Invoke-WebRequest {
+    Write-Host "%#[Invoke-WebRequest] Download from: $($args)%#"
+}
+'@
+
 function Get_Encoding_Type {
     param(
         [Parameter(Mandatory=$True)]
@@ -863,6 +870,7 @@ function PSDecode {
     $override_functions += $Uninstall_WindowsFeature_Override
     $override_functions += $Set_MpPreference_Override
     $override_functions += $Start_Process_Override
+    $override_functions += $Invoke_WebRequest_Override
 
     if(!$x){
         $override_functions += $New_Object_Override
