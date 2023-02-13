@@ -15,6 +15,16 @@
             "path": [
               "./C:/Users/Public/WindowsKeys.ps1"
             ]
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "www.4sync.com"
+              ],
+              "uri": [
+                "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+              ]
+            }
           }
         },
         "title_text": "Actions detected with PSDecode",
@@ -336,12 +346,22 @@
       ],
       "network.dynamic.domain": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "www.4sync.com"
+        },
+        {
           "heur_id": 1,
           "signatures": [],
           "value": "www.4sync.com"
         }
       ],
       "network.dynamic.uri": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+        },
         {
           "heur_id": 1,
           "signatures": [],

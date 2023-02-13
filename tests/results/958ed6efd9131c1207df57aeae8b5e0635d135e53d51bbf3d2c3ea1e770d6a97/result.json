@@ -15,7 +15,22 @@
             "path": [
               "./C:/Users/Public/apple.png",
               "C:ProgramDatainvoice.pdf"
-            ]
+            ],
+            "string": {
+              "extracted": [
+                "http://deal.real"
+              ]
+            }
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "transfer.sh"
+              ],
+              "uri": [
+                "https://transfer.sh/get/vpiHmi/invoice.pdf"
+              ]
+            }
           }
         },
         "title_text": "Actions detected with PSDecode",
@@ -191,7 +206,19 @@
           "value": "C:ProgramDatainvoice.pdf"
         }
       ],
+      "file.string.extracted": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://deal.real"
+        }
+      ],
       "network.dynamic.domain": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "transfer.sh"
+        },
         {
           "heur_id": 1,
           "signatures": [],
@@ -199,6 +226,11 @@
         }
       ],
       "network.dynamic.uri": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
+        },
         {
           "heur_id": 1,
           "signatures": [],

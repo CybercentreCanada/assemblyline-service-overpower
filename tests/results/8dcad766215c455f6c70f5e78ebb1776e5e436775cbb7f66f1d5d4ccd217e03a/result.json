@@ -15,6 +15,16 @@
             "path": [
               "./APPDATA/svhost.exe"
             ]
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "oiartzunirratia.eus"
+              ],
+              "uri": [
+                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+              ]
+            }
           }
         },
         "title_text": "Actions detected with PSDecode",
@@ -220,12 +230,22 @@
       ],
       "network.dynamic.domain": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "oiartzunirratia.eus"
+        },
+        {
           "heur_id": 1,
           "signatures": [],
           "value": "oiartzunirratia.eus"
         }
       ],
       "network.dynamic.uri": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+        },
         {
           "heur_id": 1,
           "signatures": [],
