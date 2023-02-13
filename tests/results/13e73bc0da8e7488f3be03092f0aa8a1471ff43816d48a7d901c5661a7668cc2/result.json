@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Invoke-WebRequest] Download from: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ -OutFile /znsrPecXVb.dMo\n\n[Invoke-WebRequest] Download from: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ -OutFile /znsrPecXVb.dMo\n",
+        "body": "[Invoke-WebRequest] Download from: github.com/john-xor/temp/blob/main/index.html?raw=true\n",
         "body_format": "TEXT",
         "classification": "TLP:W",
         "depth": 0,
@@ -16,7 +16,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/ixbabmh0i2clm3qq1gvv/\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/john-xor/temp/blob/main/index.html?raw=true\"}]",
         "body_format": "TABLE",
         "classification": "TLP:W",
         "depth": 1,
@@ -32,13 +32,10 @@
           "network": {
             "dynamic": {
               "domain": [
-                "focusmedica.in"
-              ],
-              "uri": [
-                "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "github.com"
               ],
               "uri_path": [
-                "/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "/john-xor/temp/blob/main/index.html?raw=true"
               ]
             }
           }
@@ -48,7 +45,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/ixbabmh0i2clm3qq1gvv/\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/john-xor/temp/blob/main/index.html?raw=true).content\"}]",
         "body_format": "TABLE",
         "classification": "TLP:W",
         "depth": 0,
@@ -64,24 +61,26 @@
           "network": {
             "static": {
               "domain": [
-                "focusmedica.in"
-              ],
-              "uri": [
-                "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "github.com"
               ],
               "uri_path": [
-                "/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "/john-xor/temp/blob/main/index.html?raw=true).content"
               ]
             }
           }
         },
-        "title_text": "IOC(s) extracted from 6b7905352b4272d7e4998a328c2cb9fde4bdaa889a43c02245fceb4698964483",
+        "title_text": "IOC(s) extracted from 13e73bc0da8e7488f3be03092f0aa8a1471ff43816d48a7d901c5661a7668cc2",
         "zeroize_on_tag_safe": false
       }
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "dd514045a1d288772c4f44ab64fb8b3eccd553e0273f669b99c1656e584e7bf8"
+      }
+    ],
     "supplementary": []
   },
   "results": {
@@ -102,42 +101,28 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "focusmedica.in"
-        }
-      ],
-      "network.dynamic.uri": [
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "github.com"
         }
       ],
       "network.dynamic.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "/john-xor/temp/blob/main/index.html?raw=true"
         }
       ],
       "network.static.domain": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "focusmedica.in"
-        }
-      ],
-      "network.static.uri": [
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "github.com"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "/john-xor/temp/blob/main/index.html?raw=true).content"
         }
       ]
     },
