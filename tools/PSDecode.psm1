@@ -178,7 +178,12 @@ function Start-Process {
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.3
 $Invoke_WebRequest_Override = @'
 function Invoke-WebRequest {
-    Write-Host "%#[Invoke-WebRequest] Download from: $($args)%#"
+    # If there are no spaces or protocol string in the argument string, add the default
+    if ("$($args)".IndexOf(" ") -eq -1 -and "$($args)".IndexOf("://") -eq -1) {
+        $args = "http://$($args)"
+    }
+
+    Write-Host "%#[Invoke-WebRequest] Download from: $($args) %#"
 }
 '@
 
@@ -489,7 +494,7 @@ function Resolve_Replaces
        return $Command
     }
 
-function Resolves_PowerShell_On_Linux
+function Resolve_PowerShell_On_Linux
 {
     param(
         [Parameter( `
@@ -503,7 +508,7 @@ function Resolves_PowerShell_On_Linux
     While ($matches.Count -gt 0){
         ForEach($match in $matches){
             $resolved_string = "'/usr/bin/pwsh'"
-            Write-Verbose "[Resolves_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+            Write-Verbose "[Resolve_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
             $Command = $Command.Replace($match, "$($resolved_string)")
         }
         $matches = $env_windir_pattern.Matches($Command)
@@ -514,7 +519,7 @@ function Resolves_PowerShell_On_Linux
     While ($matches.Count -gt 0){
         ForEach($match in $matches){
             $resolved_string = ""
-            Write-Verbose "[Resolves_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+            Write-Verbose "[Resolve_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
             $Command = $Command.Replace($match, "$($resolved_string)")
         }
         $matches = $powershell_path_pattern.Matches($Command)
@@ -526,7 +531,7 @@ function Resolves_PowerShell_On_Linux
     While ($matches.Count -gt 0){
         ForEach($match in $matches){
             $resolved_string = ''
-            Write-Verbose "[Resolves_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+            Write-Verbose "[Resolve_PowerShell_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
             $Command = $Command.Replace($match, "$($resolved_string)")
         }
         $matches = $powershell_image_pattern.Matches($Command)
@@ -535,7 +540,7 @@ function Resolves_PowerShell_On_Linux
     return $Command
 }
 
-function Resolves_Windows_Directories_On_Linux
+function Resolve_Windows_Directories_On_Linux
     {
     param(
         [Parameter( `
@@ -555,7 +560,7 @@ function Resolves_Windows_Directories_On_Linux
             New-Item -ItemType "Directory" -Path $directory_to_create | Out-Null
         }
 
-        Write-Verbose "[Resolves_Windows_Directories_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
+        Write-Verbose "[Resolve_Windows_Directories_On_Linux] Replacing: $($match) With: '$($resolved_string)'"
         $Command = $Command.Replace($match, "$($resolved_string)")
     }
     return $Command
@@ -601,6 +606,23 @@ function Remove_Carets
        return $Command.Replace("^", "")
     }
 
+function Resolve_Background_Tasks
+    {
+        param(
+            [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+            [String]$Command
+        )
+        $background_task_pattern = [regex]'(?i)\b(\s*&\s*)start'
+        $matches = $background_task_pattern.Matches($Command)
+        ForEach($match in $matches){
+            Write-Verbose "[Resolve_Background_Tasks] Replacing: $($match.groups[1]) with a newline character"
+            $Command = $Command.Replace($match.groups[1], "`r`n")
+        }
+        return $Command
+    }
+
 function Code_Cleanup
     {
         param(
@@ -626,10 +648,11 @@ function Code_Cleanup
             $new_command = Remove_String_Concat($new_command)
             $new_command = Resolve_String_Formats($new_command)
             $new_command = Resolve_Replaces($new_command)
-            $new_command = Resolves_PowerShell_On_Linux($new_command)
-            $new_command = Resolves_Windows_Directories_On_Linux($new_command)
+            $new_command = Resolve_PowerShell_On_Linux($new_command)
+            $new_command = Resolve_Windows_Directories_On_Linux($new_command)
             $new_command = Remove_Unusable_Args_On_Linux($new_command)
             $new_command = Remove_Carets($new_command)
+            $new_command = Resolve_Background_Tasks($new_command)
         }
 
         return $new_command
