@@ -58,4 +58,4 @@ heuristics:
 docker_config:
   allow_internet_access: false
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG
-  cpu_cores: 0.25
+  cpu_cores: 1
