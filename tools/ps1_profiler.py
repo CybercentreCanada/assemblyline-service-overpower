@@ -1656,14 +1656,15 @@ def normalize(output: Dict[str, Any], content_data):
         if re.search(r"\[char](0x)?[0-9A-Fa-f]{1,3}", content_data, re.IGNORECASE):
             content_data, modification_flag = char_replace(output, content_data, modification_flag)
 
+        # Commenting out since this usually produces junk
         # Type conversions - Changes STATE
-        if re.search(
-                r"([1-2]?[0-9]?[0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data):
-            # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
-            if len(content_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", content_data)) >= 5000:
-                pass
-            else:
-                content_data, modification_flag = type_conversion(output, content_data, modification_flag)
+        # if re.search(
+        #         r"([1-2]?[0-9]?[0-9](?:\s*),|0x[0-9a-fA-F]{1,2}(?:\s*),|\\x[0-9a-fA-F]{1,2}(?:\s*),)", content_data):
+        #     # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
+        #     if len(content_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", content_data)) >= 5000:
+        #         pass
+        #     else:
+        #         content_data, modification_flag = type_conversion(output, content_data, modification_flag)
 
         # String Splits - Changes STATE
         if re.search(r"\.split\((\'|\")[^\'\"]+?\1\)", content_data, re.IGNORECASE):
