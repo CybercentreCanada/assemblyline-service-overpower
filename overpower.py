@@ -56,7 +56,8 @@ class Overpower(ServiceBase):
         psdecode_output: List[str] = []
         self.log.debug("Starting PSDecode...")
         try:
-            # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform the deobfuscation when setting the tool_timeout param...
+            # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform
+            # the deobfuscation when setting the tool_timeout param...
             # Stream stdout to resp rather than waiting for process to finish
             with Popen(args=args, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
                 for line in p.stdout:
@@ -288,7 +289,10 @@ class Overpower(ServiceBase):
                 self.log.debug(f"Ignoring {file_path} since it is a duplicate extracted file...")
                 # We also want to rename the artifact that this file is a duplicate of
                 # to avoid naming conflicts
-                artifact = next((artifact for artifact in self.artifact_list if artifact["sha256"] == artifact_sha256), None)
+                artifact = next(
+                    (artifact for artifact in self.artifact_list if artifact["sha256"] == artifact_sha256),
+                    None
+                )
                 if artifact:
                     artifact["name"] = artifact_sha256
                 continue
