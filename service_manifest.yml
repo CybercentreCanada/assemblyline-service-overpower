@@ -32,25 +32,25 @@ heuristics:
   - heur_id: 1
     name: IOC(s) Extracted
     score: 1
-    filetype: '*'
+    filetype: '.*'
     description: At least one IOC has been extracted.
 
   - heur_id: 2
     name: File is infected
     score: 1
-    filetype: '*'
+    filetype: '.*'
     description: PowerShellProfiler has determined that the file is malicious
 
   - heur_id: 3
     name: File contains suspicious content
     score: 1
-    filetype: '*'
+    filetype: '.*'
     description: PowerShellProfiler has detected suspicious content
 
   - heur_id: 4
     name: Batch file was written to disk
     score: 1
-    filetype: '*'
+    filetype: '.*'
     description: PSDecode wrote a batch file to disk
     signature_score_map:
       suspicious_url_found: 500
