@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 2,
+    "score": 12,
     "sections": [
       {
         "auto_collapse": false,
@@ -44,6 +44,39 @@
           }
         },
         "title_text": "IOCs found in actions",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in 6b7905352b4272d7e4998a328c2cb9fde4bdaa889a43c02245fceb4698964483",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: iwr, -outf",
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Downloader": 10
+          },
+          "signatures": {
+            "Downloader": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
       },
       {
@@ -95,6 +128,13 @@
         "attack_ids": [],
         "heur_id": 1,
         "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Downloader"
+        ]
       }
     ],
     "tags": {
