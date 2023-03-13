@@ -827,7 +827,7 @@ function PSDecode {
     )
     $layers  = New-Object System.Collections.Generic.List[System.Object]
     $actions = New-Object System.Collections.Generic.List[System.Object]
-    $action_pattern = [regex]'%#\[([^\]]+)\]\s([^%]+)%#'
+    $action_pattern = [regex]'%#\[([^\]]+)\]\s(.+?)%#'
 
     $override_functions = @()
     $encoded_script = ""
