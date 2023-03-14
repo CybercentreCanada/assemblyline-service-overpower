@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 22,
+    "score": 122,
     "sections": [
       {
         "auto_collapse": false,
@@ -103,6 +103,28 @@
       },
       {
         "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:W",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Malicious Behaviour Combo": 100
+          },
+          "signatures": {
+            "Malicious Behaviour Combo": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Malicious Behaviour Combo",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"shoru.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://shoru.net/db/main_db\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/db/main_db\"}]",
         "body_format": "TABLE",
         "classification": "TLP:W",
@@ -172,6 +194,13 @@
         "heur_id": 3,
         "signatures": [
           "One Liner"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Malicious Behaviour Combo"
         ]
       }
     ],
