@@ -114,7 +114,6 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "Byte Usage": 2.0,
         "SysInternals": 1.0,
         "One Liner": 1.0,
-        "Variable Extension": 1.0,
         "Email": 1.0,
 
         # Benign
@@ -474,9 +473,6 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     behaviour_col["One Liner"] = [  # Work done in processing.
     ]
 
-    behaviour_col["Variable Extension"] = [  # Work done in processing.
-    ]
-
     behaviour_col["Script Logging"] = [
         ["LogMsg", "LogErr"],
         ["Write-Debug"],
@@ -534,11 +530,11 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     # Instances where FP hits occur have been commented out
 
     behaviour_combos = [
-        ["Downloader", "One Liner", "Variable Extension"],
+        ["Downloader", "One Liner"],
         ["Downloader", "Script Execution", "Crypto", "Enumeration"],
         ["Downloader", "Script Execution", "Persistence", "Enumeration"],
         ["Downloader", "Script Execution", "Starts Process", "Enumeration"],
-        ["Script Execution", "One Liner", "Variable Extension"],
+        ["Script Execution", "One Liner"],
         # ["Script Execution", "Starts Process", "Downloader"],
         ['Script Execution', 'Starts Process', 'Downloader', 'One Liner'],
         ['Script Execution', 'Downloader', 'Custom Web Fields'],
@@ -622,17 +618,6 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         elif behaviour == "Abnormal Size":
 
             if len(original_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", original_data)) >= 5000:
-                if behaviour not in behaviour_tags:
-                    behaviour_tags[behaviour] = {"marks": []}
-
-        elif behaviour == "Variable Extension":
-
-            short_vars = len(re.findall(
-                r"(Set-Item Variable|SI Variable|Get-ChildItem Variable|LS Variable|Get-Item Variable|ChildItem Variable|Set-Variable|Get-Variable|DIR Variable|GetCommandName|(\.Value\|Member|\.Value\.Name))",
-                original_data, re.IGNORECASE))
-            asterik_vars = len(re.findall(r"[A-Za-z0-9]\*[A-Za-z0-9]", original_data))
-
-            if short_vars + asterik_vars >= 10:
                 if behaviour not in behaviour_tags:
                     behaviour_tags[behaviour] = {"marks": []}
 
