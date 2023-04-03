@@ -7,7 +7,7 @@
         "auto_collapse": false,
         "body": "[Invoke-WebRequest] Download from: http://github.com/john-xor/temp/blob/main/index.html?raw=true\n",
         "body_format": "TEXT",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
         "tags": {},
@@ -18,7 +18,7 @@
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://github.com/john-xor/temp/blob/main/index.html?raw=true\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/john-xor/temp/blob/main/index.html?raw=true\"}]",
         "body_format": "TABLE",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 1,
         "heuristic": {
           "attack_ids": [],
@@ -50,7 +50,7 @@
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}]",
         "body_format": "TABLE",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 0,
         "heuristic": {
           "attack_ids": [],

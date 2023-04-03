@@ -7,7 +7,7 @@
         "auto_collapse": false,
         "body": "Attribution family: SET\n\tMatched any or all strings:\n\t\t$sc.length -gt 0x1000)\n\t\t$winfunc::memset",
         "body_format": "TEXT",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 0,
         "heuristic": {
           "attack_ids": [],
@@ -31,7 +31,7 @@
         "auto_collapse": false,
         "body": "Marks: VirtualAlloc, memset, CreateThread",
         "body_format": "TEXT",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 1,
         "heuristic": {
           "attack_ids": [],
@@ -53,7 +53,7 @@
         "auto_collapse": false,
         "body": "Marks: Start-Sleep",
         "body_format": "TEXT",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 1,
         "heuristic": {
           "attack_ids": [],
@@ -75,7 +75,7 @@
         "auto_collapse": false,
         "body": null,
         "body_format": "TEXT",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 1,
         "heuristic": {
           "attack_ids": [],
@@ -97,7 +97,7 @@
         "auto_collapse": false,
         "body": null,
         "body_format": "TEXT",
-        "classification": "TLP:W",
+        "classification": "TLP:C",
         "depth": 1,
         "heuristic": {
           "attack_ids": [],
