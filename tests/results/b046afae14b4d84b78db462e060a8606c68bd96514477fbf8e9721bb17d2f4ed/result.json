@@ -1,0 +1,236 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 21,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in b046afae14b4d84b78db462e060a8606c68bd96514477fbf8e9721bb17d2f4ed",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: wget",
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Downloader": 10
+          },
+          "signatures": {
+            "Downloader": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Downloader",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Start-Sleep, sleep -s",
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Sleeps": 10
+          },
+          "signatures": {
+            "Sleeps": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Sleeps",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"141.94.86.90\"}, {\"ioc_type\": \"ip\", \"ioc\": \"94.131.117.111\"}, {\"ioc_type\": \"ip\", \"ioc\": \"85.239.41.205\"}, {\"ioc_type\": \"ip\", \"ioc\": \"199.247.30.203\"}, {\"ioc_type\": \"ip\", \"ioc\": \"216.146.25.129\"}, {\"ioc_type\": \"ip\", \"ioc\": \"104.225.129.114\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://141.94.86.90/1xavn.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/1xavn.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://199.247.30.203/ffyijfx.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/ffyijfx.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://216.146.25.129/bvwvah0damg.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/bvwvah0damg.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://85.239.41.205/b7hqgguhc94a.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/b7hqgguhc94a.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://104.225.129.114/c4botpyl4i.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/c4botpyl4i.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://94.131.117.111/etxtkvmfmgnf.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/etxtkvmfmgnf.dat\"}]",
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "static": {
+              "ip": [
+                "141.94.86.90",
+                "94.131.117.111",
+                "85.239.41.205",
+                "199.247.30.203",
+                "216.146.25.129",
+                "104.225.129.114"
+              ],
+              "uri": [
+                "http://141.94.86.90/1xavn.dat",
+                "http://199.247.30.203/ffyijfx.dat",
+                "http://216.146.25.129/bvwvah0damg.dat",
+                "http://85.239.41.205/b7hqgguhc94a.dat",
+                "http://104.225.129.114/c4botpyl4i.dat",
+                "http://94.131.117.111/etxtkvmfmgnf.dat"
+              ],
+              "uri_path": [
+                "/1xavn.dat",
+                "/ffyijfx.dat",
+                "/bvwvah0damg.dat",
+                "/b7hqgguhc94a.dat",
+                "/c4botpyl4i.dat",
+                "/etxtkvmfmgnf.dat"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from b046afae14b4d84b78db462e060a8606c68bd96514477fbf8e9721bb17d2f4ed",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [],
+    "supplementary": []
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Downloader"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Sleeps"
+        ]
+      }
+    ],
+    "tags": {
+      "network.static.ip": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "104.225.129.114"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "141.94.86.90"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "199.247.30.203"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "216.146.25.129"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "85.239.41.205"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "94.131.117.111"
+        }
+      ],
+      "network.static.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://104.225.129.114/c4botpyl4i.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://141.94.86.90/1xavn.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://199.247.30.203/ffyijfx.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://216.146.25.129/bvwvah0damg.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://85.239.41.205/b7hqgguhc94a.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://94.131.117.111/etxtkvmfmgnf.dat"
+        }
+      ],
+      "network.static.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/1xavn.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/b7hqgguhc94a.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/bvwvah0damg.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/c4botpyl4i.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/etxtkvmfmgnf.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/ffyijfx.dat"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
+}

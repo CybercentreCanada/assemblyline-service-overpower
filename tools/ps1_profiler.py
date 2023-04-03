@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 import base64
 import binascii
-from collections import defaultdict
-from Crypto.Cipher import AES
 import os
 import re
-from typing import Any, Dict, List, Tuple
 import zlib
+from collections import defaultdict
+from typing import Any, Dict, List, Tuple
 
 from assemblyline_v4_service.common.extractor.base64 import base64_search
-
+from Crypto.Cipher import AES
 
 __author__ = "Jeff White [karttoon] @noottrak"
 __email__ = "jwhite@paloaltonetworks.com"
@@ -1291,7 +1290,7 @@ def string_split(output, content_data, modification_flag):
                     # Sets to "comma" as a separator so typeConversion can pick it up on next run
                     stripped_string = stripped_string.replace(x, ",")
 
-                    if stripped_string not in garbage_list:
+                    if stripped_string not in garbage_list and stripped_string != ",":
                         garbage_list.append(entry[0])
                         content_data += "\n\n##### SPLIT STRINGS #####\n\n%s\n\n" % (stripped_string)
                         modification_flag = True
@@ -1652,9 +1651,11 @@ def normalize(output: Dict[str, Any], content_data):
         #     else:
         #         content_data, modification_flag = type_conversion(output, content_data, modification_flag)
 
+        # This creates an unnecessary file in the file tree since this type of string manipulation is not
+        # Overpower's job
         # String Splits - Changes STATE
-        if re.search(r"\.split\((\'|\")[^\'\"]+?\1\)", content_data, re.IGNORECASE):
-            content_data, modification_flag = string_split(output, content_data, modification_flag)
+        # if re.search(r"\.split\((\'|\")[^\'\"]+?\1\)", content_data, re.IGNORECASE):
+        #     content_data, modification_flag = string_split(output, content_data, modification_flag)
 
         # Bridge strings together - Changes STATE
         if re.search(r"(\"|\')(?:\s*)\+(?:\s*)(\"|\')", content_data):
