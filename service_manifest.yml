@@ -55,6 +55,14 @@ heuristics:
     signature_score_map:
       suspicious_url_found: 500
 
+  - heur_id: 5
+    name: Actions detected by PSDecode
+    score: 1
+    filetype: '.*'
+    description: PSDecode detected actions and was able to override them
+    signature_score_map:
+      suspicious_behaviour_combo_url: 500
+
 docker_config:
   allow_internet_access: false
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG

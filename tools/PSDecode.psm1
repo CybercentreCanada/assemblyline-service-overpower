@@ -63,11 +63,11 @@ function new-object {
             $webclient_obj = microsoft.powershell.utility\new-object Net.WebClient
             Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Force -Name "DownloadFile" -Value {
                 param([string]$url,[string]$destination)
-                Write-Host "%#[System.Net.WebClient.DownloadFile] Download From: $($url) --> Save To: $($destination)%#"
+                Write-Host "%#[System.Net.WebClient.DownloadFile] Download From: $($url) --> Save To: $($destination) %#"
                 }
             Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Force -Name "DownloadString" -Value {
                 param([string]$url)
-                Write-Host "%#[System.Net.WebClient.DownloadString] Download from: $($url)%#"
+                Write-Host "%#[System.Net.WebClient.DownloadString] Download From: $($url) %#"
                 }
             return $webclient_obj
         }
@@ -102,12 +102,8 @@ function new-object {
 
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/start-sleep?view=powershell-7.3
 $Start_Sleep_Override = @'
-function start-sleep {
-        param(
-            [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
-            [string]$Obj
-        )
-        Write-Host "%#[Start-Sleep] $(Obj)%#"
+function Start-Sleep {
+        Write-Host "%#[Start-Sleep] $($args)%#"
     }
 '@
 
@@ -150,7 +146,18 @@ function sc {
 # https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/start
 $Start_Override = @'
 function start {
-    Write-Host "%#[start] $($args)%#"
+    # In case the array contains subarrays
+    $argString = ""
+    ForEach($arg in $args) {
+        if ($arg.GetType() -eq [System.Object[]]) {
+            $argString = $argString + $arg -join " "
+        }
+        else {
+            $argString = $argString + $arg + " "
+        }
+    }
+
+    Write-Host "%#[start] $($argString)%#"
 }
 '@
 
@@ -178,12 +185,60 @@ function Start-Process {
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.3
 $Invoke_WebRequest_Override = @'
 function Invoke-WebRequest {
-    # If there are no spaces or protocol string in the argument string, add the default
-    if ("$($args)".IndexOf(" ") -eq -1 -and "$($args)".IndexOf("://") -eq -1) {
-        $args = "http://$($args)"
+    # Odds are the first or last arg is the URI, but we'll confirm this later
+    if ($args[0].IndexOf("-") -eq -1 -or $args[0].IndexOf("-") -ne 0) {
+        $uri = $args[0]
+    }
+    else {
+        $uri = $args[-1]
+    }
+    $outfile = ""
+
+    # We only care about URI and OutFile
+    $nextArgIsUri = $false;
+    $nextArgIsOutFile = $false;
+
+    ForEach($arg in $args){
+        if ($nextArgIsUri) {
+            $uri = $arg
+            $nextArgIsUri = $false
+        } elseif ($nextArgIsOutFile) {
+            $outfile = $arg
+            $nextArgIsOutFile = $false;
+        }
+
+        if ($arg.GetType() -eq [System.String] -and $arg -ieq "-Uri") {
+            $nextArgIsUri = $true
+        }
+        elseif ($arg.GetType() -eq [System.String] -and ($arg -ieq "-O" -or $arg -ieq "-outf" -or $arg -ieq "-OutFile")) {
+            $nextArgIsOutFile = $true
+        }
     }
 
-    Write-Host "%#[Invoke-WebRequest] Download from: $($args) %#"
+    # If there are no spaces or protocol string in the uri string, add the default
+    if ($uri.IndexOf(" ") -eq -1 -and $uri.IndexOf("://") -eq -1) {
+        $uri = "http://$($uri)"
+    }
+
+    if ($outfile) {
+        # We should create a fake file for further execution
+
+        # Create the fake file
+        $currdir = "./"
+        $file_to_create = Join-Path -Path $currdir -ChildPath $outfile.Replace("\\", "/").Replace("%", "")
+        New-Item -ItemType "File" -Path $file_to_create -Force | Out-Null
+
+        # Create the fake content
+        $fake_content = "MZ"
+        For($ii = 0; $ii -lt 2000; $ii++) {
+            $fake_content = $fake_content + "Dummy content, This program cannot be run in DOS mode.`r`n"
+        }
+        $fake_content | Set-Content $file_to_create
+
+        Write-Host "%#[Invoke-WebRequest] Download From: $($uri) --> Save To: $($outfile) %#"
+    } else {
+        Write-Host "%#[Invoke-WebRequest] Download From: $($uri) %#"
+    }
 }
 '@
 
@@ -409,7 +464,6 @@ function Replace_MultiLineEscapes
         $str_format_pattern = [regex]'`\s*\r\n\s*'
         $matches = $str_format_pattern.Matches($Command)
 
-
         While ($matches.Count -gt 0){
             if($matches.Count -gt 0){
                 Write-Verbose "$($matches.Count) instances of multi-line escape characters detected... Removing"
@@ -419,6 +473,52 @@ function Replace_MultiLineEscapes
                 $Command = $Command.Replace($match, ' ')
                 }
             $matches = $str_format_pattern.Matches($Command)
+        }
+    return $Command
+}
+
+# In PowerShell on Linux, wget is the command for the Wget tool https://www.gnu.org/software/wget/
+# But in PowerShell on Windows, wget is an alias for the Invoke-WebRequest commandlet
+function Replace_Wget
+    {
+        param(
+            [Parameter(Mandatory=$True)]
+            [string]$Command
+        )
+
+        $wget_pattern = [regex]'(?i)\bwget\b'
+        $matches = $wget_pattern.Matches($Command)
+
+        While ($matches.Count -gt 0){
+            if($matches.Count -gt 0){
+                Write-Verbose "$($matches.Count) instances of wget detected... Replacing!"
+            }
+            ForEach($match in $matches){
+                $Command = $Command.Replace($match, 'Invoke-WebRequest')
+            }
+            $matches = $wget_pattern.Matches($Command)
+        }
+    return $Command
+}
+
+function Resolve_Env_Variables
+    {
+        param(
+            [Parameter(Mandatory=$True)]
+            [string]$Command
+        )
+
+        $env_pattern = [regex]'(?i)\$env\:\b\w+\b'
+        $matches = $env_pattern.Matches($Command)
+
+        While ($matches.Count -gt 0){
+            if($matches.Count -gt 0){
+                Write-Verbose "$($matches.Count) instances of `$env:<variable-name>` detected... Replacing!"
+            }
+            ForEach($match in $matches){
+                $Command = $Command.Replace($match, './')
+            }
+            $matches = $env_pattern.Matches($Command)
         }
     return $Command
 }
@@ -653,6 +753,8 @@ function Code_Cleanup
             $new_command = Remove_Unusable_Args_On_Linux($new_command)
             $new_command = Remove_Carets($new_command)
             $new_command = Resolve_Background_Tasks($new_command)
+            $new_command = Replace_Wget($new_command)
+            $new_command = Resolve_Env_Variables($new_command)
         }
 
         return $new_command

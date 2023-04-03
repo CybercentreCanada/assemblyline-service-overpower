@@ -1,15 +1,22 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 2,
+    "score": 3,
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Invoke-WebRequest] Download from: http://github.com/john-xor/temp/blob/main/index.html?raw=true\n",
+        "body": "[Invoke-WebRequest] Download From: http://github.com/john-xor/temp/blob/main/index.html?raw=true\n",
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -93,6 +100,11 @@
       {
         "attack_ids": [],
         "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
         "signatures": []
       }
     ],

@@ -1,21 +1,23 @@
+import re
 from json import dumps
 from os import environ, getcwd, listdir, path, remove, rmdir, walk
-import re
 from shutil import copy
 from subprocess import PIPE, Popen, TimeoutExpired
 from time import time
-from typing import Optional, Dict, Any, List, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.forge import get_identify
 from assemblyline.common.str_utils import safe_str, truncate
 from assemblyline_v4_service.common.base import ServiceBase
-from assemblyline_v4_service.common.dynamic_service_helper import extract_iocs_from_text_blob, OntologyResults
+from assemblyline_v4_service.common.dynamic_service_helper import (
+    OntologyResults, extract_iocs_from_text_blob)
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultTextSection, ResultTableSection
+from assemblyline_v4_service.common.result import (Result, ResultTableSection,
+                                                   ResultTextSection)
 from assemblyline_v4_service.common.tag_helper import add_tag
-
-from tools.ps1_profiler import profile_ps1, DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS
+from tools.ps1_profiler import (DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS,
+                                SUSPICIOUS_BEHAVIOUR_COMBO, profile_ps1)
 
 TRANSLATE_SCORE = {
     1.0: 10,  # Low Risk (0-14% hit rate)
@@ -27,6 +29,9 @@ TRANSLATE_SCORE = {
 }
 
 DOWNLOAD_FILE_REGEX = "\[.+\] Download From: (.+) --> Save To: (.+)\n"
+
+# The SHA256 representation when PSDecode creates a fake file when pretending to download something
+FAKE_FILE_CONTENT = "924122b31d645b72bec716d8114ca5e18f06f20d15cc77f9dd2e8bdd14cb7330"
 
 
 class Overpower(ServiceBase):
@@ -161,6 +166,14 @@ class Overpower(ServiceBase):
             translated_score = TRANSLATE_SCORE[details["score"]]
             profiler_sig_section.heuristic.add_signature_id(tag, score=translated_score)
 
+            if tag == SUSPICIOUS_BEHAVIOUR_COMBO:
+                # If there is a suspicious behaviour combo seen, we should flag the IOCs seen in actions with a signature that scores 500
+                for result_section in result.sections:
+                    if result_section.heuristic and result_section.heuristic.heur_id == 5:
+                        self.log.debug("Added the suspicious_behaviour_combo_url signature to the result section to score the tagged URLs")
+                        result_section.heuristic.add_signature_id("suspicious_behaviour_combo_url")
+                        break
+
         if len(suspicious_res_sec.subsections) > 0 or suspicious_res_sec.heuristic is not None:
             result.add_section(suspicious_res_sec)
 
@@ -221,7 +234,9 @@ class Overpower(ServiceBase):
         for index, line in enumerate(output):
             if "############################## Actions ##############################" in line:
                 actions = output[index + 1:]
+                break
         psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
+        psdecode_actions_res_sec.set_heuristic(5)
         psdecode_actions_res_sec.add_lines(actions)
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         for action in actions:
@@ -285,6 +300,10 @@ class Overpower(ServiceBase):
             file_path = path.join(self.working_directory, file)
 
             artifact_sha256 = get_sha256_for_file(file_path)
+
+            if artifact_sha256 in [FAKE_FILE_CONTENT]:
+                continue
+
             if artifact_sha256 in self.artifact_hashes:
                 self.log.debug(f"Ignoring {file_path} since it is a duplicate extracted file...")
                 # We also want to rename the artifact that this file is a duplicate of

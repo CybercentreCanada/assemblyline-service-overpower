@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 360,
+    "score": 361,
     "sections": [
       {
         "auto_collapse": false,
@@ -9,7 +9,14 @@
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -239,8 +246,8 @@
   "files": {
     "extracted": [
       {
-        "name": "44f8deafd834f09c7e21dfa57ab2fe462dae0bbd686b14d209e561146a41f5e2",
-        "sha256": "44f8deafd834f09c7e21dfa57ab2fe462dae0bbd686b14d209e561146a41f5e2"
+        "name": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde",
+        "sha256": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde"
       },
       {
         "name": "layer_0.ps1",
@@ -317,6 +324,11 @@
         "signatures": [
           "Byte Usage"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
       }
     ],
     "tags": {},

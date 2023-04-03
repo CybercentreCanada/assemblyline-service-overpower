@@ -1,16 +1,39 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 12,
+    "score": 13,
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Invoke-WebRequest] Download from: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ -OutFile /znsrPecXVb.dMo\n\n[Invoke-WebRequest] Download from: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ -OutFile /znsrPecXVb.dMo\n",
+        "body": "[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: .//znsrPecXVb.dMo\n\n[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: .//znsrPecXVb.dMo\n",
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
-        "tags": {},
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "file": {
+            "path": [
+              ".//znsrPecXVb.dMo"
+            ]
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "focusmedica.in"
+              ],
+              "uri": [
+                "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
+              ]
+            }
+          }
+        },
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
       },
@@ -114,7 +137,12 @@
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb",
+        "sha256": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb"
+      }
+    ],
     "supplementary": []
   },
   "results": {
@@ -135,10 +163,27 @@
         "signatures": [
           "Downloader"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
       }
     ],
     "tags": {
+      "file.path": [
+        {
+          "heur_id": 5,
+          "signatures": [],
+          "value": ".//znsrPecXVb.dMo"
+        }
+      ],
       "network.dynamic.domain": [
+        {
+          "heur_id": 5,
+          "signatures": [],
+          "value": "focusmedica.in"
+        },
         {
           "heur_id": 1,
           "signatures": [],
@@ -146,6 +191,11 @@
         }
       ],
       "network.dynamic.uri": [
+        {
+          "heur_id": 5,
+          "signatures": [],
+          "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
+        },
         {
           "heur_id": 1,
           "signatures": [],

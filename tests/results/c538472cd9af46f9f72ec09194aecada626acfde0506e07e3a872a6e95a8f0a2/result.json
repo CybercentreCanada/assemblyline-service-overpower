@@ -1,8 +1,26 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 140,
+    "score": 141,
     "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[Start-Sleep] -s 60\n",
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
       {
         "auto_collapse": false,
         "body": null,
@@ -175,6 +193,11 @@
         "signatures": [
           "Obfuscation:Char Frequency"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
       }
     ],
     "tags": {},
