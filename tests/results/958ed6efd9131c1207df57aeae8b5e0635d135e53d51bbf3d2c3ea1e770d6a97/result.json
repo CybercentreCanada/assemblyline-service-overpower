@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 22,
+    "score": 23,
     "sections": [
       {
         "auto_collapse": false,
@@ -9,7 +9,14 @@
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
         "tags": {
           "file": {
             "path": [
@@ -191,31 +198,36 @@
         "signatures": [
           "Starts Process"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
       }
     ],
     "tags": {
       "file.path": [
         {
-          "heur_id": null,
+          "heur_id": 5,
           "signatures": [],
           "value": "./C:/Users/Public/apple.png"
         },
         {
-          "heur_id": null,
+          "heur_id": 5,
           "signatures": [],
           "value": "C:ProgramDatainvoice.pdf"
         }
       ],
       "file.string.extracted": [
         {
-          "heur_id": null,
+          "heur_id": 5,
           "signatures": [],
           "value": "http://deal.real"
         }
       ],
       "network.dynamic.domain": [
         {
-          "heur_id": null,
+          "heur_id": 5,
           "signatures": [],
           "value": "transfer.sh"
         },
@@ -227,7 +239,7 @@
       ],
       "network.dynamic.uri": [
         {
-          "heur_id": null,
+          "heur_id": 5,
           "signatures": [],
           "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         },

