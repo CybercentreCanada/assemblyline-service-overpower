@@ -24,6 +24,8 @@ DEOBFUS_FILE = "deobfuscated.ps1"
 REGEX_INDICATORS = "regex_indicators"
 STR_INDICATORS = "str_indicators"
 
+SUSPICIOUS_BEHAVIOUR_COMBO = "Suspicious Behaviour Combo"
+
 #####################
 # Support Functions #
 #####################
@@ -90,7 +92,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "DNS C2": 1.0,
         "Disabled Protections": 1.0,
         "Negative Context": 1.0,
-        "Malicious Behaviour Combo": 2.0,
+        SUSPICIOUS_BEHAVIOUR_COMBO: 3.0,
         "Hidden Window": 1.0,
         "Script Execution": 1.0,
         "Uses WMI": 1.0,
@@ -340,6 +342,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Invoke-Item"],
         ["WScript.Shell", "ActiveXObject", "run"],
         ["START", "$ENV:APPDATA", "exe", "http"],
+        ["START", "rundll32"],
     ]
 
     behaviour_col["Script Execution"] = [
@@ -544,6 +547,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         # ['Starts Process', 'Downloader', 'One Liner'],
         # ["Starts Process", "Downloader", "Enumeration", "One Liner"],
         ["Hidden Window", "Persistence", "Downloader"],
+        ["Downloader", "Starts Process", "Sleeps"],
+        ["Downloader", "Starts Process", "Hidden Window"],
     ]
 
     for behaviour, checks in behaviour_col.items():
@@ -660,8 +665,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
                 if behaviour not in behaviour_tags:
                     found_flag = 0
         if found_flag == 1:
-            if "Malicious Behaviour Combo" not in behaviour_tags:
-                behaviour_tags["Malicious Behaviour Combo"] = {"marks": [].extend(combo_row)}
+            if SUSPICIOUS_BEHAVIOUR_COMBO not in behaviour_tags:
+                behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO] = {"marks": [].extend(combo_row)}
 
     return behaviour_tags
 
