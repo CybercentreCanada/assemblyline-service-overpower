@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 12,
+    "score": 13,
     "sections": [
       {
         "auto_collapse": false,
@@ -9,7 +9,14 @@
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -148,6 +155,11 @@
         "signatures": [
           "One Liner"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
       }
     ],
     "tags": {

@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 32,
+    "score": 1032,
     "sections": [
       {
         "auto_collapse": false,
@@ -9,7 +9,16 @@
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 500,
+          "score_map": {},
+          "signatures": {
+            "suspicious_behaviour_combo_url": 1
+          }
+        },
         "tags": {
           "file": {
             "path": [
@@ -141,6 +150,28 @@
       },
       {
         "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 500,
+          "score_map": {
+            "Suspicious Behaviour Combo": 500
+          },
+          "signatures": {
+            "Suspicious Behaviour Combo": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Suspicious Behaviour Combo",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/lcovlccdxd.exe\"}]",
         "body_format": "TABLE",
         "classification": "TLP:C",
@@ -218,20 +249,38 @@
         "signatures": [
           "Hidden Window"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Suspicious Behaviour Combo"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": [
+          "suspicious_behaviour_combo_url"
+        ]
       }
     ],
     "tags": {
       "file.path": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "./APPDATA/svhost.exe"
         }
       ],
       "network.dynamic.domain": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "oiartzunirratia.eus"
         },
         {
@@ -242,8 +291,10 @@
       ],
       "network.dynamic.uri": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
         },
         {
