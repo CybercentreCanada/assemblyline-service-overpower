@@ -169,7 +169,7 @@ class Overpower(ServiceBase):
             if tag == SUSPICIOUS_BEHAVIOUR_COMBO:
                 # If there is a suspicious behaviour combo seen, we should flag the IOCs seen in actions with a signature that scores 500
                 for result_section in result.sections:
-                    if result_section.heuristic and result_section.heuristic.heur_id == 5:
+                    if result_section.heuristic and result_section.heuristic.heur_id == 5 and any("network" in key for key in result_section.tags.keys()):
                         self.log.debug("Added the suspicious_behaviour_combo_url signature to the result section to score the tagged URLs")
                         result_section.heuristic.add_signature_id("suspicious_behaviour_combo_url")
                         break
