@@ -233,6 +233,7 @@ class TestOverpower:
         task.service_config = {
             "tool_timeout": 60,
             "add_supplementary": True,
+            "fake_web_download": True,
         }
         overpower_class_instance._task = task
         service_request = ServiceRequest(task)
