@@ -43,20 +43,25 @@ class Overpower(ServiceBase):
         self.safe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
         self.identify = get_identify(use_cache=environ.get('PRIVILEGED', 'false').lower() == 'true')
 
-    def execute(self, request: ServiceRequest) -> None:
-        self.artifact_hashes = set()
-        self.artifact_list: List[Dict[str, Any]] = []
+    def _run_psdecode(self, request: ServiceRequest, fake_web_download: bool = True) -> List[str]:
+        """
+        This method runs the PSDecode tool and returns what was written to STDOUT
+        :param request: The ServiceRequest object
+        :param fake_web_download: A flag that is used for indicating if a web request to download a file to disk should be faked.
+        :return: A list of strings representing each line that PSDecode wrote to STDOUT
+        """
         tool_timeout = request.get_param("tool_timeout")
-        add_supplementary = request.get_param("add_supplementary")
-        request.result = Result()
 
-        # PSDecode
         args = [
             "pwsh", "-Command", "PSDecode", request.file_path,
             "-verbose",
             "-dump", self.working_directory,
-            "-timeout", f"{tool_timeout}"
+            "-timeout", f"{tool_timeout}",
         ]
+
+        if fake_web_download:
+            args.append("-fakefile")
+
         start_time = time()
         psdecode_output: List[str] = []
         self.log.debug("Starting PSDecode...")
@@ -72,9 +77,52 @@ class Overpower(ServiceBase):
 
         time_elapsed = time() - start_time
         self.log.debug(f"PSDecode took {round(time_elapsed)}s to complete.")
+
+        return psdecode_output
+
+    def _move_unsafe_new_files_to_working_dir(self) -> Set[str]:
+        """
+        Since we are running samples right on the Docker container, there is a chance that samples could drop
+        files to the root directory of execution
+        :return: A set containing the file paths of the the files that were moved
+        """
+
+        unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
+        files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
+        for file_to_move in files_to_move:
+            copy(file_to_move, self.working_directory)
+            remove(file_to_move)
+        return files_to_move
+
+    def _remove_fake_files(self) -> None:
+        """
+        This method removes fake files since we don't want them to exist on subsequent PSDecode runs
+        :return: None
+        """
+        _ = self._move_unsafe_new_files_to_working_dir()
+
+        for file in sorted(listdir(self.working_directory)):
+            file_path = path.join(self.working_directory, file)
+
+            artifact_sha256 = get_sha256_for_file(file_path)
+
+            if artifact_sha256 in [FAKE_FILE_CONTENT]:
+                self.log.debug(f"Removed fake file '{file}' in preparation for subsequent PSDecode run...")
+                remove(file_path)
+
+    def execute(self, request: ServiceRequest) -> None:
+        self.artifact_hashes = set()
+        self.artifact_list: List[Dict[str, Any]] = []
+        add_supplementary = request.get_param("add_supplementary")
+        request.result = Result()
+
+        # PSDecode
+        fake_web_download = request.get_param("fake_web_download")
+        psdecode_output = self._run_psdecode(request, fake_web_download=fake_web_download)
         self._handle_psdecode_output(psdecode_output, request.result)
 
         # PowerShellProfiler
+        rerun_psdecode = False
         files_to_profile = [(request.file_name, request.file_path)]
         files_to_profile.extend([(layer, path.join(self.working_directory, layer))
                                 for layer in sorted(listdir(self.working_directory)) if "layer" in layer])
@@ -84,13 +132,26 @@ class Overpower(ServiceBase):
         for file_to_profile, file_path in files_to_profile:
             self.log.debug(f"Profiling {file_to_profile}")
             total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
-            self._handle_ps1_profiler_output(
+            do_we_rerun_psdecode = self._handle_ps1_profiler_output(
                 total_ps1_profiler_output[file_to_profile],
                 request.result, file_to_profile)
+
+            # If we already ran PSDecode with faking web downloads, and it is determined that
+            # we should re-run PSDecode, then do so
+            if not rerun_psdecode and do_we_rerun_psdecode and fake_web_download:
+                rerun_psdecode = True
+
             self.log.debug(f"Completed profiling {file_to_profile}")
 
         time_elapsed = time() - start_time
         self.log.debug(f"PS1Profiler took {round(time_elapsed)}s to complete.")
+
+        if rerun_psdecode:
+            # First, remove fake files
+            self._remove_fake_files()
+            # We do not want to fake a successful web download on this second run
+            psdecode_output = self._run_psdecode(request, fake_web_download=False)
+            self._handle_psdecode_output(psdecode_output, request.result, subsequent_run=True)
 
         if add_supplementary:
             self._extract_supplementary(total_ps1_profiler_output, psdecode_output)
@@ -102,13 +163,13 @@ class Overpower(ServiceBase):
         # Adding sandbox artifacts using the OntologyResults helper class
         _ = OntologyResults.handle_artifacts(self.artifact_list, request)
 
-    def _handle_ps1_profiler_output(self, output: Dict[str, Any], result: Result, file_name: str) -> None:
+    def _handle_ps1_profiler_output(self, output: Dict[str, Any], result: Result, file_name: str) -> bool:
         """
         This method converts the output from the PowerShellProfiler tool into ResultSections
         :param output: The output from the PowerShellProfiler tool
         :param result: A Result object containing the service results
         :param file_name: The name of the file which was profiled
-        :return: None
+        :return: A flag indicating that we need to re-run PSDecode
         """
         # Get previous result sections for handling PowerShellProfiler profiles
         previous_signatures: List[str] = []
@@ -148,6 +209,7 @@ class Overpower(ServiceBase):
         else:
             suspicious_res_sec.title_text = f"Suspicious Content Detected in {file_name}"
 
+        suspicious_behaviour_combo_url_sig = False
         for tag, details in output["behaviour"].items():
             if details["score"] < 0:
                 # According to the PowerShell Profiler, if a score is < 0, then the script can be generally assumed
@@ -172,6 +234,7 @@ class Overpower(ServiceBase):
                     if result_section.heuristic and result_section.heuristic.heur_id == 5 and any("network" in key for key in result_section.tags.keys()):
                         self.log.debug("Added the suspicious_behaviour_combo_url signature to the result section to score the tagged URLs")
                         result_section.heuristic.add_signature_id("suspicious_behaviour_combo_url")
+                        suspicious_behaviour_combo_url_sig = True
                         break
 
         if len(suspicious_res_sec.subsections) > 0 or suspicious_res_sec.heuristic is not None:
@@ -223,11 +286,20 @@ class Overpower(ServiceBase):
                     ioc_res_sec.set_heuristic(1)
                     result.add_section(ioc_res_sec)
 
-    def _handle_psdecode_output(self, output: List[str], result: Result) -> None:
+                # If we see a suspicious behaviour combination being used, were able to
+                # attribute it to a URL, and there are multiple URLs extracted statically, it's
+                # worth running PSDecode again
+                if suspicious_behaviour_combo_url_sig and len(ioc_res_sec.tags.get("network.static.uri", [])) > 2:
+                    return True
+
+        return False
+
+    def _handle_psdecode_output(self, output: List[str], result: Result, subsequent_run: bool = False) -> None:
         """
         This method converts the output from the PSDecode tool into ResultSections
         :param output: The output from the PSDecode tool
         :param result: A Result object containing the service results
+        :param subsequent_run: A boolean indicating if this output is from a subsquent run of PSDecode
         :return: None
         """
         actions: List[str] = []
@@ -235,8 +307,17 @@ class Overpower(ServiceBase):
             if "############################## Actions ##############################" in line:
                 actions = output[index + 1:]
                 break
-        psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
+        if not subsequent_run:
+            psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
+        else:
+            psdecode_actions_res_sec = ResultTextSection("Actions detected with subsequent run of PSDecode")
+
         psdecode_actions_res_sec.set_heuristic(5)
+
+        # If this is the second run of PSDecode, we are confident that the IOCs we are going to see are worth scoring.
+        if subsequent_run:
+            psdecode_actions_res_sec.heuristic.add_signature_id("suspicious_behaviour_combo_url")
+
         psdecode_actions_res_sec.add_lines(actions)
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         for action in actions:
@@ -279,14 +360,7 @@ class Overpower(ServiceBase):
         :param worth_extracting: A flag indicating if we should extract files or not.
         :return: None
         """
-        # Since we are running samples right on the Docker container, there is a chance that samples could drop
-        # files to the root directory of execution
-
-        unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
-        files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
-        for file_to_move in files_to_move:
-            copy(file_to_move, self.working_directory)
-            remove(file_to_move)
+        files_to_move = self._move_unsafe_new_files_to_working_dir()
 
         # Remove empty dirs
         for root, dirs, _ in walk(getcwd()):

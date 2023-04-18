@@ -182,8 +182,9 @@ function Start-Process {
 }
 '@
 
+# This method writes a fake file to disk
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.3
-$Invoke_WebRequest_Override = @'
+$Invoke_WebRequest_With_Fake_File_Override = @'
 function Invoke-WebRequest {
     # Odds are the first or last arg is the URI, but we'll confirm this later
     if ($args[0].IndexOf("-") -eq -1 -or $args[0].IndexOf("-") -ne 0) {
@@ -235,6 +236,54 @@ function Invoke-WebRequest {
         }
         $fake_content | Set-Content $file_to_create
 
+        Write-Host "%#[Invoke-WebRequest] Download From: $($uri) --> Save To: $($outfile) %#"
+    } else {
+        Write-Host "%#[Invoke-WebRequest] Download From: $($uri) %#"
+    }
+}
+'@
+
+# This method does not write a fake file to disk
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.3
+$Invoke_WebRequest_Override = @'
+function Invoke-WebRequest {
+    # Odds are the first or last arg is the URI, but we'll confirm this later
+    if ($args[0].IndexOf("-") -eq -1 -or $args[0].IndexOf("-") -ne 0) {
+        $uri = $args[0]
+    }
+    else {
+        $uri = $args[-1]
+    }
+    $outfile = ""
+
+    # We only care about URI and OutFile
+    $nextArgIsUri = $false;
+    $nextArgIsOutFile = $false;
+
+    ForEach($arg in $args){
+        if ($nextArgIsUri) {
+            $uri = $arg
+            $nextArgIsUri = $false
+        } elseif ($nextArgIsOutFile) {
+            $outfile = $arg
+            $nextArgIsOutFile = $false;
+        }
+
+        if ($arg.GetType() -eq [System.String] -and $arg -ieq "-Uri") {
+            $nextArgIsUri = $true
+        }
+        elseif ($arg.GetType() -eq [System.String] -and ($arg -ieq "-O" -or $arg -ieq "-outf" -or $arg -ieq "-OutFile")) {
+            $nextArgIsOutFile = $true
+        }
+    }
+
+    # If there are no spaces or protocol string in the uri string, add the default
+    if ($uri.IndexOf(" ") -eq -1 -and $uri.IndexOf("://") -eq -1) {
+        $uri = "http://$($uri)"
+    }
+
+    # Even if we don't actually write a file, it is nice to log what would have happened
+    if ($outfile) {
         Write-Host "%#[Invoke-WebRequest] Download From: $($uri) --> Save To: $($outfile) %#"
     } else {
         Write-Host "%#[Invoke-WebRequest] Download From: $($uri) %#"
@@ -901,6 +950,9 @@ function PSDecode {
 .PARAMETER timeout
     Sets the maximum number of seconds the decoder should be allowed to run before it is timed out and terminated. Default is 60 seconds.
 
+.PARAMETER fakefile
+    Indicates if we want a web request to write a fake file to disk. Default is false.
+
 .NOTES
     File Name  : PSDecode.psm1
     Author     : @R3MRUM
@@ -912,7 +964,7 @@ function PSDecode {
 .LINK
     https://r3mrum.wordpress.coom
 .EXAMPLE
-    PSDecode -verbose -dump -beautify .\encoded_ps.ps1
+    PSDecode -verbose -dump -beautify -fakefile .\encoded_ps.ps1
 
 .EXAMPLE
     Get-Content .\encoded_ps.ps1 | PSDecode
@@ -925,6 +977,7 @@ function PSDecode {
         [Parameter(Mandatory=$false)][switch]$beautify,
         [Parameter(Mandatory=$false)][switch]$x,
         [Parameter(Mandatory=$false)][int]$timeout = 60,
+        [Parameter(Mandatory=$false)][switch]$fakefile,
         [Parameter(Mandatory=$True, Valuefrompipeline = $True, Position = 0)][PSObject[]]$InputObject
     )
     $layers  = New-Object System.Collections.Generic.List[System.Object]
@@ -995,11 +1048,17 @@ function PSDecode {
     $override_functions += $Uninstall_WindowsFeature_Override
     $override_functions += $Set_MpPreference_Override
     $override_functions += $Start_Process_Override
-    $override_functions += $Invoke_WebRequest_Override
 
     if(!$x){
         $override_functions += $New_Object_Override
     }
+
+    if($fakefile){
+        $override_functions += $Invoke_WebRequest_With_Fake_File_Override
+    } else {
+         $override_functions += $Invoke_WebRequest_Override
+    }
+
 
     $override_functions  = ($override_functions -join "`r`n") + "`r`n`r`n"
 
