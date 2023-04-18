@@ -18,6 +18,7 @@ is_external: false
 licence_count: 0
 
 submission_params:
+  # Generic parameters
   - default: 90
     name: tool_timeout
     type: int
@@ -27,6 +28,12 @@ submission_params:
     name: add_supplementary
     type: bool
     value: false
+
+  # PSDecode option
+  - default: true
+    name: fake_web_download
+    type: bool
+    value: true
 
 heuristics:
   - heur_id: 1
