@@ -84,7 +84,7 @@ class Overpower(ServiceBase):
         """
         Since we are running samples right on the Docker container, there is a chance that samples could drop
         files to the root directory of execution
-        :return: A set containing the file paths of the the files that were moved
+        :return: A set containing the file paths of the files that were moved
         """
 
         unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
