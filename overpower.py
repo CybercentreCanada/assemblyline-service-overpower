@@ -10,14 +10,11 @@ from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.forge import get_identify
 from assemblyline.common.str_utils import safe_str, truncate
 from assemblyline_v4_service.common.base import ServiceBase
-from assemblyline_v4_service.common.dynamic_service_helper import (
-    OntologyResults, extract_iocs_from_text_blob)
+from assemblyline_v4_service.common.dynamic_service_helper import OntologyResults, extract_iocs_from_text_blob
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import (Result, ResultTableSection,
-                                                   ResultTextSection)
+from assemblyline_v4_service.common.result import Result, ResultTableSection, ResultTextSection
 from assemblyline_v4_service.common.tag_helper import add_tag
-from tools.ps1_profiler import (DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS,
-                                SUSPICIOUS_BEHAVIOUR_COMBO, profile_ps1)
+from tools.ps1_profiler import DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS, SUSPICIOUS_BEHAVIOUR_COMBO, profile_ps1
 
 TRANSLATE_SCORE = {
     1.0: 10,  # Low Risk (0-14% hit rate)
@@ -31,7 +28,7 @@ TRANSLATE_SCORE = {
 DOWNLOAD_FILE_REGEX = "\[.+\] Download From: (.+) --> Save To: (.+)\n"
 
 # The SHA256 representation when PSDecode creates a fake file when pretending to download something
-FAKE_FILE_CONTENT = "924122b31d645b72bec716d8114ca5e18f06f20d15cc77f9dd2e8bdd14cb7330"
+FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e3b9f8"
 
 
 class Overpower(ServiceBase):
@@ -175,6 +172,7 @@ class Overpower(ServiceBase):
         previous_signatures: List[str] = []
         previous_families: List[str] = []
         previous_iocs: List[Tuple[str, str]] = []
+        static_uri_counter = 0
         for section in result.sections:
             for subsection in section.subsections:
                 if subsection.heuristic:
@@ -188,6 +186,8 @@ class Overpower(ServiceBase):
                     for value in values:
                         if (tag, value) not in previous_iocs:
                             previous_iocs.append((tag, value))
+                            if tag == "network.static.uri":
+                                static_uri_counter += 1
 
         suspicious_res_sec = ResultTextSection("Placeholder")
         # Check if there is a malware family detected
@@ -289,7 +289,7 @@ class Overpower(ServiceBase):
                 # If we see a suspicious behaviour combination being used, were able to
                 # attribute it to a URL, and there are multiple URLs extracted statically, it's
                 # worth running PSDecode again
-                if suspicious_behaviour_combo_url_sig and len(ioc_res_sec.tags.get("network.static.uri", [])) > 2:
+                if suspicious_behaviour_combo_url_sig and (len(ioc_res_sec.tags.get("network.static.uri", [])) > 2 or static_uri_counter > 3):
                     return True
 
         return False
