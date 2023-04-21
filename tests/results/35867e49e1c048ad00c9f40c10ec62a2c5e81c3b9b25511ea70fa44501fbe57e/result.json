@@ -386,15 +386,16 @@
   "files": {
     "extracted": [
       {
-        "name": "layer_0.ps1",
-        "sha256": "5e131c2968dfc503e551dab5cf8c282c7a554e06bbafd4caa9f66e3fa8116318"
-      },
-      {
         "name": "deobfuscated.ps1",
         "sha256": "ceac4f2afa5bd8379e1f7ec87dde35054fcd8b2cf8ea470458383ceb340a18b4"
       }
     ],
-    "supplementary": []
+    "supplementary": [
+      {
+        "name": "layer_0.ps1",
+        "sha256": "b87eadf7279ece29c5f800d4323cfe56389d4ca970a6ecfd65842e12b945d169"
+      }
+    ]
   },
   "results": {
     "heuristics": [

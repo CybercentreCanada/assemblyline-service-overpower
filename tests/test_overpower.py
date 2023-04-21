@@ -215,8 +215,7 @@ class TestOverpower:
         from subprocess import TimeoutExpired
 
         from assemblyline.odm.messages.task import Task as ServiceTask
-        from assemblyline_v4_service.common.dynamic_service_helper import \
-            OntologyResults
+        from assemblyline_v4_service.common.dynamic_service_helper import OntologyResults
         from assemblyline_v4_service.common.request import ServiceRequest
         from assemblyline_v4_service.common.task import Task
 
@@ -253,10 +252,7 @@ class TestOverpower:
     def test_handle_ps1_profiler_output(overpower_class_instance):
         from os import path
 
-        from assemblyline_v4_service.common.result import (Result,
-                                                           ResultSection,
-                                                           ResultTableSection,
-                                                           TableRow)
+        from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
         output = {
             "deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}},
             "score": 3, "families": {},
@@ -306,10 +302,7 @@ class TestOverpower:
 
     @staticmethod
     def test_handle_psdecode_output(overpower_class_instance):
-        from assemblyline_v4_service.common.result import (Result,
-                                                           ResultSection,
-                                                           ResultTableSection,
-                                                           TableRow)
+        from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
         res = Result()
         correct_res_sec = ResultSection("Actions detected with PSDecode")
         output = ["blah", "############################## Actions ##############################", "blah.com"]
@@ -386,7 +379,7 @@ class TestOverpower:
             "name": "layer1.txt",
             "path": item_1,
             "description": "Layer of de-obfuscated PowerShell from PSDecode",
-            "to_be_extracted": True,
+            "to_be_extracted": False,
             "sha256": "823b42df5b53e54895e9f8a0dd7430c722c63796fb847db2a43cde91bc951a38",
         }
         assert overpower_class_instance.artifact_list[3] == {
@@ -401,6 +394,13 @@ class TestOverpower:
         overpower_class_instance.artifact_hashes = set()
         overpower_class_instance._prepare_artifacts(res, False)
         assert overpower_class_instance.artifact_list[0] == {
+            "name": "layer1.txt",
+            "path": item_1,
+            "description": "Layer of de-obfuscated PowerShell from PSDecode",
+            "to_be_extracted": False,
+            "sha256": "823b42df5b53e54895e9f8a0dd7430c722c63796fb847db2a43cde91bc951a38",
+        }
+        assert overpower_class_instance.artifact_list[1] == {
             "name": "2d0bc6e82ff7dda5491eefc888ea9fae386f8460bf461fa763944149d0cd8caa",
             "path": item_2,
             "description": "Output from PowerShell tool",

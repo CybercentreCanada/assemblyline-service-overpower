@@ -396,6 +396,8 @@ class Overpower(ServiceBase):
                 description = "De-obfuscated file from PowerShellProfiler"
             elif "layer" in file:
                 description = "Layer of de-obfuscated PowerShell from PSDecode"
+                # We don't want to extract these since it is redundant. PSDecode already ran on them.
+                to_be_extracted = False
             elif "suppl" in file:
                 description = "Output from PowerShell tool"
                 to_be_extracted = False

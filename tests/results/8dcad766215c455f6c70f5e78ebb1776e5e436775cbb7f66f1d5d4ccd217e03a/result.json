@@ -209,13 +209,14 @@
       {
         "name": "deobfuscated.ps1",
         "sha256": "aacbf34179967745babdc2eba3c8174a8c7851c76a6e6a1fe1261fa6094c5e70"
-      },
+      }
+    ],
+    "supplementary": [
       {
         "name": "layer_0.ps1",
         "sha256": "fd8034c1dc3d53bc854982d584fe5577a631b7778759ccf630a7001483c2e58e"
       }
-    ],
-    "supplementary": []
+    ]
   },
   "results": {
     "heuristics": [
