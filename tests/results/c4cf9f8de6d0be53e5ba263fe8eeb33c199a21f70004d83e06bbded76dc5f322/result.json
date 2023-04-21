@@ -250,15 +250,16 @@
         "sha256": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde"
       },
       {
-        "name": "layer_0.ps1",
-        "sha256": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed"
-      },
-      {
         "name": "a869ac3fa2ed34c5d13fc7ac4f8753f68cc2921959f8fe087cae9a1a7b646d39",
         "sha256": "a869ac3fa2ed34c5d13fc7ac4f8753f68cc2921959f8fe087cae9a1a7b646d39"
       }
     ],
-    "supplementary": []
+    "supplementary": [
+      {
+        "name": "layer_0.ps1",
+        "sha256": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed"
+      }
+    ]
   },
   "results": {
     "heuristics": [
