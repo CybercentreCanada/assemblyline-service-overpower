@@ -742,7 +742,8 @@ function Convert_Encoded_Command
         [String]$Command
     )
 
-    $encoded_command_pattern = [regex]"(?i)-(?:encodedcommand|enc)\s+['`"]([a-zA-Z0-9+/]+=?=?)['`"]"
+    # From https://github.com/CybercentreCanada/Multidecoder/blob/main/multidecoder/analyzers/shell.py#L14
+    $encoded_command_pattern = [regex]"(?i)\s\^?(?:-|\/)\^?e\^?(?:c|n\^?(?:c\^?(?:o\^?(?:d\^?(?:e\^?(?:d\^?(?:c\^?(?:o\^?(?:m\^?(?:m\^?(?:a\^?(?:n\^?d?)?)?)?)?)?)?)?)?)?)?)?)?[\s^]+['`"]?([a-z0-9+\/^]{4,}=?\^?=?\^?)['`"]?"
     $matches = $encoded_command_pattern.Matches($Command)
 
     ForEach($match in $matches){
