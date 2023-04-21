@@ -742,7 +742,7 @@ function Convert_Encoded_Command
         [String]$Command
     )
 
-    # From https://github.com/CybercentreCanada/Multidecoder/blob/main/multidecoder/analyzers/shell.py#L14
+    # From https://github.com/CybercentreCanada/Multidecoder/blob/v0.0.13/multidecoder/analyzers/shell.py#L14
     $encoded_command_pattern = [regex]"(?i)\s\^?(?:-|\/)\^?e\^?(?:c|n\^?(?:c\^?(?:o\^?(?:d\^?(?:e\^?(?:d\^?(?:c\^?(?:o\^?(?:m\^?(?:m\^?(?:a\^?(?:n\^?d?)?)?)?)?)?)?)?)?)?)?)?)?[\s^]+['`"]?([a-z0-9+\/^]{4,}=?\^?=?\^?)['`"]?"
     $matches = $encoded_command_pattern.Matches($Command)
 
