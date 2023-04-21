@@ -158,15 +158,16 @@
   "files": {
     "extracted": [
       {
-        "name": "layer_0.ps1",
-        "sha256": "47e83cfa95902cf0782e5e8ddbbdb25b357fa848b951193258c9f44627e537a0"
-      },
-      {
         "name": "c0802e152bbc844a832f33cc0aaeca8b2ded397ad49ce5aad4ee08a4b35b58a9",
         "sha256": "c0802e152bbc844a832f33cc0aaeca8b2ded397ad49ce5aad4ee08a4b35b58a9"
       }
     ],
-    "supplementary": []
+    "supplementary": [
+      {
+        "name": "layer_0.ps1",
+        "sha256": "47e83cfa95902cf0782e5e8ddbbdb25b357fa848b951193258c9f44627e537a0"
+      }
+    ]
   },
   "results": {
     "heuristics": [

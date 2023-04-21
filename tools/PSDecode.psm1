@@ -231,7 +231,8 @@ function Invoke-WebRequest {
 
         # Create the fake content
         $fake_content = "MZ"
-        For($ii = 0; $ii -lt 2000; $ii++) {
+        # 5000 iterations will create a file greater than 100000 bytes
+        For($ii = 0; $ii -lt 5000; $ii++) {
             $fake_content = $fake_content + "Dummy content, This program cannot be run in DOS mode.`r`n"
         }
         $fake_content | Set-Content $file_to_create
@@ -515,12 +516,11 @@ function Replace_MultiLineEscapes
 
         While ($matches.Count -gt 0){
             if($matches.Count -gt 0){
-                Write-Verbose "$($matches.Count) instances of multi-line escape characters detected... Removing"
+                Write-Verbose "$($matches.Count) instance(s) of multi-line escape characters detected... Removing"
             }
             ForEach($match in $matches){
-
                 $Command = $Command.Replace($match, ' ')
-                }
+            }
             $matches = $str_format_pattern.Matches($Command)
         }
     return $Command
@@ -540,7 +540,7 @@ function Replace_Wget
 
         While ($matches.Count -gt 0){
             if($matches.Count -gt 0){
-                Write-Verbose "$($matches.Count) instances of wget detected... Replacing!"
+                Write-Verbose "$($matches.Count) instance(s) of wget detected... Replacing with 'Invoke-WebRequest'!"
             }
             ForEach($match in $matches){
                 $Command = $Command.Replace($match, 'Invoke-WebRequest')
@@ -562,7 +562,7 @@ function Resolve_Env_Variables
 
         While ($matches.Count -gt 0){
             if($matches.Count -gt 0){
-                Write-Verbose "$($matches.Count) instances of `$env:<variable-name>` detected... Replacing!"
+                Write-Verbose "$($matches.Count) instance(s) of `$env:<variable-name>` detected... Replacing!"
             }
             ForEach($match in $matches){
                 $Command = $Command.Replace($match, './')
@@ -724,11 +724,32 @@ function Remove_Unusable_Args_On_Linux
         [String]$Command
     )
 
-    $unusable_args_pattern = [regex]'(?i)(bypass|hidden|-(?:noprofile|windowstyle|executionpolicy))\b'
+    $unusable_args_pattern = [regex]'(?i)(bypass|hidden|-(?:noprofile|windowstyle|executionpolicy|nologo))\b'
     $matches = $unusable_args_pattern.Matches($Command)
     ForEach($match in $matches){
         Write-Verbose "[Remove_Unusable_Args_On_Linux] Removing: $($match)"
         $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Convert_Encoded_Command
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # From https://github.com/CybercentreCanada/Multidecoder/blob/v0.0.13/multidecoder/analyzers/shell.py#L14
+    $encoded_command_pattern = [regex]"(?i)\s\^?(?:-|\/)\^?e\^?(?:c|n\^?(?:c\^?(?:o\^?(?:d\^?(?:e\^?(?:d\^?(?:c\^?(?:o\^?(?:m\^?(?:m\^?(?:a\^?(?:n\^?d?)?)?)?)?)?)?)?)?)?)?)?)?[\s^]+['`"]?([a-z0-9+\/^]{4,}=?\^?=?\^?)['`"]?"
+    $matches = $encoded_command_pattern.Matches($Command)
+
+    ForEach($match in $matches){
+        $b64_decoded = Base64_Decode($match.groups[1].Value)
+        Write-Verbose "[Convert_Encoded_Command] Replacing: $($match.groups[1].Value) With: '$($b64_decoded)'"
+        $Command = $Command.Replace($match, $b64_decoded)
     }
     return $Command
 }
@@ -804,6 +825,7 @@ function Code_Cleanup
             $new_command = Resolve_Background_Tasks($new_command)
             $new_command = Replace_Wget($new_command)
             $new_command = Resolve_Env_Variables($new_command)
+            $new_command = Convert_Encoded_Command($new_command)
         }
 
         return $new_command
