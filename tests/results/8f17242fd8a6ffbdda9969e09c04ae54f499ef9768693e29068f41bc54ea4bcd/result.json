@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 220,
+    "score": 230,
     "sections": [
       {
         "auto_collapse": false,
@@ -34,6 +34,28 @@
         },
         "tags": {},
         "title_text": "Signature: Starts Process",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: START, rundll32",
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Starts RunDll": 10
+          },
+          "signatures": {
+            "Starts RunDll": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Starts RunDll",
         "zeroize_on_tag_safe": false
       },
       {
@@ -120,6 +142,13 @@
         "heur_id": 3,
         "signatures": [
           "Starts Process"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Starts RunDll"
         ]
       },
       {
