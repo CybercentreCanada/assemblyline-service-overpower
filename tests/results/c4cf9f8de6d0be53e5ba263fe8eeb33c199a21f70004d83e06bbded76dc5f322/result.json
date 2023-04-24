@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 361,
+    "score": 861,
     "sections": [
       {
         "auto_collapse": false,
@@ -118,6 +118,28 @@
         },
         "tags": {},
         "title_text": "Signature: Obfuscation:Char Frequency",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 500,
+          "score_map": {
+            "Suspicious Behaviour Combo": 500
+          },
+          "signatures": {
+            "Suspicious Behaviour Combo": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
       },
       {
@@ -289,6 +311,13 @@
         "heur_id": 3,
         "signatures": [
           "Obfuscation:Char Frequency"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Suspicious Behaviour Combo"
         ]
       },
       {

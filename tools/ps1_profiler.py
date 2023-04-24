@@ -96,6 +96,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "Hidden Window": 1.0,
         "Script Execution": 1.0,
         "Uses WMI": 1.0,
+        "Starts RunDll": 1.0,
 
         # Neutral
         # Behaviours which require more context to infer intent.
@@ -345,6 +346,10 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["START", "rundll32"],
     ]
 
+    behaviour_col["Starts RunDll"] = [
+         ["START", "rundll32"]
+    ]
+
     behaviour_col["Script Execution"] = [
         ["Invoke-Expression"],
         ["Invoke-Command"],
@@ -549,6 +554,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Hidden Window", "Persistence", "Downloader"],
         ["Downloader", "Starts Process", "Sleeps"],
         ["Downloader", "Starts Process", "Hidden Window"],
+        ["Downloader", "Starts RunDll"],
     ]
 
     for behaviour, checks in behaviour_col.items():
@@ -658,12 +664,9 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     # Tries to determine if any behaviour combos exist - should always be last step.
     for combo_row in behaviour_combos:
         found_flag = 1
-        if len(combo_row) != len(behaviour_tags.keys()):
-            found_flag = 0
-        else:
-            for behaviour in combo_row:
-                if behaviour not in behaviour_tags:
-                    found_flag = 0
+        for behaviour in combo_row:
+            if behaviour not in behaviour_tags:
+                found_flag = 0
         if found_flag == 1:
             if SUSPICIOUS_BEHAVIOUR_COMBO not in behaviour_tags:
                 behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO] = {"marks": [].extend(combo_row)}
