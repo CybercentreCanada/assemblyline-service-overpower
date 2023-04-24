@@ -125,17 +125,6 @@
         "body": null,
         "body_format": "TEXT",
         "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": null,
-        "tags": {},
-        "title_text": "Suspicious Content Detected in layer_1.ps1",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": null,
-        "body_format": "TEXT",
-        "classification": "TLP:C",
         "depth": 1,
         "heuristic": {
           "attack_ids": [],
