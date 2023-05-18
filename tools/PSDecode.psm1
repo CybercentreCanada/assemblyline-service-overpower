@@ -724,7 +724,7 @@ function Remove_Unusable_Args_On_Linux
         [String]$Command
     )
 
-    $unusable_args_pattern = [regex]'(?i)(bypass|hidden|-(?:noprofile|windowstyle|executionpolicy|nologo))\b'
+    $unusable_args_pattern = [regex]'(?i)(bypass|hidden|-(?:nop(?:rofile)?|windowstyle|executionpolicy|nologo|c(?:ommand)?))\b'
     $matches = $unusable_args_pattern.Matches($Command)
     ForEach($match in $matches){
         Write-Verbose "[Remove_Unusable_Args_On_Linux] Removing: $($match)"
