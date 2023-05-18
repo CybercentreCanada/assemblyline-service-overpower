@@ -126,13 +126,13 @@
     "extracted": [
       {
         "name": "deobfuscated.ps1",
-        "sha256": "64be5299bbc2cd6c4cefd279fded10d01dba22e67afc79730c9c4f0a38e4eead"
+        "sha256": "4c6fbfcf89454219de491aeb47a2b6c8d2b8618c738c9dacacd806b99675d17c"
       }
     ],
     "supplementary": [
       {
         "name": "layer_0.ps1",
-        "sha256": "0388c747e7b04be4a9af85663b1682ab75e3f28ac0370f73ec56a23ea7660823"
+        "sha256": "65d48542b0bff791731be7fff017b752e76c3247cfc54f4182e53b46c2123e62"
       }
     ]
   },
