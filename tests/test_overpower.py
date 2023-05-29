@@ -1,7 +1,18 @@
 import os
 import shutil
+from json import dumps
+from os import path
+from os.path import join
+from subprocess import TimeoutExpired
 
 import pytest
+from assemblyline.odm.messages.task import Task as ServiceTask
+from assemblyline_service_utilities.common.dynamic_service_helper import OntologyResults
+from assemblyline_v4_service.common.request import ServiceRequest
+from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
+from assemblyline_v4_service.common.task import Task
+from overpower import Overpower
+from tools.ps1_profiler import DEOBFUS_FILE
 
 # Getting absolute paths, names and regexes
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -166,7 +177,6 @@ def remove_tmp_manifest():
 def overpower_class_instance():
     create_tmp_manifest()
     try:
-        from overpower import Overpower
         yield Overpower()
     finally:
         remove_tmp_manifest()
@@ -212,13 +222,6 @@ class TestOverpower:
     @staticmethod
     @pytest.mark.parametrize("sample", samples)
     def test_execute(sample, overpower_class_instance, dummy_completed_process_instance, mocker):
-        from subprocess import TimeoutExpired
-
-        from assemblyline.odm.messages.task import Task as ServiceTask
-        from assemblyline_v4_service.common.dynamic_service_helper import OntologyResults
-        from assemblyline_v4_service.common.request import ServiceRequest
-        from assemblyline_v4_service.common.task import Task
-
         mocker.patch("overpower.profile_ps1", return_value=[])
         mocker.patch.object(overpower_class_instance, "_handle_ps1_profiler_output")
         mocker.patch.object(overpower_class_instance, "_handle_psdecode_output")
@@ -250,9 +253,6 @@ class TestOverpower:
 
     @staticmethod
     def test_handle_ps1_profiler_output(overpower_class_instance):
-        from os import path
-
-        from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
         output = {
             "deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}},
             "score": 3, "families": {},
@@ -302,7 +302,6 @@ class TestOverpower:
 
     @staticmethod
     def test_handle_psdecode_output(overpower_class_instance):
-        from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
         res = Result()
         correct_res_sec = ResultSection("Actions detected with PSDecode")
         output = ["blah", "############################## Actions ##############################", "blah.com"]
@@ -319,8 +318,6 @@ class TestOverpower:
 
     @staticmethod
     def test_extract_supplementary(overpower_class_instance):
-        from json import dumps
-        from os import path
         ps1_profiler_output = {"blah": "blah"}
         psdecode_output = ["blah"]
         suppl_ps1_profiler_output = path.join(
@@ -339,10 +336,6 @@ class TestOverpower:
 
     @staticmethod
     def test_prepare_artifacts(overpower_class_instance):
-        from os.path import join
-
-        from assemblyline_v4_service.common.result import Result
-        from tools.ps1_profiler import DEOBFUS_FILE
         res = Result()
         overpower_class_instance.artifact_list = []
         overpower_class_instance.artifact_hashes = set()

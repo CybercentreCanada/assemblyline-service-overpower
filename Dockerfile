@@ -33,6 +33,10 @@ RUN echo "Testing pwsh if PSDecode exists"
 RUN pwsh -Command printenv PSModulePath
 RUN pwsh -Command Get-Module -ListAvailable -Name PSDecode
 
+# Install python dependencies
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir --user --requirement requirements.txt && rm -rf ~/.cache/pip
+
 # Copy Overpower service code
 WORKDIR /opt/al_service
 COPY . .

@@ -9,11 +9,11 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.forge import get_identify
 from assemblyline.common.str_utils import safe_str, truncate
+from assemblyline_service_utilities.common.dynamic_service_helper import OntologyResults, extract_iocs_from_text_blob
+from assemblyline_service_utilities.common.tag_helper import add_tag
 from assemblyline_v4_service.common.base import ServiceBase
-from assemblyline_v4_service.common.dynamic_service_helper import OntologyResults, extract_iocs_from_text_blob
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultTableSection, ResultTextSection
-from assemblyline_v4_service.common.tag_helper import add_tag
 from tools.ps1_profiler import DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS, SUSPICIOUS_BEHAVIOUR_COMBO, profile_ps1
 
 TRANSLATE_SCORE = {
