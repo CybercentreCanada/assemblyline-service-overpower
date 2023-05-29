@@ -7,7 +7,7 @@ import zlib
 from collections import defaultdict
 from typing import Any, Dict, List, Tuple
 
-from assemblyline_v4_service.common.extractor.base64 import base64_search
+from assemblyline_service_utilities.common.extractor.base64 import base64_search
 from Crypto.Cipher import AES
 
 __author__ = "Jeff White [karttoon] @noottrak"
