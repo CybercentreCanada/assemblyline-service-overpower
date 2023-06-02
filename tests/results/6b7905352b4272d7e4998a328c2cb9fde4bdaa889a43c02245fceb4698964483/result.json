@@ -137,13 +137,13 @@
     ]
   },
   "files": {
-    "extracted": [
+    "extracted": [],
+    "supplementary": [
       {
         "name": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb",
         "sha256": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb"
       }
-    ],
-    "supplementary": []
+    ]
   },
   "results": {
     "heuristics": [
