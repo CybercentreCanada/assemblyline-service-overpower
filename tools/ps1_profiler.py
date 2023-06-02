@@ -1641,9 +1641,10 @@ def normalize(output: Dict[str, Any], content_data):
         if "^" in content_data:
             content_data, modification_flag = remove_caret(output, content_data)
 
+        # While this makes the file look beautiful, it is not worth extracting a file over
         # Removes Space Padding - Does NOT change STATE
-        while re.search(r"[\x20]{2,}", content_data):
-            content_data, modification_flag = space_replace(output, content_data, modification_flag)
+        # while re.search(r"[\x20]{2,}", content_data):
+        #     content_data, modification_flag = space_replace(output, content_data, modification_flag)
 
         # Converts Char bytes to ASCII - Changes STATE
         if re.search(r"\[char](0x)?[0-9A-Fa-f]{1,3}", content_data, re.IGNORECASE):
@@ -1764,8 +1765,8 @@ def profile_ps1(sample_path, working_dir):
     behaviour_tags: Dict[str, Any] = {}
 
     # Open file for processing, ignore errors
-    with open(sample_path, encoding='utf8', errors='ignore') as fh:
-        original_data = fh.read()
+    with open(sample_path, "rb") as fh:
+        original_data = fh.read().decode()
 
     # Strip NULLs out before processing
     original_data = original_data.replace("\x00", "")
