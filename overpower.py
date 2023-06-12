@@ -388,6 +388,11 @@ class Overpower(ServiceBase):
                 )
                 if artifact:
                     artifact["name"] = artifact_sha256
+                    # If there is an extracted file with the same hash as a layer file from PSDecode, then set
+                    # that file to supplementary
+                    if "layer" in file and artifact["to_be_extracted"]:
+                        self.log.debug(f"Setting artifact {artifact_sha256} to supplmentary")
+                        artifact["to_be_extracted"] = False
                 continue
             else:
                 self.artifact_hashes.add(artifact_sha256)
@@ -416,9 +421,6 @@ class Overpower(ServiceBase):
                 "to_be_extracted": to_be_extracted,
                 "sha256": artifact_sha256,
             })
-            self.log.debug(
-                f"Adding extracted file: {file_path}"
-                if to_be_extracted else f"Adding supplementary file: {file_path}")
 
             for f in files_to_move:
                 if "/" in f:
@@ -427,6 +429,11 @@ class Overpower(ServiceBase):
                         file_type_details = self.identify.fileinfo(file_path)
                         self._handle_specific_written_files(file_type_details["type"], file_path, result)
                         break
+
+        for artifact in self.artifact_list:
+            self.log.debug(
+                f"Adding extracted file: {artifact['path']}"
+                if artifact["to_be_extracted"] else f"Adding supplementary file: {artifact['path']}")
 
     @staticmethod
     def _handle_specific_written_files(file_type: str, file_path: str, result: Result) -> None:
