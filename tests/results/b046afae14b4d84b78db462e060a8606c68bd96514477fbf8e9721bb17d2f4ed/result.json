@@ -335,13 +335,13 @@
     ]
   },
   "files": {
-    "extracted": [
+    "extracted": [],
+    "supplementary": [
       {
         "name": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36",
         "sha256": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36"
       }
-    ],
-    "supplementary": []
+    ]
   },
   "results": {
     "heuristics": [
