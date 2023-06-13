@@ -51,6 +51,24 @@ function Get-Item
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item?view=powershell-7.3
+$Remove_Item_Override = @'
+function Remove-Item
+    {
+        Write-Host "%#[Remove-Item] $($args)%#"
+        # Microsoft.PowerShell.Management\Remove-Item $args
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/clear-content?view=powershell-7.3
+$Clear_Content_Override = @'
+function Clear-Content
+    {
+        Write-Host "%#[Clear-Content] $($args)%#"
+        # Microsoft.PowerShell.Management\Clear-Content $args
+    }
+'@
+
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.3
 $New_Object_Override = @'
 function new-object {
@@ -1060,6 +1078,8 @@ function PSDecode {
     $override_functions += $Invoke_Command_Override
     $override_functions += $Invoke_Item_Override
     $override_functions += $Get_Item_Override
+    $override_functions += $Remove_Item_Override
+    $override_functions += $Clear_Content_Override
     $override_functions += $Start_Sleep_Override
     $override_functions += $Start_Job_Override
     $override_functions += $Receive_Job_Override
