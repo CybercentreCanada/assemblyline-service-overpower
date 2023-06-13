@@ -1766,7 +1766,11 @@ def profile_ps1(sample_path, working_dir):
 
     # Open file for processing, ignore errors
     with open(sample_path, "rb") as fh:
-        original_data = fh.read().decode()
+        try:
+            original_data = fh.read().decode()
+        except UnicodeDecodeError as e:
+            print(f"Could not decode {sample_path} due to {e}.")
+            original_data = ""
 
     # Strip NULLs out before processing
     original_data = original_data.replace("\x00", "")
