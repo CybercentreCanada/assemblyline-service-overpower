@@ -234,6 +234,10 @@ function Invoke-WebRequest {
         }
     }
 
+    if (-not $uri) {
+        return
+    }
+
     # If there are no spaces or protocol string in the uri string, add the default
     if ($uri.IndexOf(" ") -eq -1 -and $uri.IndexOf("://") -eq -1) {
         $uri = "http://$($uri)"
@@ -294,6 +298,10 @@ function Invoke-WebRequest {
         elseif ($arg.GetType() -eq [System.String] -and ($arg -ieq "-O" -or $arg -ieq "-outf" -or $arg -ieq "-OutFile")) {
             $nextArgIsOutFile = $true
         }
+    }
+
+    if (-not $uri) {
+        return
     }
 
     # If there are no spaces or protocol string in the uri string, add the default
