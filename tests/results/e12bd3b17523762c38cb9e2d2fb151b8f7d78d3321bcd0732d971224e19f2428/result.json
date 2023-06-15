@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "Attribution family: SET\n\tMatched any or all strings:\n\t\t$sc.length -gt 0x1000)\n\t\t$winfunc::memset",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -30,6 +31,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: VirtualAlloc, memset, CreateThread",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -52,6 +54,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Start-Sleep",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -74,6 +77,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -96,6 +100,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
