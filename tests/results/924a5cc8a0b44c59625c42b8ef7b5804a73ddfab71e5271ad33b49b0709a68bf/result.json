@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[start] /min ./C:/Users/Public/agafX.cmd und https://thetwindollar.com/L7PJjN/01.png\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -24,6 +25,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"thetwindollar.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://thetwindollar.com/l7pjjn/01.png\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7pjjn/01.png\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -56,6 +63,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -67,6 +75,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -89,6 +98,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"thetwindollar.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://thetwindollar.com/l7pjjn/01.png\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7pjjn/01.png\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,

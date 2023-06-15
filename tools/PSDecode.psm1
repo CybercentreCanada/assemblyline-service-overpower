@@ -8,14 +8,24 @@ function Invoke-Expression()
                 Valuefrompipeline = $True)]
             [String]$Command
         )
+        if (-not $Command) {
+            return
+        }
+
+        # Add the action, then write
+        Write-Host "%#[Invoke-Expression] Execute/Open: $($Command)%#"
         Write-Host $Command
-        Microsoft.PowerShell.Utility\Invoke-Expression $Command
+
+        $output = Microsoft.PowerShell.Utility\Invoke-Expression $Command
+
+        # Useful for debugging IEX usage
+        # Write-Host $output
     }
 '@
 
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/invoke-command?view=powershell-7.3
 $Invoke_Command_Override = @'
-function Invoke-Command ()
+function Invoke-Command()
     {
         param(
             [Parameter( `
@@ -23,8 +33,18 @@ function Invoke-Command ()
                 Valuefrompipeline = $True)]
             [String]$Command
         )
+        if (-not $Command) {
+            return
+        }
+
+        # Add the action, then write
         Write-Host "%#[Invoke-Command] Execute/Open: $($Command)%#"
-        Microsoft.PowerShell.Core\Invoke-Command $Command
+        Write-Host $Command
+
+        $output = Microsoft.PowerShell.Core\Invoke-Command $Command
+
+        # Useful for debugging Invoke-Command usage
+        # Write-Host $output
     }
 '@
 
@@ -71,14 +91,14 @@ function Clear-Content
 
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.3
 $New_Object_Override = @'
-function new-object {
+function New-Object {
         param(
             [Parameter(Mandatory=$True, Valuefrompipeline = $True)]
             [string]$Obj,
             [Parameter(Mandatory=$False)][System.Object[]]$Args
         )
         if($Obj -ieq 'System.Net.WebClient' -or $Obj -ieq 'Net.WebClient'){
-            $webclient_obj = microsoft.powershell.utility\new-object Net.WebClient
+            $webclient_obj = Microsoft.Powershell.Utility\New-Object Net.WebClient
             Add-Member -memberType ScriptMethod -InputObject $webclient_obj -Force -Name "DownloadFile" -Value {
                 param([string]$url,[string]$destination)
                 Write-Host "%#[System.Net.WebClient.DownloadFile] Download From: $($url) --> Save To: $($destination) %#"
@@ -90,14 +110,14 @@ function new-object {
             return $webclient_obj
         }
         elseif ($Obj -ieq 'System.Net.Sockets.TCPClient') {
-            $tcpclient_obj = microsoft.powershell.utility\new-object System.Net.Sockets.TCPClient
+            $tcpclient_obj = Microsoft.Powershell.Utility\New-Object System.Net.Sockets.TCPClient
             $IP = $Args[0]
             $port = $Args[1]
             Write-Host "%#[System.Net.Sockets.TCPClient] Connect To $($IP):$($port)%#"
             return $tcpclient_obj
         }
         elseif($Obj -ieq 'random'){
-            $random_obj = microsoft.powershell.utility\new-object Random
+            $random_obj = Microsoft.Powershell.Utility\New-Object Random
             Add-Member -memberType ScriptMethod -InputObject $random_obj -Name "next" -Value {
                 param([int]$min,[int]$max)
                 $random_int = Get-Random -Minimum $min -Maximum $max
@@ -108,10 +128,10 @@ function new-object {
         }
         else {
             if ($Args.count -gt 0) {
-                $unk_obj = microsoft.powershell.utility\new-object $Obj $Args
+                $unk_obj = Microsoft.Powershell.Utility\New-Object $Obj $Args
             }
             else {
-                $unk_obj = microsoft.powershell.utility\new-object $Obj
+                $unk_obj = Microsoft.Powershell.Utility\New-Object $Obj
             }
             return $unk_obj
         }
@@ -315,6 +335,14 @@ function Invoke-WebRequest {
     } else {
         Write-Host "%#[Invoke-WebRequest] Download From: $($uri) %#"
     }
+}
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/test-connection?view=powershell-7.3
+$Test_Connection_Override = @'
+function Test-Connection {
+    Write-Host "%#[Test-Connection] $($args)%#"
+    return $true
 }
 '@
 
@@ -907,7 +935,7 @@ function Get_SHA256
             [byte[]]$strBytes
         )
 
-        $sha256obj = new-object -TypeName System.Security.Cryptography.SHA256CryptoServiceProvider
+        $sha256obj = New-Object -TypeName System.Security.Cryptography.SHA256CryptoServiceProvider
         $hash = [System.BitConverter]::ToString($sha256obj.ComputeHash($strBytes))
 
         return $hash.ToLower().Replace('-','')
@@ -1098,6 +1126,7 @@ function PSDecode {
     $override_functions += $Uninstall_WindowsFeature_Override
     $override_functions += $Set_MpPreference_Override
     $override_functions += $Start_Process_Override
+    $override_functions += $Test_Connection_Override
 
     if(!$x){
         $override_functions += $New_Object_Override
@@ -1109,7 +1138,6 @@ function PSDecode {
         $override_functions += $Invoke_WebRequest_Override
 
     }
-
 
     $override_functions  = ($override_functions -join "`r`n") + "`r`n`r`n"
 
@@ -1130,6 +1158,12 @@ function PSDecode {
         if ($encoded_script -ne $original_script) {
             Write-Verbose "Adding $($encoded_script_hash) to layers"
             $layers.Add($encoded_script)
+            # Here's a little taster of what is going to be run...
+            if($encoded_script.length -gt 1000) {
+                Write-Verbose "Script to run: $($encoded_script.substring(0, 1000))..."
+            } else {
+                Write-Verbose "Script to run: $($encoded_script)"
+            }
         }
 
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo

@@ -117,6 +117,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "SysInternals": 1.0,
         "One Liner": 1.0,
         "Email": 1.0,
+        "Ping": 1.0,
 
         # Benign
         # Behaviours which are generally only seen in Benign scripts - subtracts from score.
@@ -358,6 +359,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["InvokeScript"],
         [".Invoke("],
         ["IEX("],
+        ["|IEX"],
         ["wScript.Run"],
         ["wscript.shell"],
         ["ActiveXObject", "ShellExecute"],
@@ -532,6 +534,10 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["wmic"]
     ]
 
+    behaviour_col["Ping"] = [
+        ["Test-Connection"]
+    ]
+
     # Behavioural Combos combine a base grouping of behaviours to help raise the score of files without a lot of complexity.
     # Take care in adding to this list and use a minimum length of 3 behaviours.
     # Instances where FP hits occur have been commented out
@@ -555,6 +561,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Downloader", "Starts Process", "Sleeps"],
         ["Downloader", "Starts Process", "Hidden Window"],
         ["Downloader", "Starts RunDll"],
+        ["Downloader", "Script Execution", "Ping"],
+        ["Script Execution", "Ping"],
     ]
 
     for behaviour, checks in behaviour_col.items():
