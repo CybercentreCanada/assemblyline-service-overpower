@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[Invoke-WebRequest] Download From: http://github.com/john-xor/temp/blob/main/index.html?raw=true\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -24,6 +25,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://github.com/john-xor/temp/blob/main/index.html?raw=true\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/john-xor/temp/blob/main/index.html?raw=true\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -56,6 +63,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,

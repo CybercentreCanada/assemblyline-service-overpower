@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[System.Net.Sockets.TCPClient] Connect To 0xC0A83865:80\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -24,6 +25,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -35,6 +37,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: wget",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -57,6 +60,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Invoke-Expression",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -79,6 +83,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: -W, Hidden",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -101,6 +106,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,

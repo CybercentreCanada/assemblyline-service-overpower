@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[Start-Sleep] -s 60\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -24,6 +25,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -35,6 +37,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: .Invoke(",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -57,6 +60,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Convert, FromBase64String, Text.Encoding",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -79,6 +83,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Start-Sleep, sleep -s",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -101,6 +106,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: [Convert]::FromBase64String(",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -123,6 +129,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -145,11 +152,16 @@
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "ps1profiler_base64_decoded_0",
+        "sha256": "fd9f8274377a534461c76b4e374dc2e153267fc6c28fbe2e5ba4087d895850b0"
+      }
+    ],
     "supplementary": [
       {
-        "name": "fd9f8274377a534461c76b4e374dc2e153267fc6c28fbe2e5ba4087d895850b0",
-        "sha256": "fd9f8274377a534461c76b4e374dc2e153267fc6c28fbe2e5ba4087d895850b0"
+        "name": "655155bfecb054582471415275fe31c488e4c6394b227610e0e095b105b1ef17",
+        "sha256": "655155bfecb054582471415275fe31c488e4c6394b227610e0e095b105b1ef17"
       }
     ]
   },

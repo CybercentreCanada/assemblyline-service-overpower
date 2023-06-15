@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[System.Net.WebClient.DownloadFile] Download From: https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580 --> Save To: ./C:/Users/Public/WindowsKeys.ps1\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -42,6 +43,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"www.4sync.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -74,6 +81,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -85,6 +93,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: -W, Hidden, -Exec, Bypass",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -107,6 +116,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Net.WebClient, DownloadFile",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -129,6 +139,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Convert, FromBase64String, Text.Encoding",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -151,6 +162,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: WindowStyle, Hidden, -W, Hidden",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -173,6 +185,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: SCHTASKS",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -195,6 +208,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: [Convert]::FromBase64String(",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -217,6 +231,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -239,6 +254,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -261,6 +277,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"www.4sync.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://www.4sync.com/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/web/directdownload/qhzsers6/rhb0lmwd.f2e6a9154ab6cd29b337d6b555367580\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,

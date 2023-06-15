@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -17,6 +18,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Start-Process, START, rundll32",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -39,6 +41,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: START, rundll32",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -61,6 +64,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: [-1..-, [array]::Reverse",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -83,6 +87,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: [Convert]::FromBase64String(",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -105,6 +110,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: IO.File, WriteAllBytes",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,

