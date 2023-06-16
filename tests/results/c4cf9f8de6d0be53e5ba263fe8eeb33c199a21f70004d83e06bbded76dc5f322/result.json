@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Start-Process] \\pscp_putty.exe -windowstyle hidden\n",
+        "body": "[Invoke-Expression] Execute/Open: $EXE_Path = \"$env:TEMP\\pscp_putty.exe\"$Base64_Code = \"TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAABQRQAAZIYCAKn4I+IAAAAAAAAAAPAAIgALAjAAAA4AAAAQAQAAAAAAAAAAAAAgAAAAAABAAQAAAAAgAAAAAgAABAAAAAAAAAAGAAAAAAAAAABgAQAAAgAAAAAAAAIAYIUAAEAAAAAAAABAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAABAAADUDwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUC0AABwAAAAAAAAAAAAAAAA...\n\n[Start-Process] \\pscp_putty.exe -windowstyle hidden\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -287,12 +287,12 @@
     ],
     "supplementary": [
       {
-        "name": "a79b51ad3625362bcf5a6e554acc4cdb6c6394f94a602c98d496039c9603e7d4",
-        "sha256": "a79b51ad3625362bcf5a6e554acc4cdb6c6394f94a602c98d496039c9603e7d4"
+        "name": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde",
+        "sha256": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde"
       },
       {
         "name": "layer_0.ps1",
-        "sha256": "f54d3f98cd31c60768b6e9e4729fce43f4e7d84722cf8eabf2fdb517fe1ef77c"
+        "sha256": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed"
       }
     ]
   },
