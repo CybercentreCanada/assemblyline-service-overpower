@@ -82,6 +82,29 @@
       },
       {
         "auto_collapse": false,
+        "body": "Marks: [System.Convert]::FromBase64String(",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Deobfuscation": 10
+          },
+          "signatures": {
+            "Deobfuscation": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Deobfuscation",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -232,29 +255,6 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [Convert]::FromBase64String(",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 10,
-          "score_map": {
-            "Deobfuscation": 10
-          },
-          "signatures": {
-            "Deobfuscation": 1
-          }
-        },
-        "tags": {},
-        "title_text": "Signature: Deobfuscation",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
         "body": "Marks: IO.File, WriteAllBytes",
         "body_config": {},
         "body_format": "TEXT",
@@ -316,6 +316,13 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
+          "Deobfuscation"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
           "One Liner"
         ]
       },
@@ -352,13 +359,6 @@
         "heur_id": 3,
         "signatures": [
           "Hidden Window"
-        ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "Deobfuscation"
         ]
       },
       {

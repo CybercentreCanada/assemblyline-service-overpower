@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1211,
+    "score": 1221,
     "sections": [
       {
         "auto_collapse": false,
@@ -118,6 +118,29 @@
       },
       {
         "auto_collapse": false,
+        "body": "Marks: [System.Convert]::FromBase64String(",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Deobfuscation": 10
+          },
+          "signatures": {
+            "Deobfuscation": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Deobfuscation",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": "Marks: AppDomain]::CurrentDomain.GetAssemblies(), GlobalAssemblyCache",
         "body_config": {},
         "body_format": "TEXT",
@@ -185,6 +208,13 @@
         "heur_id": 3,
         "signatures": [
           "Obfuscation"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Deobfuscation"
         ]
       },
       {
