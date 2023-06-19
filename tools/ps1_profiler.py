@@ -414,6 +414,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Deobfuscation"] = [
         ["[Convert]::FromBase64String("],
+        ["[System.Convert]::FromBase64String("],
     ]
 
     behaviour_col["Crypto"] = [
@@ -539,7 +540,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     ]
 
     # Behavioural Combos combine a base grouping of behaviours to help raise the score of files without a lot of complexity.
-    # Take care in adding to this list and use a minimum length of 3 behaviours.
+    # Take care in adding to this list and use a minimum length of 3 behaviours (or 2 really good ones!).
     # Instances where FP hits occur have been commented out
 
     behaviour_combos = [

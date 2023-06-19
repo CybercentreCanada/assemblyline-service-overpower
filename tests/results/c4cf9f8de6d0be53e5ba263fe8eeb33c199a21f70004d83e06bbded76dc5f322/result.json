@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Start-Process] \\pscp_putty.exe -windowstyle hidden\n",
+        "body": "[Invoke-Expression] Execute/Open: $EXE_Path = \"$env:TEMP\\pscp_putty.exe\"$Base64_Code = \"TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAABQRQAAZIYCAKn4I+IAAAAAAAAAAPAAIgALAjAAAA4AAAAQAQAAAAAAAAAAAAAgAAAAAABAAQAAAAAgAAAAAgAABAAAAAAAAAAGAAAAAAAAAABgAQAAAgAAAAAAAAIAYIUAAEAAAAAAAABAAAAAAAAAAAAQAAAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAABAAADUDwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUC0AABwAAAAAAAAAAAAAAAA...\n\n[Start-Process] \\pscp_putty.exe -windowstyle hidden\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -78,6 +78,29 @@
         },
         "tags": {},
         "title_text": "Signature: Compression",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: [System.Convert]::FromBase64String(",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Deobfuscation": 10
+          },
+          "signatures": {
+            "Deobfuscation": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Deobfuscation",
         "zeroize_on_tag_safe": false
       },
       {
@@ -232,29 +255,6 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [Convert]::FromBase64String(",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 10,
-          "score_map": {
-            "Deobfuscation": 10
-          },
-          "signatures": {
-            "Deobfuscation": 1
-          }
-        },
-        "tags": {},
-        "title_text": "Signature: Deobfuscation",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
         "body": "Marks: IO.File, WriteAllBytes",
         "body_config": {},
         "body_format": "TEXT",
@@ -287,12 +287,12 @@
     ],
     "supplementary": [
       {
-        "name": "a79b51ad3625362bcf5a6e554acc4cdb6c6394f94a602c98d496039c9603e7d4",
-        "sha256": "a79b51ad3625362bcf5a6e554acc4cdb6c6394f94a602c98d496039c9603e7d4"
+        "name": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde",
+        "sha256": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde"
       },
       {
         "name": "layer_0.ps1",
-        "sha256": "f54d3f98cd31c60768b6e9e4729fce43f4e7d84722cf8eabf2fdb517fe1ef77c"
+        "sha256": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed"
       }
     ]
   },
@@ -310,6 +310,13 @@
         "heur_id": 3,
         "signatures": [
           "Compression"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Deobfuscation"
         ]
       },
       {
@@ -352,13 +359,6 @@
         "heur_id": 3,
         "signatures": [
           "Hidden Window"
-        ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "Deobfuscation"
         ]
       },
       {

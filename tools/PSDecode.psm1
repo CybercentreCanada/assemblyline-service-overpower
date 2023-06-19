@@ -12,8 +12,16 @@ function Invoke-Expression()
             return
         }
 
-        # Add the action, then write
-        Write-Host "%#[Invoke-Expression] Execute/Open: $($Command)%#"
+        if ("$($Command)".Length -gt 500) {
+            # We want the command on a single line for when actions are replaced
+            $cmd = ("$($Command)").substring(0, 500).Replace("`n", "")
+            # Add the action, then write
+            Write-Host "%#[Invoke-Expression] Execute/Open: $($cmd)...%#"
+        } else {
+            # Add the action, then write
+            Write-Host "%#[Invoke-Expression] Execute/Open: $($Command)%#"
+        }
+
         Write-Host $Command
 
         $output = Microsoft.PowerShell.Utility\Invoke-Expression $Command
@@ -29,19 +37,52 @@ function Invoke-Command()
     {
         param(
             [Parameter( `
-                Mandatory=$True, `
+                Mandatory=$False, `
                 Valuefrompipeline = $True)]
-            [String]$Command
+            [String]$Command,
+            [Parameter( `
+                Mandatory=$False, `
+                Valuefrompipeline = $True)]
+            [ScriptBlock]$ScriptBlock,
+            [Parameter( `
+                Mandatory=$False, `
+                Valuefrompipeline = $True)]
+            [System.Object[]]$ArgumentList
         )
-        if (-not $Command) {
+
+        if ($Command) {
+
+            if ("$($Command)".Length -gt 500) {
+                # We want the command on a single line for when actions are replaced
+                $cmd = ("$($Command)").substring(0, 500).Replace("`n", "")
+                # Add the action, then write
+                Write-Host "%#[Invoke-Command] Execute/Open: $($cmd)...%#"
+            } else {
+                # Add the action, then write
+                Write-Host "%#[Invoke-Command] Execute/Open: $($Command)%#"
+            }
+
+            Write-Host $Command
+
+            $output = Microsoft.PowerShell.Core\Invoke-Command $Command
+        } elseif ($ScriptBlock) {
+            if ("$($ScriptBlock)".Length + "$($ArgumentList)".Length -gt 500) {
+                # We want the script block + argument list on a single line for when actions are replaced
+                $cmd = ("$($ScriptBlock)" + " " + "$($ArgumentList)").substring(0, 500).Replace("`n", "")
+                # Add the action
+                Write-Host "%#[Invoke-Command] Execute/Open: $($cmd)...%#"
+            } else {
+                # Add the action
+                Write-Host "%#[Invoke-Command] Execute/Open: -ScriptBlock $($ScriptBlock) -ArgumentList $($ArgumentList)%#"
+            }
+
+            # Do not write ScriptBlock object to host, since it will hurt execution
+            # Write-Host $ScriptBlock $ArgumentList
+
+            $output = Microsoft.PowerShell.Core\Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $ArgumentList
+        } else {
             return
         }
-
-        # Add the action, then write
-        Write-Host "%#[Invoke-Command] Execute/Open: $($Command)%#"
-        Write-Host $Command
-
-        $output = Microsoft.PowerShell.Core\Invoke-Command $Command
 
         # Useful for debugging Invoke-Command usage
         # Write-Host $output
@@ -127,10 +168,9 @@ function New-Object {
             return $random_obj
         }
         else {
-            if ($Args.count -gt 0) {
+            if ($Args -and $Args.count -gt 0) {
                 $unk_obj = Microsoft.Powershell.Utility\New-Object $Obj $Args
-            }
-            else {
+            } else {
                 $unk_obj = Microsoft.Powershell.Utility\New-Object $Obj
             }
             return $unk_obj
@@ -147,11 +187,21 @@ function Start-Sleep {
 
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/start-job?view=powershell-7.3
 $Start_Job_Override = @'
-function start-job {
+function Start-Job {
         param(
-            [Parameter(Mandatory=$True, Valuefrompipeline = $True)][ScriptBlock]$ScriptBlock
+            [Parameter(Mandatory=$True, ValueFromPipeline=$True)][ScriptBlock]$ScriptBlock,
+            [Parameter(Mandatory=$False, ValueFromPipeline=$True)][System.Object[]]$ArgumentList
         )
-        Write-Host "$ScriptBlock"
+        if ("$($ScriptBlock)".Length + "$($ArgumentList)".Length -gt 500) {
+            # We want the script block and argument list on a single line for when actions are replaced
+            $start_job = ("$($ScriptBlock)" + " " + "$($ArgumentList)").substring(0, 500).Replace("`n", "")
+            # Add the action
+            Write-Host "%#[Start-Job] $($start_job)...%#"
+        } else {
+            # Add the action
+            Write-Host "%#[Start-Job] $($ScriptBlock)%#"
+        }
+        Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $ArgumentList
     }
 '@
 
@@ -787,6 +837,26 @@ function Remove_Unusable_Args_On_Linux
     return $Command
 }
 
+function Remove_Unusable_Start_Job_Args
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/start-job?view=powershell-7.3#-runas32
+    # We run PowerShell 7 which does not support the runas32 parameter
+    $unusable_args_pattern = [regex]'(?i)start-job \{.+\}(\s+-runas32)'
+    $matches = $unusable_args_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_Unusable_Start_Job_Args] Removing: $($match.groups[1].Value)"
+        $Command = $Command.Replace($match.groups[1].Value, "")
+    }
+    return $Command
+}
+
 function Convert_Encoded_Command
     {
     param(
@@ -875,6 +945,7 @@ function Code_Cleanup
             $new_command = Resolve_PowerShell_On_Linux($new_command)
             $new_command = Resolve_Windows_Directories_On_Linux($new_command)
             $new_command = Remove_Unusable_Args_On_Linux($new_command)
+            $new_command = Remove_Unusable_Start_Job_Args($new_command)
             $new_command = Remove_Carets($new_command)
             $new_command = Resolve_Background_Tasks($new_command)
             $new_command = Replace_Wget($new_command)

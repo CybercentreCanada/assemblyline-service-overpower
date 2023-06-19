@@ -1,0 +1,244 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 1221,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[Start-Job]  param($a) IEX $a  function func_get_proc_address {\tParam ($var_module, $var_procedure)\t\t\t$var_unsafe_native_methods = ([AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\\\')[-1].Equals('System.dll') }).GetType('Microsoft.Win32.UnsafeNativeMethods')\t$var_gpa = $var_unsafe_native_methods.GetMethod('GetProcAddress', [Type[]] @('System.Runtime.InteropServices.HandleRef', 'string'))\treturn $var_gpa.Invoke($null, @([System.Runtime.InteropSe...\n\n[Invoke-Command] Execute/Open:  param($a) IEX $a  function func_get_proc_address {\tParam ($var_module, $var_procedure)\t\t\t$var_unsafe_native_methods = ([AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\\\')[-1].Equals('System.dll') }).GetType('Microsoft.Win32.UnsafeNativeMethods')\t$var_gpa = $var_unsafe_native_methods.GetMethod('GetProcAddress', [Type[]] @('System.Runtime.InteropServices.HandleRef', 'string'))\treturn $var_gpa.Invoke($null, @([System.Runtime.InteropSe...\n\n[Invoke-Expression] Execute/Open: function func_get_proc_address {\tParam ($var_module, $var_procedure)\t\t\t$var_unsafe_native_methods = ([AppDomain]::CurrentDomain.GetAssemblies() | Where-Object { $_.GlobalAssemblyCache -And $_.Location.Split('\\\\')[-1].Equals('System.dll') }).GetType('Microsoft.Win32.UnsafeNativeMethods')\t$var_gpa = $var_unsafe_native_methods.GetMethod('GetProcAddress', [Type[]] @('System.Runtime.InteropServices.HandleRef', 'string'))\treturn $var_gpa.Invoke($null, @([System.Runtime.InteropServices.HandleRef](N...\n",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Attribution family: Cobalt Strike\n\tMatched any or all strings:\n\t\t$doit = @\n\t\tfunc_get_proc_address\n\t\tfunc_get_delegate_type\n\t\tgetdelegateforfunctionpointer\n\t\tstart-job",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 2,
+          "score": 500,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "attribution": {
+            "family": [
+              "Cobalt Strike"
+            ]
+          }
+        },
+        "title_text": "Malicious Content Detected in e1c40d86c558a003a1971480fac4cefc663efb5cddd9ac91104acc54e9150293",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: VirtualAlloc, Runtime.InteropServices.Marshal]::Copy, Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 500,
+          "score_map": {
+            "Code Injection": 500
+          },
+          "signatures": {
+            "Code Injection": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Code Injection",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: .Invoke(",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Script Execution": 10
+          },
+          "signatures": {
+            "Script Execution": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Script Execution",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: -bxor",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Obfuscation": 100
+          },
+          "signatures": {
+            "Obfuscation": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Obfuscation",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: [System.Convert]::FromBase64String(",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Deobfuscation": 10
+          },
+          "signatures": {
+            "Deobfuscation": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Deobfuscation",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: AppDomain]::CurrentDomain.GetAssemblies(), GlobalAssemblyCache",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Byte Usage": 100
+          },
+          "signatures": {
+            "Byte Usage": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Byte Usage",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "7ca0a7693af53594f27a05a1a36001ebf226ee74280815b0f598758d17f87c26"
+      }
+    ],
+    "supplementary": [
+      {
+        "name": "layer_0.ps1",
+        "sha256": "37bbd15bedfb9c6055b7675ecab7e74f5173ccc46d33b535d9c80282b9eb557f"
+      },
+      {
+        "name": "layer_1.ps1",
+        "sha256": "ae744c4ce37e626df42a5182f1d484df2e3c440cc918ddd3b0be6fc98c9a075c"
+      }
+    ]
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 2,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Code Injection"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Script Execution"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Obfuscation"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Deobfuscation"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Byte Usage"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
+      }
+    ],
+    "tags": {
+      "attribution.family": [
+        {
+          "heur_id": 2,
+          "signatures": [],
+          "value": "Cobalt Strike"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
+}
