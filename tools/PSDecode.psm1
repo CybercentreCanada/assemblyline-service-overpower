@@ -819,7 +819,7 @@ function Resolve_Windows_Directories_On_Linux
     return $Command
 }
 
-function Remove_Unusable_Args_On_Linux
+function Remove_WindowStyle_Hidden_On_Linux
     {
     param(
         [Parameter( `
@@ -828,10 +828,155 @@ function Remove_Unusable_Args_On_Linux
         [String]$Command
     )
 
-    $unusable_args_pattern = [regex]'(?i)(bypass|hidden|-(?:nop(?:rofile)?|windowstyle|executionpolicy|nologo))\b'
-    $matches = $unusable_args_pattern.Matches($Command)
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the WindowStyle Hidden section
+    $windowstyle_pattern = [regex]'(?i)(-w(in(d(ow(s(tyle)?)?)?)?)?\s+hid(den)?)\b'
+    $matches = $windowstyle_pattern.Matches($Command)
     ForEach($match in $matches){
-        Write-Verbose "[Remove_Unusable_Args_On_Linux] Removing: $($match)"
+        Write-Verbose "[Remove_WindowStyle_Hidden_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Remove_NonInteractive_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the NonInteractive section
+    $noninteractive_pattern = [regex]'(?i)(-noni(nteractive)?)\b'
+    $matches = $noninteractive_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_NonInteractive_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Remove_NoProfile_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the NoProfile section
+    $noprofile_pattern = [regex]'(?i)(-nop(rofile)?)\b'
+    $matches = $noprofile_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_NoProfile_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Remove_ExecutionPolicy_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the following sections:
+    #   - ExecutionPolicy Bypass
+    #   - ExecutionPolicy Hidden
+    #   - ExecutionPolicy Unrestricted
+    $executionpolicy_pattern = [regex]'(?i)(-e(xe(c(ution)?)?)?(p(olicy)?)?\s+(bypass|hidden|unrestricted))\b'
+    $matches = $executionpolicy_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_ExecutionPolicy_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Remove_Sta_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the Sta section
+    $sta_pattern = [regex]'(?i)(-sta)\b'
+    $matches = $sta_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_Sta_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Remove_NoExit_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the NoExit section
+    $sta_pattern = [regex]'(?i)(-noexit)\b'
+    $matches = $sta_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_NoExit_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Remove_NoLogo_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the NoLogo section
+    $nologo_pattern = [regex]'(?i)(-nol(ogo)?)\b'
+    $matches = $nologo_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_NoLogo_On_Linux] Removing: $($match)"
+        $Command = $Command.Replace($match, "")
+    }
+    return $Command
+}
+
+function Remove_Command_On_Linux
+    {
+    param(
+        [Parameter( `
+            Mandatory=$True, `
+            Valuefrompipeline = $True)]
+        [String]$Command
+    )
+
+    # https://unit42.paloaltonetworks.com/unit42-pulling-back-the-curtains-on-encodedcommand-powershell-attacks/
+    # Addresses the Command section
+    $command_pattern = [regex]'(?i)(-c)\b'
+    $matches = $command_pattern.Matches($Command)
+    ForEach($match in $matches){
+        Write-Verbose "[Remove_Command_On_Linux] Removing: $($match)"
         $Command = $Command.Replace($match, "")
     }
     return $Command
@@ -944,7 +1089,14 @@ function Code_Cleanup
             $new_command = Resolve_Replaces($new_command)
             $new_command = Resolve_PowerShell_On_Linux($new_command)
             $new_command = Resolve_Windows_Directories_On_Linux($new_command)
-            $new_command = Remove_Unusable_Args_On_Linux($new_command)
+            $new_command = Remove_WindowStyle_Hidden_On_Linux($new_command)
+            $new_command = Remove_NonInteractive_On_Linux($new_command)
+            $new_command = Remove_NoProfile_On_Linux($new_command)
+            $new_command = Remove_ExecutionPolicy_On_Linux($new_command)
+            $new_command = Remove_Sta_On_Linux($new_command)
+            $new_command = Remove_NoExit_On_Linux($new_command)
+            $new_command = Remove_NoLogo_On_Linux($new_command)
+            $new_command = Remove_Command_On_Linux($new_command)
             $new_command = Remove_Unusable_Start_Job_Args($new_command)
             $new_command = Remove_Carets($new_command)
             $new_command = Resolve_Background_Tasks($new_command)
