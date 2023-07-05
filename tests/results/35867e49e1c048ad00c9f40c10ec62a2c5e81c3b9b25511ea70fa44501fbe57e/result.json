@@ -42,7 +42,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/tn0q3niee\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/Tn0Q3nieE\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/Tn0Q3nieE\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -67,10 +67,10 @@
                 "hotellosmirtos.com"
               ],
               "uri": [
-                "https://hotellosmirtos.com/sjn/tn0q3niee"
+                "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
               ],
               "uri_path": [
-                "/sjn/tn0q3niee"
+                "/sjn/Tn0Q3nieE"
               ]
             }
           }
@@ -184,7 +184,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"carladvogadatributaria.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"citytech-solutions.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"erg-eg.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"gsscorporationltd.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"mrcrizquna.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"nayadofoundation.org\"}, {\"ioc_type\": \"domain\", \"ioc\": \"zainco.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://carladvogadatributaria.com/tvnq9/h78n9qol\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/tvnq9/h78n9qol\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://citytech-solutions.com/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://erg-eg.com/ocmb/cjva5tv\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/ocmb/cjva5tv\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://gsscorporationltd.com/oksfj/elnfp\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/oksfj/elnfp\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://mrcrizquna.com/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://nayadofoundation.org/wxakm/x7gy6orrr\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/wxakm/x7gy6orrr\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://zainco.net/odou/5nz7cc739ffc\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/odou/5nz7cc739ffc\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"carladvogadatributaria.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"citytech-solutions.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"erg-eg.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"gsscorporationltd.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"mrcrizquna.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"nayadofoundation.org\"}, {\"ioc_type\": \"domain\", \"ioc\": \"zainco.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://carladvogadatributaria.com/tvnq9/H78n9QOL\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/tvnq9/H78n9QOL\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://citytech-solutions.com/6Mh1k/VyRQIueel74\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/6Mh1k/VyRQIueel74\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://erg-eg.com/ocmb/CjVa5TV\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/ocmb/CjVa5TV\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://gsscorporationltd.com/okSfj/ElnfP\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/okSfj/ElnfP\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/Tn0Q3nieE\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/Tn0Q3nieE\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://mrcrizquna.com/L7ccN/raQf0mzg0gq\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/L7ccN/raQf0mzg0gq\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://nayadofoundation.org/wXaKm/x7GY6orRR\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/wXaKm/x7GY6orRR\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://zainco.net/OdOU/5nz7Cc739ffc\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/OdOU/5nz7Cc739ffc\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -216,24 +216,24 @@
                 "zainco.net"
               ],
               "uri": [
-                "https://carladvogadatributaria.com/tvnq9/h78n9qol",
-                "https://citytech-solutions.com/6mh1k/vyrqiueel74",
-                "https://erg-eg.com/ocmb/cjva5tv",
-                "https://gsscorporationltd.com/oksfj/elnfp",
-                "https://hotellosmirtos.com/sjn/tn0q3niee",
-                "https://mrcrizquna.com/l7ccn/raqf0mzg0gq",
-                "https://nayadofoundation.org/wxakm/x7gy6orrr",
-                "https://zainco.net/odou/5nz7cc739ffc"
+                "https://carladvogadatributaria.com/tvnq9/H78n9QOL",
+                "https://citytech-solutions.com/6Mh1k/VyRQIueel74",
+                "https://erg-eg.com/ocmb/CjVa5TV",
+                "https://gsscorporationltd.com/okSfj/ElnfP",
+                "https://hotellosmirtos.com/sjn/Tn0Q3nieE",
+                "https://mrcrizquna.com/L7ccN/raQf0mzg0gq",
+                "https://nayadofoundation.org/wXaKm/x7GY6orRR",
+                "https://zainco.net/OdOU/5nz7Cc739ffc"
               ],
               "uri_path": [
-                "/tvnq9/h78n9qol",
-                "/6mh1k/vyrqiueel74",
-                "/ocmb/cjva5tv",
-                "/oksfj/elnfp",
-                "/sjn/tn0q3niee",
-                "/l7ccn/raqf0mzg0gq",
-                "/wxakm/x7gy6orrr",
-                "/odou/5nz7cc739ffc"
+                "/tvnq9/H78n9QOL",
+                "/6Mh1k/VyRQIueel74",
+                "/ocmb/CjVa5TV",
+                "/okSfj/ElnfP",
+                "/sjn/Tn0Q3nieE",
+                "/L7ccN/raQf0mzg0gq",
+                "/wXaKm/x7GY6orRR",
+                "/OdOU/5nz7Cc739ffc"
               ]
             }
           }
@@ -375,7 +375,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/tn0q3niee\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/tn0q3niee\"}, {\"ioc_type\": \"domain\", \"ioc\": \"gsscorporationltd.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://gsscorporationltd.com/oksfj/elnfp\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/oksfj/elnfp\"}, {\"ioc_type\": \"domain\", \"ioc\": \"citytech-solutions.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://citytech-solutions.com/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/6mh1k/vyrqiueel74\"}, {\"ioc_type\": \"domain\", \"ioc\": \"carladvogadatributaria.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://carladvogadatributaria.com/tvnq9/h78n9qol\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/tvnq9/h78n9qol\"}, {\"ioc_type\": \"domain\", \"ioc\": \"mrcrizquna.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://mrcrizquna.com/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/l7ccn/raqf0mzg0gq\"}, {\"ioc_type\": \"domain\", \"ioc\": \"zainco.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://zainco.net/odou/5nz7cc739ffc\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/odou/5nz7cc739ffc\"}, {\"ioc_type\": \"domain\", \"ioc\": \"erg-eg.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://erg-eg.com/ocmb/cjva5tv\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/ocmb/cjva5tv\"}, {\"ioc_type\": \"domain\", \"ioc\": \"nayadofoundation.org\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://nayadofoundation.org/wxakm/x7gy6orrr\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/wxakm/x7gy6orrr\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"hotellosmirtos.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://hotellosmirtos.com/sjn/Tn0Q3nieE\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/sjn/Tn0Q3nieE\"}, {\"ioc_type\": \"domain\", \"ioc\": \"gsscorporationltd.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://gsscorporationltd.com/okSfj/ElnfP\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/okSfj/ElnfP\"}, {\"ioc_type\": \"domain\", \"ioc\": \"citytech-solutions.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://citytech-solutions.com/6Mh1k/VyRQIueel74\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/6Mh1k/VyRQIueel74\"}, {\"ioc_type\": \"domain\", \"ioc\": \"carladvogadatributaria.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://carladvogadatributaria.com/tvnq9/H78n9QOL\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/tvnq9/H78n9QOL\"}, {\"ioc_type\": \"domain\", \"ioc\": \"mrcrizquna.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://mrcrizquna.com/L7ccN/raQf0mzg0gq\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/L7ccN/raQf0mzg0gq\"}, {\"ioc_type\": \"domain\", \"ioc\": \"zainco.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://zainco.net/OdOU/5nz7Cc739ffc\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/OdOU/5nz7Cc739ffc\"}, {\"ioc_type\": \"domain\", \"ioc\": \"erg-eg.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://erg-eg.com/ocmb/CjVa5TV\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/ocmb/CjVa5TV\"}, {\"ioc_type\": \"domain\", \"ioc\": \"nayadofoundation.org\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://nayadofoundation.org/wXaKm/x7GY6orRR\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/wXaKm/x7GY6orRR\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -407,24 +407,24 @@
                 "nayadofoundation.org"
               ],
               "uri": [
-                "https://hotellosmirtos.com/sjn/tn0q3niee",
-                "https://gsscorporationltd.com/oksfj/elnfp",
-                "https://citytech-solutions.com/6mh1k/vyrqiueel74",
-                "https://carladvogadatributaria.com/tvnq9/h78n9qol",
-                "https://mrcrizquna.com/l7ccn/raqf0mzg0gq",
-                "https://zainco.net/odou/5nz7cc739ffc",
-                "https://erg-eg.com/ocmb/cjva5tv",
-                "https://nayadofoundation.org/wxakm/x7gy6orrr"
+                "https://hotellosmirtos.com/sjn/Tn0Q3nieE",
+                "https://gsscorporationltd.com/okSfj/ElnfP",
+                "https://citytech-solutions.com/6Mh1k/VyRQIueel74",
+                "https://carladvogadatributaria.com/tvnq9/H78n9QOL",
+                "https://mrcrizquna.com/L7ccN/raQf0mzg0gq",
+                "https://zainco.net/OdOU/5nz7Cc739ffc",
+                "https://erg-eg.com/ocmb/CjVa5TV",
+                "https://nayadofoundation.org/wXaKm/x7GY6orRR"
               ],
               "uri_path": [
-                "/sjn/tn0q3niee",
-                "/oksfj/elnfp",
-                "/6mh1k/vyrqiueel74",
-                "/tvnq9/h78n9qol",
-                "/l7ccn/raqf0mzg0gq",
-                "/odou/5nz7cc739ffc",
-                "/ocmb/cjva5tv",
-                "/wxakm/x7gy6orrr"
+                "/sjn/Tn0Q3nieE",
+                "/okSfj/ElnfP",
+                "/6Mh1k/VyRQIueel74",
+                "/tvnq9/H78n9QOL",
+                "/L7ccN/raQf0mzg0gq",
+                "/OdOU/5nz7Cc739ffc",
+                "/ocmb/CjVa5TV",
+                "/wXaKm/x7GY6orRR"
               ]
             }
           }
@@ -662,7 +662,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://carladvogadatributaria.com/tvnq9/h78n9qol"
+          "value": "https://carladvogadatributaria.com/tvnq9/H78n9QOL"
         },
         {
           "heur_id": 5,
@@ -674,7 +674,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://citytech-solutions.com/6mh1k/vyrqiueel74"
+          "value": "https://citytech-solutions.com/6Mh1k/VyRQIueel74"
         },
         {
           "heur_id": 5,
@@ -686,7 +686,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://erg-eg.com/ocmb/cjva5tv"
+          "value": "https://erg-eg.com/ocmb/CjVa5TV"
         },
         {
           "heur_id": 5,
@@ -698,13 +698,18 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://gsscorporationltd.com/oksfj/elnfp"
+          "value": "https://gsscorporationltd.com/okSfj/ElnfP"
         },
         {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
+          "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
           "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
         },
         {
@@ -717,12 +722,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://hotellosmirtos.com/sjn/tn0q3niee"
-        },
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "https://hotellosmirtos.com/sjn/tn0q3niee"
+          "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
         },
         {
           "heur_id": 5,
@@ -734,7 +734,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://mrcrizquna.com/l7ccn/raqf0mzg0gq"
+          "value": "https://mrcrizquna.com/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 5,
@@ -746,7 +746,7 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://nayadofoundation.org/wxakm/x7gy6orrr"
+          "value": "https://nayadofoundation.org/wXaKm/x7GY6orRR"
         },
         {
           "heur_id": 5,
@@ -758,54 +758,54 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://zainco.net/odou/5nz7cc739ffc"
+          "value": "https://zainco.net/OdOU/5nz7Cc739ffc"
         }
       ],
       "network.dynamic.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/6mh1k/vyrqiueel74"
+          "value": "/6Mh1k/VyRQIueel74"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/l7ccn/raqf0mzg0gq"
+          "value": "/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/ocmb/cjva5tv"
+          "value": "/OdOU/5nz7Cc739ffc"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/odou/5nz7cc739ffc"
+          "value": "/ocmb/CjVa5TV"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/oksfj/elnfp"
+          "value": "/okSfj/ElnfP"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/sjn/tn0q3niee"
+          "value": "/sjn/Tn0Q3nieE"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/sjn/tn0q3niee"
+          "value": "/sjn/Tn0Q3nieE"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/tvnq9/h78n9qol"
+          "value": "/tvnq9/H78n9QOL"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/wxakm/x7gy6orrr"
+          "value": "/wXaKm/x7GY6orRR"
         }
       ],
       "network.static.domain": [
@@ -854,84 +854,84 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://carladvogadatributaria.com/tvnq9/h78n9qol"
+          "value": "https://carladvogadatributaria.com/tvnq9/H78n9QOL"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://citytech-solutions.com/6mh1k/vyrqiueel74"
+          "value": "https://citytech-solutions.com/6Mh1k/VyRQIueel74"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://erg-eg.com/ocmb/cjva5tv"
+          "value": "https://erg-eg.com/ocmb/CjVa5TV"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://gsscorporationltd.com/oksfj/elnfp"
+          "value": "https://gsscorporationltd.com/okSfj/ElnfP"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://hotellosmirtos.com/sjn/tn0q3niee"
+          "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://mrcrizquna.com/l7ccn/raqf0mzg0gq"
+          "value": "https://mrcrizquna.com/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://nayadofoundation.org/wxakm/x7gy6orrr"
+          "value": "https://nayadofoundation.org/wXaKm/x7GY6orRR"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://zainco.net/odou/5nz7cc739ffc"
+          "value": "https://zainco.net/OdOU/5nz7Cc739ffc"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/6mh1k/vyrqiueel74"
+          "value": "/6Mh1k/VyRQIueel74"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/l7ccn/raqf0mzg0gq"
+          "value": "/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/ocmb/cjva5tv"
+          "value": "/OdOU/5nz7Cc739ffc"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/odou/5nz7cc739ffc"
+          "value": "/ocmb/CjVa5TV"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/oksfj/elnfp"
+          "value": "/okSfj/ElnfP"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/sjn/tn0q3niee"
+          "value": "/sjn/Tn0Q3nieE"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/tvnq9/h78n9qol"
+          "value": "/tvnq9/H78n9QOL"
         },
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/wxakm/x7gy6orrr"
+          "value": "/wXaKm/x7GY6orRR"
         }
       ]
     },

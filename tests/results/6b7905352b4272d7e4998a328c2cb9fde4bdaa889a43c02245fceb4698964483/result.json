@@ -40,7 +40,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/ixbabmh0i2clm3qq1gvv/\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/IxBABMh0I2cLM3qq1GVv/\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -65,10 +65,10 @@
                 "focusmedica.in"
               ],
               "uri": [
-                "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
               ],
               "uri_path": [
-                "/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "/fmlib/IxBABMh0I2cLM3qq1GVv/"
               ]
             }
           }
@@ -113,7 +113,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/ixbabmh0i2clm3qq1gvv/\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"focusmedica.in\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/fmlib/IxBABMh0I2cLM3qq1GVv/\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -138,10 +138,10 @@
                 "focusmedica.in"
               ],
               "uri": [
-                "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
               ],
               "uri_path": [
-                "/fmlib/ixbabmh0i2clm3qq1gvv/"
+                "/fmlib/IxBABMh0I2cLM3qq1GVv/"
               ]
             }
           }
@@ -214,14 +214,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
       ],
       "network.dynamic.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
       ],
       "network.static.domain": [
@@ -235,14 +235,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "http://focusmedica.in/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/fmlib/ixbabmh0i2clm3qq1gvv/"
+          "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
       ]
     },

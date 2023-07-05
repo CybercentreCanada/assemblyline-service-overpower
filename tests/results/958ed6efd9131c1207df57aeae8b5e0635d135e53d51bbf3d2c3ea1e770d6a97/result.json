@@ -46,7 +46,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpihmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpihmi/invoice.pdf\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -71,10 +71,10 @@
                 "transfer.sh"
               ],
               "uri": [
-                "https://transfer.sh/get/vpihmi/invoice.pdf"
+                "https://transfer.sh/get/vpiHmi/invoice.pdf"
               ],
               "uri_path": [
-                "/get/vpihmi/invoice.pdf"
+                "/get/vpiHmi/invoice.pdf"
               ]
             }
           }
@@ -142,7 +142,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpihmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpihmi/invoice.pdf\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -167,10 +167,10 @@
                 "transfer.sh"
               ],
               "uri": [
-                "https://transfer.sh/get/vpihmi/invoice.pdf"
+                "https://transfer.sh/get/vpiHmi/invoice.pdf"
               ],
               "uri_path": [
-                "/get/vpihmi/invoice.pdf"
+                "/get/vpiHmi/invoice.pdf"
               ]
             }
           }
@@ -262,14 +262,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://transfer.sh/get/vpihmi/invoice.pdf"
+          "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         }
       ],
       "network.dynamic.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/get/vpihmi/invoice.pdf"
+          "value": "/get/vpiHmi/invoice.pdf"
         }
       ],
       "network.static.domain": [
@@ -283,14 +283,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://transfer.sh/get/vpihmi/invoice.pdf"
+          "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/get/vpihmi/invoice.pdf"
+          "value": "/get/vpiHmi/invoice.pdf"
         }
       ]
     },
