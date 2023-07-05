@@ -118,6 +118,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "One Liner": 1.0,
         "Email": 1.0,
         "Ping": 1.0,
+        "Mshta": 1.0,
 
         # Benign
         # Behaviours which are generally only seen in Benign scripts - subtracts from score.
@@ -334,6 +335,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Notepad", "SendKeys", "ForEach-Object", "Clipboard", "http"],
         ["Excel.Workbooks.Open", "http", "ReleaseComObject", "Sheets", "Item", "Range", "Row"],
         ["iwr", "-outf"],
+        # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.3
+        [". ", "mshta.exe", "http"]
     ]
 
     behaviour_col["Starts Process"] = [
@@ -365,6 +368,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["ActiveXObject", "ShellExecute"],
         ["$ExecutionContext|Get-Member)[6].Name"],  # Invoke-Command
         ["shellexecute"],
+        # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.3
+        [". ", ".exe"],
     ]
 
     behaviour_col["Compression"] = [
@@ -410,6 +415,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["PtrToStringAnsi"],
         ["[-1..-"],
         ["[array]::Reverse"],
+        ["$ENV:COMSPEC\\..\\"],
     ]
 
     behaviour_col["Deobfuscation"] = [
@@ -539,6 +545,10 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Test-Connection"]
     ]
 
+    behaviour_col["Mshta"] = [
+        ["mshta.exe"]
+    ]
+
     # Behavioural Combos combine a base grouping of behaviours to help raise the score of files without a lot of complexity.
     # Take care in adding to this list and use a minimum length of 3 behaviours (or 2 really good ones!).
     # Instances where FP hits occur have been commented out
@@ -564,6 +574,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Downloader", "Starts RunDll"],
         ["Downloader", "Script Execution", "Ping"],
         ["Script Execution", "Ping"],
+        ["Downloader", "Script Execution", "Mshta"],
     ]
 
     for behaviour, checks in behaviour_col.items():
@@ -654,6 +665,12 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
             if cf1 and cf2 and cf3:
                 if behaviour not in behaviour_tags:
                     behaviour_tags[behaviour] = {"marks": [cf1, cf2, cf3]}
+
+        elif behaviour == "Mshta":
+            # Mshta Downloader
+            mshta_search = re.search(r"c:\\\\windows\\\\system32\\\\mshta\.exe\s+[\'\"](https?:\/\/.+[\'\"])", original_data, re.IGNORECASE)
+            if mshta_search:
+                behaviour_tags["Mshta"]["marks"].append(mshta_search.group(1))
 
     # Tries to catch download cradle PowerShell scripts where the obfuscation isn't identified.
     # Examples are heavy variable command usage for chaining/parsing.
