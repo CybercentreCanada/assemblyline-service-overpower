@@ -24,7 +24,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -50,10 +50,10 @@
                 "onedrive.live.com"
               ],
               "uri": [
-                "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+                "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
               ],
               "uri_path": [
-                "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+                "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
               ]
             }
           }
@@ -202,7 +202,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -228,10 +228,10 @@
                 "onedrive.live.com"
               ],
               "uri": [
-                "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+                "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
               ],
               "uri_path": [
-                "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+                "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
               ]
             }
           }
@@ -333,14 +333,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+          "value": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
         }
       ],
       "network.dynamic.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+          "value": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
         }
       ],
       "network.static.domain": [
@@ -359,14 +359,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://onedrive.live.com/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+          "value": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/download?cid=8b8c81e9ea559ff0&resid=8b8c81e9ea559ff0%211131&authkey=ampc-h991zcyt5q"
+          "value": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
         }
       ]
     },

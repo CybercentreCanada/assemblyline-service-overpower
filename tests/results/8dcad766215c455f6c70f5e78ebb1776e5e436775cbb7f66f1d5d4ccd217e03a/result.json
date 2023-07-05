@@ -42,7 +42,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/lcovlccdxd.exe\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/Lcovlccdxd.exe\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -67,10 +67,10 @@
                 "oiartzunirratia.eus"
               ],
               "uri": [
-                "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
               ],
               "uri_path": [
-                "/install/clean/lcovlccdxd.exe"
+                "/install/clean/Lcovlccdxd.exe"
               ]
             }
           }
@@ -184,7 +184,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/lcovlccdxd.exe\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/Lcovlccdxd.exe\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -209,10 +209,10 @@
                 "oiartzunirratia.eus"
               ],
               "uri": [
-                "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
               ],
               "uri_path": [
-                "/install/clean/lcovlccdxd.exe"
+                "/install/clean/Lcovlccdxd.exe"
               ]
             }
           }
@@ -314,14 +314,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
         }
       ],
       "network.dynamic.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/install/clean/lcovlccdxd.exe"
+          "value": "/install/clean/Lcovlccdxd.exe"
         }
       ],
       "network.static.domain": [
@@ -335,14 +335,14 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://oiartzunirratia.eus/install/clean/lcovlccdxd.exe"
+          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/install/clean/lcovlccdxd.exe"
+          "value": "/install/clean/Lcovlccdxd.exe"
         }
       ]
     },
