@@ -70,6 +70,12 @@ heuristics:
     signature_score_map:
       suspicious_behaviour_combo_url: 500
 
+  - heur_id: 6
+    name: Mshta Downloader
+    score: 500
+    filetype: '.*'
+    description: Ps1 Profiler detected Mshta.exe being used for downloading
+
 docker_config:
   allow_internet_access: false
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG
