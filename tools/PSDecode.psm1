@@ -654,6 +654,46 @@ function Replace_Wget
     return $Command
 }
 
+function Resolve_Env_Variables_For_System32
+    {
+        param(
+            [Parameter(Mandatory=$True)]
+            [string]$Command
+        )
+
+        $env_pattern = [regex]'(?i)\$env\:comspec\\\.\.\\([^\s]+)\s'
+        $matches = $env_pattern.Matches($Command)
+
+        While ($matches.Count -gt 0){
+            if($matches.Count -gt 0){
+                Write-Verbose "$($matches.Count) instance(s) of `$env:<variable-name>\..\<binary>` detected... Replacing!"
+            }
+
+            # Read in the list of standard System32 directory contents
+            $binaries = Get-Content "tools/ENV_SYSTEM32.txt"
+
+            ForEach($match in $matches){
+                $cmd_wildcard_pattern = $match.groups[1].Value
+                $replacement = ""
+
+                ForEach($binary in $binaries){
+                    if ($binary -like $cmd_wildcard_pattern) {
+                        $replacement = "C:\\Windows\\System32\\$($binary)"
+                        break
+                    }
+                }
+                if ([string]::IsNullOrEmpty($replacement)) {
+                    $replacement = "./"
+                }
+                Write-Verbose "Replacing $($match) with '$($replacement)'"
+                $Command = $Command.Replace($match, $replacement)
+            }
+            $matches = $env_pattern.Matches($Command)
+        }
+    return $Command
+}
+
+
 function Resolve_Env_Variables
     {
         param(
@@ -666,7 +706,7 @@ function Resolve_Env_Variables
 
         While ($matches.Count -gt 0){
             if($matches.Count -gt 0){
-                Write-Verbose "$($matches.Count) instance(s) of `$env:<variable-name>` detected... Replacing!"
+                Write-Verbose "$($matches.Count) instance(s) of `$env:<variable-name>` detected... Replacing with './'!"
             }
             ForEach($match in $matches){
                 $Command = $Command.Replace($match, './')
@@ -1101,6 +1141,7 @@ function Code_Cleanup
             $new_command = Remove_Carets($new_command)
             $new_command = Resolve_Background_Tasks($new_command)
             $new_command = Replace_Wget($new_command)
+            $new_command = Resolve_Env_Variables_For_System32($new_command)
             $new_command = Resolve_Env_Variables($new_command)
             $new_command = Convert_Encoded_Command($new_command)
         }

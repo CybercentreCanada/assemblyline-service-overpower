@@ -224,9 +224,17 @@ class Overpower(ServiceBase):
             )
             if details.get('marks'):
                 profiler_sig_section.add_line(f"Marks: {', '.join(details['marks'])}")
-            profiler_sig_section.set_heuristic(3)
-            translated_score = TRANSLATE_SCORE[details["score"]]
-            profiler_sig_section.heuristic.add_signature_id(tag, score=translated_score)
+
+                # Special Mshta Downloader case
+                if tag == "Mshta" and len(details["marks"]) == 2:
+                    profiler_sig_section.set_heuristic(6)
+                    _ = add_tag(profiler_sig_section, "network.static.uri", details["marks"][1])
+                    profiler_sig_section.heuristic.add_signature_id(tag)
+
+            if profiler_sig_section.heuristic is None:
+                profiler_sig_section.set_heuristic(3)
+                translated_score = TRANSLATE_SCORE[details["score"]]
+                profiler_sig_section.heuristic.add_signature_id(tag, score=translated_score)
 
             if tag == SUSPICIOUS_BEHAVIOUR_COMBO:
                 # If there is a suspicious behaviour combo seen, we should flag the IOCs seen in actions with a signature that scores 500
