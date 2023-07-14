@@ -253,7 +253,7 @@
       },
       {
         "auto_collapse": false,
-        "body": null,
+        "body": "Marks: Downloader, One Liner, Hidden Window, Persistence",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
