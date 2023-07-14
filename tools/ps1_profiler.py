@@ -695,7 +695,10 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
                 found_flag = 0
         if found_flag == 1:
             if SUSPICIOUS_BEHAVIOUR_COMBO not in behaviour_tags:
-                behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO] = {"marks": [].extend(combo_row)}
+                behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO] = {"marks": []}
+            for item in combo_row:
+                if item not in behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO]["marks"]:
+                    behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO]["marks"].append(item)
 
     return behaviour_tags
 

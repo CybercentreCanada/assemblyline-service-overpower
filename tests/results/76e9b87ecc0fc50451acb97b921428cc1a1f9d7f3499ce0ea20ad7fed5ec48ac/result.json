@@ -168,7 +168,7 @@
       },
       {
         "auto_collapse": false,
-        "body": null,
+        "body": "Marks: Downloader, Script Execution, Mshta",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",

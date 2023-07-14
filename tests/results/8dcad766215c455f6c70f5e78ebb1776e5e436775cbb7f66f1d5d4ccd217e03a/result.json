@@ -161,7 +161,7 @@
       },
       {
         "auto_collapse": false,
-        "body": null,
+        "body": "Marks: Downloader, Starts Process, Hidden Window",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
