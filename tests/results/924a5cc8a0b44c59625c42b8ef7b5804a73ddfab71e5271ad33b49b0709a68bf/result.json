@@ -223,10 +223,12 @@
       ]
     },
     "temp_submission_data": {
-      "extracted_files_to_ignore": [
-        "34eb5c5354c0b835df51b08adb6ba1fa261d63bffb07bbdacd7f3e7b96a1ebf5",
-        "42db4fd148750f2e1bbb39ae373eaf3aacf11a4cea21b1759732ea78bc99368a"
-      ]
+      "extracted_files_to_ignore": {
+        "Overpower": [
+          "34eb5c5354c0b835df51b08adb6ba1fa261d63bffb07bbdacd7f3e7b96a1ebf5",
+          "42db4fd148750f2e1bbb39ae373eaf3aacf11a4cea21b1759732ea78bc99368a"
+        ]
+      }
     }
   }
 }

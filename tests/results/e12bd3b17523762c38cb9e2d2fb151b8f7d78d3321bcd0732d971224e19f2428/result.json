@@ -177,9 +177,11 @@
       ]
     },
     "temp_submission_data": {
-      "extracted_files_to_ignore": [
-        "64be933d42ac4186ea3fb0e6bd85adbcf86d8c7f4339d7c62c5ac567a23b0393"
-      ]
+      "extracted_files_to_ignore": {
+        "Overpower": [
+          "64be933d42ac4186ea3fb0e6bd85adbcf86d8c7f4339d7c62c5ac567a23b0393"
+        ]
+      }
     }
   }
 }

@@ -115,7 +115,7 @@ class Overpower(ServiceBase):
         add_supplementary = request.get_param("add_supplementary")
         request.result = Result()
 
-        if request.sha256 in request.temp_submission_data.get(EXTRACTED_FILES_TO_IGNORE, []):
+        if request.sha256 in request.temp_submission_data.get(EXTRACTED_FILES_TO_IGNORE, {}).get("Overpower", []):
             return
 
         # PSDecode
@@ -168,13 +168,15 @@ class Overpower(ServiceBase):
         hashes_to_ignore = [
             artifact["sha256"] for artifact in self.artifact_list
             if artifact["to_be_extracted"] and \
-                artifact["sha256"] not in request.temp_submission_data.get(EXTRACTED_FILES_TO_IGNORE, [])
+                artifact["sha256"] not in request.temp_submission_data.get(EXTRACTED_FILES_TO_IGNORE, {}).get("Overpower", [])
             ]
 
-        if EXTRACTED_FILES_TO_IGNORE in request.temp_submission_data and hashes_to_ignore:
-            request.temp_submission_data[EXTRACTED_FILES_TO_IGNORE].extend(sorted(hashes_to_ignore))
+        if EXTRACTED_FILES_TO_IGNORE in request.temp_submission_data and "Overpower" in request.temp_submission_data[EXTRACTED_FILES_TO_IGNORE] and hashes_to_ignore:
+            request.temp_submission_data[EXTRACTED_FILES_TO_IGNORE]["Overpower"].extend(sorted(hashes_to_ignore))
         elif hashes_to_ignore:
-            request.temp_submission_data[EXTRACTED_FILES_TO_IGNORE] = sorted(hashes_to_ignore)
+            request.temp_submission_data[EXTRACTED_FILES_TO_IGNORE] = {
+                "Overpower": sorted(hashes_to_ignore)
+            }
 
     def _handle_ps1_profiler_output(self, output: Dict[str, Any], result: Result, file_name: str) -> bool:
         """

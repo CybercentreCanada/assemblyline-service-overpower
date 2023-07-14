@@ -180,9 +180,11 @@
     ],
     "tags": {},
     "temp_submission_data": {
-      "extracted_files_to_ignore": [
-        "fb8a729b64282e4ab198c9fcccf6911e5fa51ddf7d7a0a18f7441f26735dde2d"
-      ]
+      "extracted_files_to_ignore": {
+        "Overpower": [
+          "fb8a729b64282e4ab198c9fcccf6911e5fa51ddf7d7a0a18f7441f26735dde2d"
+        ]
+      }
     }
   }
 }
