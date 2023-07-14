@@ -30,6 +30,8 @@ DOWNLOAD_FILE_REGEX = "\[.+\] Download From: (.+) --> Save To: (.+)\n"
 # The SHA256 representation when PSDecode creates a fake file when pretending to download something
 FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e3b9f8"
 
+# Key in temporary submission data used for extracted files that we need to ignore
+EXTRACTED_FILES_TO_IGNORE = "extracted_files_to_ignore"
 
 class Overpower(ServiceBase):
 
@@ -113,6 +115,9 @@ class Overpower(ServiceBase):
         add_supplementary = request.get_param("add_supplementary")
         request.result = Result()
 
+        if request.sha256 in request.temp_submission_data.get(EXTRACTED_FILES_TO_IGNORE, []):
+            return
+
         # PSDecode
         fake_web_download = request.get_param("fake_web_download")
         psdecode_output = self._run_psdecode(request, fake_web_download=fake_web_download)
@@ -159,6 +164,17 @@ class Overpower(ServiceBase):
 
         # Adding sandbox artifacts using the OntologyResults helper class
         _ = OntologyResults.handle_artifacts(self.artifact_list, request)
+
+        hashes_to_ignore = [
+            artifact["sha256"] for artifact in self.artifact_list
+            if artifact["to_be_extracted"] and \
+                artifact["sha256"] not in request.temp_submission_data.get(EXTRACTED_FILES_TO_IGNORE, [])
+            ]
+
+        if EXTRACTED_FILES_TO_IGNORE in request.temp_submission_data and hashes_to_ignore:
+            request.temp_submission_data[EXTRACTED_FILES_TO_IGNORE].extend(sorted(hashes_to_ignore))
+        elif hashes_to_ignore:
+            request.temp_submission_data[EXTRACTED_FILES_TO_IGNORE] = sorted(hashes_to_ignore)
 
     def _handle_ps1_profiler_output(self, output: Dict[str, Any], result: Result, file_name: str) -> bool:
         """
