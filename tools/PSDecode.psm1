@@ -396,6 +396,46 @@ function Test-Connection {
 }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtaskaction?view=windowsserver2022-ps
+$New_ScheduledTaskAction_Override = @'
+    function New-ScheduledTaskAction {
+        Write-Host "%#[New-ScheduledTaskAction] $($args)%#"
+        return "ScheduledTaskAction_CimInstance"
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtaskprincipal?view=windowsserver2022-ps
+$New_ScheduledTaskPrincipal_Override = @'
+    function New-ScheduledTaskPrincipal {
+        Write-Host "%#[New-ScheduledTaskPrincipal] $($args)%#"
+        return "ScheduledTaskPrincipal_CimInstance"
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtasktrigger?view=windowsserver2022-ps
+$New_ScheduledTaskTrigger_Override = @'
+    function New-ScheduledTaskTrigger {
+        Write-Host "%#[New-ScheduledTaskTrigger] $($args)%#"
+        return "ScheduledTaskTrigger_CimInstance"
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/new-scheduledtasksettingsset?view=windowsserver2022-ps
+$New_ScheduledTaskSettingsSet_Override = @'
+    function New-ScheduledTaskSettingsSet {
+        Write-Host "%#[New-ScheduledTaskSettingsSet] $($args)%#"
+        return "ScheduledTaskSettingsSet_CimInstance"
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/register-scheduledtask?view=windowsserver2022-ps
+$Register_ScheduledTask_Override = @'
+    function Register-ScheduledTask {
+        Write-Host "%#[Register-ScheduledTask] $($args)%#"
+        return "RegisteredScheduledTask_CimInstance"
+    }
+'@
+
 function Get_Encoding_Type {
     param(
         [Parameter(Mandatory=$True)]
@@ -933,7 +973,7 @@ function Remove_ExecutionPolicy_On_Linux
     #   - ExecutionPolicy Bypass
     #   - ExecutionPolicy Hidden
     #   - ExecutionPolicy Unrestricted
-    $executionpolicy_pattern = [regex]'(?i)(-e(xe(c(ution)?)?)?(p(olicy)?)?\s+(bypass|hidden|unrestricted))\b'
+    $executionpolicy_pattern = [regex]'(?i)(-e(xe(c(u(tion)?)?)?)?(p(olicy)?)?\s+(bypass|hidden|unrestricted))\b'
     $matches = $executionpolicy_pattern.Matches($Command)
     ForEach($match in $matches){
         Write-Verbose "[Remove_ExecutionPolicy_On_Linux] Removing: $($match)"
@@ -1391,6 +1431,11 @@ function PSDecode {
     $override_functions += $Set_MpPreference_Override
     $override_functions += $Start_Process_Override
     $override_functions += $Test_Connection_Override
+    $override_functions += $New_ScheduledTaskAction_Override
+    $override_functions += $New_ScheduledTaskPrincipal_Override
+    $override_functions += $New_ScheduledTaskTrigger_Override
+    $override_functions += $New_ScheduledTaskSettingsSet_Override
+    $override_functions += $Register_ScheduledTask_Override
 
     if(!$x){
         $override_functions += $New_Object_Override
