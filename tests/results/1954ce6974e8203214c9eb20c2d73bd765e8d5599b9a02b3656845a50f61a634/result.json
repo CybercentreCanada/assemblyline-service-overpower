@@ -370,6 +370,10 @@
         }
       ]
     },
-    "temp_submission_data": {}
+    "temp_submission_data": {
+      "extracted_files_to_ignore": [
+        "34543e9ea6ed60dfd9cf2216525fde89c65ee1de06b8d839003fdba2f2f3c8ca"
+      ]
+    }
   }
 }
