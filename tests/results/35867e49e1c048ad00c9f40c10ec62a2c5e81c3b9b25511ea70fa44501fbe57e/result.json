@@ -301,7 +301,7 @@
       },
       {
         "auto_collapse": false,
-        "body": null,
+        "body": "Marks: Downloader, Starts Process, Sleeps, Starts RunDll",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",

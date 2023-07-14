@@ -179,7 +179,7 @@
       },
       {
         "auto_collapse": false,
-        "body": null,
+        "body": "Marks: Downloader, Script Execution, Ping",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
