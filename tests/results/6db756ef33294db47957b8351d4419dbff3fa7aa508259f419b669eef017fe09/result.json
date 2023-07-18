@@ -456,13 +456,6 @@
                     "value": "/zimbra/Tekstli.asd"
                 }
             ]
-        },
-        "temp_submission_data": {
-            "extracted_files_to_ignore": {
-                "Overpower": [
-                    "d605a2483304f2a324d4d4350c27e3280aac986fe40007e325841ec3abf2f141"
-                ]
-            }
         }
     }
 }
