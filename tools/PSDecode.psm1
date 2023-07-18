@@ -892,6 +892,28 @@ function Replace_Gwmi
     return $Command
 }
 
+function Replace_GAC
+    {
+        param(
+            [Parameter(Mandatory=$True)]
+            [string]$Command
+        )
+
+        $gac_pattern = [regex]'(?i)\$_\.GlobalAssemblyCache\b\s-and'
+        $matches = $gac_pattern.Matches($Command)
+
+        While ($matches.Count -gt 0){
+            if($matches.Count -gt 0){
+                Write-Verbose "$($matches.Count) instance(s) of `$_.GlobalAssemblyCache detected... Replacing with '$true'!"
+            }
+            ForEach($match in $matches){
+                $Command = $Command.Replace($match, '$true -and')
+            }
+            $matches = $gac_pattern.Matches($Command)
+        }
+    return $Command
+}
+
 function Resolve_Env_Variables_For_System32
     {
         param(
@@ -1400,6 +1422,7 @@ function Code_Cleanup
             $new_command = Convert_Encoded_Command($new_command)
             $new_command = Remove_Quotation_Wrapping($new_command)
             $new_command = Replace_Gwmi($new_command)
+            $new_command = Replace_GAC($new_command)
         }
 
         return $new_command
