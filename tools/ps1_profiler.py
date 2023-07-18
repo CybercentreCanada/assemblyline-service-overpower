@@ -119,6 +119,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "Email": 1.0,
         "Ping": 1.0,
         "Mshta": 1.0,
+        "Imports BitsTransfer": 1.0,
 
         # Benign
         # Behaviours which are generally only seen in Benign scripts - subtracts from score.
@@ -538,7 +539,9 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     ]
 
     behaviour_col["Uses WMI"] = [
-        ["wmic"]
+        ["wmic"],
+        ["gwmi"],
+        ["Get-WmiObject"],
     ]
 
     behaviour_col["Ping"] = [
@@ -547,6 +550,10 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Mshta"] = [
         ["mshta.exe"]
+    ]
+
+    behaviour_col["Imports BitsTransfer"] = [
+        ["Import-Module", "BitsTransfer"]
     ]
 
     # Behavioural Combos combine a base grouping of behaviours to help raise the score of files without a lot of complexity.
@@ -575,6 +582,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Downloader", "Script Execution", "Ping"],
         ["Script Execution", "Ping"],
         ["Downloader", "Script Execution", "Mshta"],
+        ["Downloader", "Imports BitsTransfer", "Deobfuscation", "Compression", "Sleeps"],
     ]
 
     for behaviour, checks in behaviour_col.items():
