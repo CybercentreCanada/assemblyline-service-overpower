@@ -406,7 +406,7 @@ class Overpower(ServiceBase):
                 self.artifact_hashes.add(artifact_sha256)
             to_be_extracted = True
             if DEOBFUS_FILE in file:
-                description = "De-obfuscated file from PowerShellProfiler"
+                description = "De-obfuscated layer from PowerShellProfiler"
             elif "layer" in file:
                 description = "Layer of de-obfuscated PowerShell from PSDecode"
                 # We don't want to extract these since it is redundant. PSDecode already ran on them.
