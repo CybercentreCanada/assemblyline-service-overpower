@@ -436,6 +436,180 @@ $Register_ScheduledTask_Override = @'
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/bitstransfer/start-bitstransfer?view=windowsserver2022-ps
+$Start_BitsTransfer_Override = @'
+    function Start-BitsTransfer {
+        # We only care about Source and Destination
+        $nextArgIsSource = $false;
+        $nextArgIsDestination= $false;
+        $source = ""
+        $destination = ""
+
+        ForEach($arg in $args){
+            if ($nextArgIsSource) {
+                $source = $arg
+                $nextArgIsSource = $false
+            } elseif ($nextArgIsDestination) {
+                $destination = $arg
+                $nextArgIsDestination = $false;
+            }
+
+            if ($arg.GetType() -eq [System.String] -and $arg -ieq "-Source") {
+                $nextArgIsSource = $true
+            }
+            elseif ($arg.GetType() -eq [System.String] -and ($arg -ieq "-Destination")) {
+                $nextArgIsDestination = $true
+            }
+        }
+
+        if (-not $source -and -not $destination) {
+            return
+        }
+
+        # Even if we don't actually write a file, it is nice to log what would have happened
+        Write-Host "%#[Start-BitsTransfer] Download From: $($source) --> Save To: $($destination) %#"
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/bitstransfer/start-bitstransfer?view=windowsserver2022-ps
+$Start_BitsTransfer_With_Fake_File_Override = @'
+    function Start-BitsTransfer {
+        # We only care about Source and Destination
+        $nextArgIsSource = $false;
+        $nextArgIsDestination= $false;
+        $source = ""
+        $destination = ""
+
+        ForEach($arg in $args){
+            if ($nextArgIsSource) {
+                $source = $arg
+                $nextArgIsSource = $false
+            } elseif ($nextArgIsDestination) {
+                $destination = $arg
+                $nextArgIsDestination = $false;
+            }
+
+            if ($arg.GetType() -eq [System.String] -and $arg -ieq "-Source") {
+                $nextArgIsSource = $true
+            }
+            elseif ($arg.GetType() -eq [System.String] -and ($arg -ieq "-Destination")) {
+                $nextArgIsDestination = $true
+            }
+        }
+
+        if (-not $source -and -not $destination) {
+            return
+        }
+
+        # We should create a fake file for further execution
+
+        # Create the fake file
+        $currdir = "./"
+        $file_to_create = Join-Path -Path $currdir -ChildPath $destination.Replace("\\", "/").Replace("%", "")
+        New-Item -ItemType "File" -Path $file_to_create -Force | Out-Null
+
+        # Create the fake content
+        $fake_content = "MZ"
+        # 5000 iterations will create a file greater than 100000 bytes
+        For($ii = 0; $ii -lt 5000; $ii++) {
+            $fake_content = $fake_content + "Dummy content, This program cannot be run in DOS mode.`r`n"
+        }
+        $fake_content | Set-Content $file_to_create
+
+        Write-Host "%#[Start-BitsTransfer] Download From: $($source) --> Save To: $($destination) %#"
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/import-module?view=powershell-7.3
+$Import_Module_Override = @'
+    function Import-Module {
+        Write-Host "%#[Import-Module] $($args)%#"
+        Microsoft.Powershell.Core\Import-Module $Args
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-content?view=powershell-7.3
+$Get_Content_Override = @'
+    function Get-Content {
+        Write-Host "%#[Get-Content] $($args)%#"
+
+        $path = ""
+        $currdir = "./"
+
+        if ($args[0].IndexOf("-") -eq -1) {
+            $path = $args[0]
+        }
+
+        if (-not $path) {
+            # We only care about Path
+            $nextArgIsPath = $false;
+
+            ForEach($arg in $args){
+                if ($nextArgIsPath) {
+                    $path = $arg
+                    $nextArgIsPath = $false
+                }
+
+                if ($arg.GetType() -eq [System.String] -and $arg -ieq "-Path") {
+                    $nextArgIsPath = $true
+                }
+            }
+        }
+
+        if ($path -and $path.StartsWith("\")) {
+            $path = Join-Path -Path $currdir -ChildPath $path.Replace("\", "/")
+            return Microsoft.Powershell.Management\Get-Content "$($path)"
+        } else {
+            return Microsoft.Powershell.Management\Get-Content $args
+        }
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/test-path?view=powershell-7.3
+$Test_Path_Override = @'
+    function Test-Path {
+        Write-Host "%#[Test-Path] $($args)%#"
+
+        $path = ""
+        $currdir = "./"
+
+        if ($args[0].IndexOf("-") -eq -1) {
+            $path = $args[0]
+        }
+
+        if (-not $path) {
+            # We only care about Path
+            $nextArgIsPath = $false;
+
+            ForEach($arg in $args){
+                if ($nextArgIsPath) {
+                    $path = $arg
+                    $nextArgIsPath = $false
+                }
+
+                if ($arg.GetType() -eq [System.String] -and $arg -ieq "-Path") {
+                    $nextArgIsPath = $true
+                }
+            }
+        }
+
+        if ($path -and $path.StartsWith("\")) {
+            $path = Join-Path -Path $currdir -ChildPath $path.Replace("\", "/")
+            return Microsoft.Powershell.Management\Test-Path "$($path)"
+        } else {
+            return Microsoft.Powershell.Management\Test-Path $Args
+        }
+    }
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1
+$Get_WmiObject_Override = @'
+    function Get-WmiObject {
+        Write-Host "%#[Get-WmiObject] $($args)%#"
+        Microsoft.Powershell.Management\Get-WmiObject $Args
+    }
+'@
+
 function Get_Encoding_Type {
     param(
         [Parameter(Mandatory=$True)]
@@ -690,6 +864,52 @@ function Replace_Wget
                 $Command = $Command.Replace($match, 'Invoke-WebRequest')
             }
             $matches = $wget_pattern.Matches($Command)
+        }
+    return $Command
+}
+
+# In PowerShell on Linux, gwmi is not a command
+# But in PowerShell on Windows, gwmi is an alias for the Get-WmiObject commandlet
+function Replace_Gwmi
+    {
+        param(
+            [Parameter(Mandatory=$True)]
+            [string]$Command
+        )
+
+        $gwmi_pattern = [regex]'(?i)\bgwmi\b'
+        $matches = $gwmi_pattern.Matches($Command)
+
+        While ($matches.Count -gt 0){
+            if($matches.Count -gt 0){
+                Write-Verbose "$($matches.Count) instance(s) of gwmi detected... Replacing with 'Get-WmiObject'!"
+            }
+            ForEach($match in $matches){
+                $Command = $Command.Replace($match, 'Get-WmiObject')
+            }
+            $matches = $gwmi_pattern.Matches($Command)
+        }
+    return $Command
+}
+
+function Replace_GAC
+    {
+        param(
+            [Parameter(Mandatory=$True)]
+            [string]$Command
+        )
+
+        $gac_pattern = [regex]'(?i)\$_\.GlobalAssemblyCache\b\s-and'
+        $matches = $gac_pattern.Matches($Command)
+
+        While ($matches.Count -gt 0){
+            if($matches.Count -gt 0){
+                Write-Verbose "$($matches.Count) instance(s) of `$_.GlobalAssemblyCache detected... Replacing with '$true'!"
+            }
+            ForEach($match in $matches){
+                $Command = $Command.Replace($match, '$true -and')
+            }
+            $matches = $gac_pattern.Matches($Command)
         }
     return $Command
 }
@@ -1103,6 +1323,22 @@ function Convert_Encoded_Command
     return $Command
 }
 
+# If the entire script is wrapped in quotes, PowerShell will interpret this as a string and will not execute it
+function Remove_Quotation_Wrapping
+    {
+        param(
+            [Parameter( `
+                Mandatory=$True, `
+                Valuefrompipeline = $True)]
+            [String]$Command
+        )
+        $charCount = ($Command.ToCharArray() -eq '"').Count
+        if ($Command.Trim().StartsWith("`"") -and $Command.Trim().EndsWith("`"") -and $charCount -eq 2) {
+            $Command = $Command.replace("`"", "")
+        }
+        return $Command
+    }
+
 function Remove_String_Concat
     {
         param(
@@ -1111,7 +1347,7 @@ function Remove_String_Concat
                 Valuefrompipeline = $True)]
             [String]$Command
         )
-       return $Command.Replace("'+'", "").Replace('"+"','')
+        return $Command.Replace("'+'", "").Replace('"+"','')
     }
 
 function Remove_Carets
@@ -1122,7 +1358,7 @@ function Remove_Carets
                 Valuefrompipeline = $True)]
             [String]$Command
         )
-       return $Command.Replace("^", "")
+        return $Command.Replace("^", "")
     }
 
 function Resolve_Background_Tasks
@@ -1184,6 +1420,9 @@ function Code_Cleanup
             $new_command = Resolve_Env_Variables_For_System32($new_command)
             $new_command = Resolve_Env_Variables($new_command)
             $new_command = Convert_Encoded_Command($new_command)
+            $new_command = Remove_Quotation_Wrapping($new_command)
+            $new_command = Replace_Gwmi($new_command)
+            $new_command = Replace_GAC($new_command)
         }
 
         return $new_command
@@ -1436,6 +1675,10 @@ function PSDecode {
     $override_functions += $New_ScheduledTaskTrigger_Override
     $override_functions += $New_ScheduledTaskSettingsSet_Override
     $override_functions += $Register_ScheduledTask_Override
+    $override_functions += $Import_Module_Override
+    $override_functions += $Get_Content_Override
+    $override_functions += $Test_Path_Override
+    $override_functions += $Get_WmiObject_Override
 
     if(!$x){
         $override_functions += $New_Object_Override
@@ -1443,8 +1686,10 @@ function PSDecode {
 
     if($fakefile){
         $override_functions += $Invoke_WebRequest_With_Fake_File_Override
+        $override_functions += $Start_BitsTransfer_With_Fake_File_Override
     } else {
         $override_functions += $Invoke_WebRequest_Override
+        $override_functions += $Start_BitsTransfer_Override
 
     }
 
@@ -1464,15 +1709,15 @@ function PSDecode {
     while($layers -notcontains ($encoded_script) -and -not [string]::IsNullOrEmpty($encoded_script)){
         $encoded_script_hash = Get_SHA256([System.Text.Encoding]::UNICODE.GetBytes($encoded_script))
         Write-Verbose "Running $($encoded_script_hash)"
+        # Here's a little taster of what is going to be run...
+        if($encoded_script.length -gt 1000) {
+            Write-Verbose "Script to run: $($encoded_script.substring(0, 1000))..."
+        } else {
+            Write-Verbose "Script to run: $($encoded_script)"
+        }
         if ($encoded_script -ne $original_script) {
             Write-Verbose "Adding $($encoded_script_hash) to layers"
             $layers.Add($encoded_script)
-            # Here's a little taster of what is going to be run...
-            if($encoded_script.length -gt 1000) {
-                Write-Verbose "Script to run: $($encoded_script.substring(0, 1000))..."
-            } else {
-                Write-Verbose "Script to run: $($encoded_script)"
-            }
         }
 
         $pinfo = New-Object System.Diagnostics.ProcessStartInfo

@@ -357,7 +357,7 @@ class TestOverpower:
         assert overpower_class_instance.artifact_list[0] == {
             "name": DEOBFUS_FILE,
             "path": item_0,
-            "description": "De-obfuscated file from PowerShellProfiler",
+            "description": "De-obfuscated layer from PowerShellProfiler",
             "to_be_extracted": True,
             "sha256": "e388fc2e014ed2d7a269f5936e825dc19797a979d64aa9e9408dadb80ea9d82e",
         }
