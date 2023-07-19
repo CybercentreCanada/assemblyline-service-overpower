@@ -26,6 +26,7 @@ TRANSLATE_SCORE = {
 }
 
 DOWNLOAD_FILE_REGEX = "\[.+\] Download From: (.+) --> Save To: (.+)\n"
+INVOKE_EXPRESSION_ACTION = "[Invoke-Expression]"
 
 # The SHA256 representation when PSDecode creates a fake file when pretending to download something
 FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e3b9f8"
@@ -328,9 +329,11 @@ class Overpower(ServiceBase):
 
         psdecode_actions_res_sec.add_lines(actions)
         actions_ioc_table = ResultTableSection("IOCs found in actions")
+        iex_count = 0
         for action in actions:
             extract_iocs_from_text_blob(action, actions_ioc_table)
-
+            if action.startswith(INVOKE_EXPRESSION_ACTION):
+                iex_count += 1
             match = re.search(DOWNLOAD_FILE_REGEX, action, re.IGNORECASE)
             if match and len(match.regs) == 3:
                 url = match.group(1)
@@ -339,6 +342,9 @@ class Overpower(ServiceBase):
                 if not was_tag_added:
                     psdecode_actions_res_sec.add_tag("file.string.extracted", url)
                 psdecode_actions_res_sec.add_tag("file.path", path)
+
+        if iex_count >= 3:
+            psdecode_actions_res_sec.heuristic.add_signature_id("multiple_iex_calls", 250)
 
         if actions_ioc_table.body:
             actions_ioc_table.set_heuristic(1)
