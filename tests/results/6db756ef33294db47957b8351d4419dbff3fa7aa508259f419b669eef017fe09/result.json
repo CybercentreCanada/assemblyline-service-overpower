@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1081,
+    "score": 1331,
     "sections": [
       {
         "auto_collapse": false,
@@ -14,9 +14,12 @@
           "attack_ids": [],
           "frequency": 1,
           "heur_id": 5,
-          "score": 500,
-          "score_map": {},
+          "score": 750,
+          "score_map": {
+            "multiple_iex_calls": 250
+          },
           "signatures": {
+            "multiple_iex_calls": 1,
             "suspicious_behaviour_combo_url": 1
           }
         },
@@ -407,6 +410,7 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": [
+          "multiple_iex_calls",
           "suspicious_behaviour_combo_url"
         ]
       }
@@ -416,6 +420,7 @@
         {
           "heur_id": 5,
           "signatures": [
+            "multiple_iex_calls",
             "suspicious_behaviour_combo_url"
           ],
           "value": "\\Jagtedesh.Sal"
@@ -425,6 +430,7 @@
         {
           "heur_id": 5,
           "signatures": [
+            "multiple_iex_calls",
             "suspicious_behaviour_combo_url"
           ],
           "value": "103.10.68.110"
@@ -439,6 +445,7 @@
         {
           "heur_id": 5,
           "signatures": [
+            "multiple_iex_calls",
             "suspicious_behaviour_combo_url"
           ],
           "value": "http://103.10.68.110/zimbra/Tekstli.asd"
