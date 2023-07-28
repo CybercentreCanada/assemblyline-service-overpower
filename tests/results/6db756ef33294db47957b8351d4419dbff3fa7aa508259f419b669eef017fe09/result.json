@@ -36,6 +36,9 @@
               ],
               "uri": [
                 "http://103.10.68.110/zimbra/Tekstli.asd"
+              ],
+              "uri_path": [
+                "/zimbra/Tekstli.asd"
               ]
             }
           }
@@ -457,6 +460,14 @@
         }
       ],
       "network.dynamic.uri_path": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "multiple_iex_calls",
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/zimbra/Tekstli.asd"
+        },
         {
           "heur_id": 1,
           "signatures": [],

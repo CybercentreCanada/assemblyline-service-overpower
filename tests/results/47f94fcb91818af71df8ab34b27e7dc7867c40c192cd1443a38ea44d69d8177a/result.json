@@ -33,6 +33,9 @@
               ],
               "uri": [
                 "https://shoru.net/db/main_db"
+              ],
+              "uri_path": [
+                "/db/main_db"
               ]
             }
           }
@@ -288,6 +291,13 @@
         }
       ],
       "network.dynamic.uri_path": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/db/main_db"
+        },
         {
           "heur_id": 1,
           "signatures": [],

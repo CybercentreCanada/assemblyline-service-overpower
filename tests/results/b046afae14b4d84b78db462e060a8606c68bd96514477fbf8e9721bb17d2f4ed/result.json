@@ -33,6 +33,9 @@
               ],
               "uri": [
                 "http://199.247.30.203/FfYIJfx.dat"
+              ],
+              "uri_path": [
+                "/FfYIJfx.dat"
               ]
             }
           }
@@ -207,7 +210,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"104.225.129.114\"}, {\"ioc_type\": \"ip\", \"ioc\": \"141.94.86.90\"}, {\"ioc_type\": \"ip\", \"ioc\": \"199.247.30.203\"}, {\"ioc_type\": \"ip\", \"ioc\": \"216.146.25.129\"}, {\"ioc_type\": \"ip\", \"ioc\": \"85.239.41.205\"}, {\"ioc_type\": \"ip\", \"ioc\": \"94.131.117.111\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://104.225.129.114/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://141.94.86.90/1XAVN.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/1XAVN.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://199.247.30.203/FfYIJfx.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/FfYIJfx.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://216.146.25.129/bvWVah0daMG.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/bvWVah0daMG.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://85.239.41.205/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://94.131.117.111/EtXtKVmFMGNf.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/EtXtKVmFMGNf.dat\"}]",
+        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"141.94.86.90\"}, {\"ioc_type\": \"ip\", \"ioc\": \"216.146.25.129\"}, {\"ioc_type\": \"ip\", \"ioc\": \"104.225.129.114\"}, {\"ioc_type\": \"ip\", \"ioc\": \"85.239.41.205\"}, {\"ioc_type\": \"ip\", \"ioc\": \"94.131.117.111\"}, {\"ioc_type\": \"ip\", \"ioc\": \"199.247.30.203\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://141.94.86.90/1XAVN.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://216.146.25.129/bvWVah0daMG.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://104.225.129.114/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://85.239.41.205/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://94.131.117.111/EtXtKVmFMGNf.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://199.247.30.203/FfYIJfx.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/1XAVN.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/bvWVah0daMG.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/EtXtKVmFMGNf.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/FfYIJfx.dat\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -245,12 +248,12 @@
                 "http://94.131.117.111/EtXtKVmFMGNf.dat"
               ],
               "uri_path": [
-                "/c4bOTpyL4I.dat",
                 "/1XAVN.dat",
+                "/B7hQgGuHC94A.dat",
+                "/EtXtKVmFMGNf.dat",
                 "/FfYIJfx.dat",
                 "/bvWVah0daMG.dat",
-                "/B7hQgGuHC94A.dat",
-                "/EtXtKVmFMGNf.dat"
+                "/c4bOTpyL4I.dat"
               ]
             }
           }
@@ -298,6 +301,14 @@
                 "http://104.225.129.114/c4bOTpyL4I.dat",
                 "http://216.146.25.129/bvWVah0daMG.dat",
                 "http://141.94.86.90/1XAVN.dat"
+              ],
+              "uri_path": [
+                "/FfYIJfx.dat",
+                "/EtXtKVmFMGNf.dat",
+                "/B7hQgGuHC94A.dat",
+                "/c4bOTpyL4I.dat",
+                "/bvWVah0daMG.dat",
+                "/1XAVN.dat"
               ]
             }
           }
@@ -307,7 +318,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"199.247.30.203\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://199.247.30.203/FfYIJfx.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/FfYIJfx.dat\"}, {\"ioc_type\": \"ip\", \"ioc\": \"94.131.117.111\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://94.131.117.111/EtXtKVmFMGNf.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/EtXtKVmFMGNf.dat\"}, {\"ioc_type\": \"ip\", \"ioc\": \"85.239.41.205\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://85.239.41.205/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"ip\", \"ioc\": \"104.225.129.114\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://104.225.129.114/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"ip\", \"ioc\": \"216.146.25.129\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://216.146.25.129/bvWVah0daMG.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/bvWVah0daMG.dat\"}, {\"ioc_type\": \"ip\", \"ioc\": \"141.94.86.90\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://141.94.86.90/1XAVN.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/1XAVN.dat\"}]",
+        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"199.247.30.203\"}, {\"ioc_type\": \"ip\", \"ioc\": \"94.131.117.111\"}, {\"ioc_type\": \"ip\", \"ioc\": \"85.239.41.205\"}, {\"ioc_type\": \"ip\", \"ioc\": \"104.225.129.114\"}, {\"ioc_type\": \"ip\", \"ioc\": \"216.146.25.129\"}, {\"ioc_type\": \"ip\", \"ioc\": \"141.94.86.90\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://199.247.30.203/FfYIJfx.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://94.131.117.111/EtXtKVmFMGNf.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://85.239.41.205/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://104.225.129.114/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://216.146.25.129/bvWVah0daMG.dat\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://141.94.86.90/1XAVN.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/FfYIJfx.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/EtXtKVmFMGNf.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/B7hQgGuHC94A.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/c4bOTpyL4I.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/bvWVah0daMG.dat\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/1XAVN.dat\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -329,28 +340,28 @@
           "network": {
             "dynamic": {
               "ip": [
-                "199.247.30.203",
-                "94.131.117.111",
-                "85.239.41.205",
                 "104.225.129.114",
+                "141.94.86.90",
+                "199.247.30.203",
                 "216.146.25.129",
-                "141.94.86.90"
+                "85.239.41.205",
+                "94.131.117.111"
               ],
               "uri": [
-                "http://199.247.30.203/FfYIJfx.dat",
-                "http://94.131.117.111/EtXtKVmFMGNf.dat",
-                "http://85.239.41.205/B7hQgGuHC94A.dat",
                 "http://104.225.129.114/c4bOTpyL4I.dat",
+                "http://141.94.86.90/1XAVN.dat",
+                "http://199.247.30.203/FfYIJfx.dat",
                 "http://216.146.25.129/bvWVah0daMG.dat",
-                "http://141.94.86.90/1XAVN.dat"
+                "http://85.239.41.205/B7hQgGuHC94A.dat",
+                "http://94.131.117.111/EtXtKVmFMGNf.dat"
               ],
               "uri_path": [
-                "/FfYIJfx.dat",
-                "/EtXtKVmFMGNf.dat",
+                "/1XAVN.dat",
                 "/B7hQgGuHC94A.dat",
-                "/c4bOTpyL4I.dat",
+                "/EtXtKVmFMGNf.dat",
+                "/FfYIJfx.dat",
                 "/bvWVah0daMG.dat",
-                "/1XAVN.dat"
+                "/c4bOTpyL4I.dat"
               ]
             }
           }
@@ -627,9 +638,23 @@
       ],
       "network.dynamic.uri_path": [
         {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/1XAVN.dat"
+        },
+        {
           "heur_id": 1,
           "signatures": [],
           "value": "/1XAVN.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/B7hQgGuHC94A.dat"
         },
         {
           "heur_id": 1,
@@ -637,24 +662,59 @@
           "value": "/B7hQgGuHC94A.dat"
         },
         {
-          "heur_id": 1,
-          "signatures": [],
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "/EtXtKVmFMGNf.dat"
         },
         {
           "heur_id": 1,
           "signatures": [],
+          "value": "/EtXtKVmFMGNf.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "/FfYIJfx.dat"
         },
         {
           "heur_id": 1,
           "signatures": [],
           "value": "/FfYIJfx.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/FfYIJfx.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/FfYIJfx.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/bvWVah0daMG.dat"
         },
         {
           "heur_id": 1,
           "signatures": [],
           "value": "/bvWVah0daMG.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/c4bOTpyL4I.dat"
         },
         {
           "heur_id": 1,

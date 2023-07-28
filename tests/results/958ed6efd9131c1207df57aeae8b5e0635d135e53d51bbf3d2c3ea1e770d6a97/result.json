@@ -37,6 +37,9 @@
               ],
               "uri": [
                 "https://transfer.sh/get/vpiHmi/invoice.pdf"
+              ],
+              "uri_path": [
+                "/get/vpiHmi/invoice.pdf"
               ]
             }
           }
@@ -46,7 +49,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://deal.real\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -65,6 +68,13 @@
           "signatures": {}
         },
         "tags": {
+          "file": {
+            "string": {
+              "extracted": [
+                "http://deal.real"
+              ]
+            }
+          },
           "network": {
             "dynamic": {
               "domain": [
@@ -142,7 +152,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://deal.real\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -161,6 +171,13 @@
           "signatures": {}
         },
         "tags": {
+          "file": {
+            "string": {
+              "extracted": [
+                "http://deal.real"
+              ]
+            }
+          },
           "network": {
             "static": {
               "domain": [
@@ -239,6 +256,16 @@
           "heur_id": 5,
           "signatures": [],
           "value": "http://deal.real"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://deal.real"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://deal.real"
         }
       ],
       "network.dynamic.domain": [
@@ -266,6 +293,11 @@
         }
       ],
       "network.dynamic.uri_path": [
+        {
+          "heur_id": 5,
+          "signatures": [],
+          "value": "/get/vpiHmi/invoice.pdf"
+        },
         {
           "heur_id": 1,
           "signatures": [],

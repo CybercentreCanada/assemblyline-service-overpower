@@ -31,6 +31,9 @@
               ],
               "uri": [
                 "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
+              ],
+              "uri_path": [
+                "/fmlib/IxBABMh0I2cLM3qq1GVv/"
               ]
             }
           }
@@ -218,6 +221,11 @@
         }
       ],
       "network.dynamic.uri_path": [
+        {
+          "heur_id": 5,
+          "signatures": [],
+          "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
+        },
         {
           "heur_id": 1,
           "signatures": [],
