@@ -159,6 +159,9 @@
               ],
               "uri": [
                 "https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D'"
+              ],
+              "uri_path": [
+                "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D'"
               ]
             }
           }
@@ -277,6 +280,13 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D"
+        },
+        {
+          "heur_id": 6,
+          "signatures": [
+            "Mshta"
+          ],
+          "value": "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D'"
         }
       ]
     },
