@@ -33,6 +33,9 @@
               ],
               "uri": [
                 "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+              ],
+              "uri_path": [
+                "/install/clean/Lcovlccdxd.exe"
               ]
             }
           }
@@ -318,6 +321,13 @@
         }
       ],
       "network.dynamic.uri_path": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/install/clean/Lcovlccdxd.exe"
+        },
         {
           "heur_id": 1,
           "signatures": [],

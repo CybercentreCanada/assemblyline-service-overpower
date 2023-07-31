@@ -33,6 +33,9 @@
               ],
               "uri": [
                 "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+              ],
+              "uri_path": [
+                "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
               ]
             }
           }
@@ -438,6 +441,13 @@
         }
       ],
       "network.dynamic.uri_path": [
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+        },
         {
           "heur_id": 1,
           "signatures": [],
