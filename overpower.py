@@ -259,7 +259,7 @@ class Overpower(ServiceBase):
             with open(path_to_write, "wb") as f:
                 f.write(extracted["data"])
 
-            file_type_details = self.identify.fileinfo(path_to_write)
+            file_type_details = self.identify.fileinfo(path_to_write, generate_hashes=False)
             if file_type_details["type"] in ["unknown", "text/plain"]:
                 self.log.debug(f"{path_to_write} was identified as {file_type_details['type']}. Ignoring...")
                 remove(path_to_write)
@@ -440,7 +440,7 @@ class Overpower(ServiceBase):
                 if "/" in f:
                     file_name = f.split("/")[-1]
                     if file == file_name:
-                        file_type_details = self.identify.fileinfo(file_path)
+                        file_type_details = self.identify.fileinfo(file_path, generate_hashes=False)
                         self._handle_specific_written_files(file_type_details["type"], file_path, result)
                         break
 
