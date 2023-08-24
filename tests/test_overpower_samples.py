@@ -20,5 +20,5 @@ th = TestHelper(service_class, RESULTS_FOLDER, SAMPLES_FOLDER)
 @pytest.mark.parametrize("sample", th.result_list())
 def test_sample(sample):
     start_time = time.time()
-    th.run_test_comparison(sample)
+    th.run_test_comparison(sample, test_extra=True)
     print(f"Time elapsed for {sample}: {round(time.time() - start_time)}s")
