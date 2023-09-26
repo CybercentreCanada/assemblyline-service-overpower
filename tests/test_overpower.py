@@ -27,26 +27,22 @@ samples = [
     dict(
         sid=1,
         metadata={},
-        service_name='overpower',
+        service_name="overpower",
         service_config={},
         fileinfo=dict(
-            magic='ASCII text, with no line terminators',
-            md5='fda4e701258ba56f465e3636e60d36ec',
-            mime='text/plain',
-            sha1='af2c2618032c679333bebf745e75f9088748d737',
-            sha256='dadc624d4454e10293dbd1b701b9ee9f99ef83b4cd07b695111d37eb95abcff8',
+            magic="ASCII text, with no line terminators",
+            md5="fda4e701258ba56f465e3636e60d36ec",
+            mime="text/plain",
+            sha1="af2c2618032c679333bebf745e75f9088748d737",
+            sha256="dadc624d4454e10293dbd1b701b9ee9f99ef83b4cd07b695111d37eb95abcff8",
             size=19,
-            type='unknown',
+            type="unknown",
         ),
-        filename='dadc624d4454e10293dbd1b701b9ee9f99ef83b4cd07b695111d37eb95abcff8',
-        min_classification='TLP:WHITE',
+        filename="dadc624d4454e10293dbd1b701b9ee9f99ef83b4cd07b695111d37eb95abcff8",
+        min_classification="TLP:WHITE",
         max_files=501,  # TODO: get the actual value
         ttl=3600,
-        safelist_config={
-            "enabled": False,
-            "hash_types": ['sha1', 'sha256'],
-            "enforce_safelist_service": False
-        }
+        safelist_config={"enabled": False, "hash_types": ["sha1", "sha256"], "enforce_safelist_service": False},
     ),
 ]
 
@@ -145,9 +141,12 @@ class TestOverpower:
     @staticmethod
     def test_handle_ps1_profiler_output(overpower_class_instance):
         output = {
-            "deobfuscated": "blah", "behaviour": {"blah": {"score": 2.0, "marks": []}},
-            "score": 3, "families": {},
-            "extracted": []}
+            "deobfuscated": "blah",
+            "behaviour": {"blah": {"score": 2.0, "marks": []}},
+            "score": 3,
+            "families": {},
+            "extracted": [],
+        }
         res = Result()
         correct_res_sec = ResultSection("Suspicious Content Detected in blah")
         correct_sig_res_sec = ResultSection("Signature: blah", parent=correct_res_sec)
@@ -175,15 +174,22 @@ class TestOverpower:
         correct_ioc_res_sec.add_tag("network.static.uri", "http://blah.com/blah.exe")
         correct_ioc_res_sec.add_tag("network.static.uri_path", "/blah.exe")
         correct_ioc_res_sec.set_heuristic(1)
-        table_data = [{"ioc_type": "domain", "ioc": "blah.com"},
-                      {"ioc_type": "uri", "ioc": "http://blah.com/blah.exe"},
-                      {"ioc_type": "uri_path", "ioc": "/blah.exe"}]
+        table_data = [
+            {"ioc_type": "domain", "ioc": "blah.com"},
+            {"ioc_type": "uri", "ioc": "http://blah.com/blah.exe"},
+            {"ioc_type": "uri_path", "ioc": "/blah.exe"},
+        ]
         for item in table_data:
             correct_ioc_res_sec.add_row(TableRow(**item))
         assert check_section_equality(res.sections[2], correct_ioc_res_sec)
 
-        output = {"deobfuscated": "blah.com;", "behaviour": {"blah": {"score": 2.0, "marks": []}},
-                  "score": 3, "families": [], "extracted": [{"type": "base64_decoded", "data": b"blah"}]}
+        output = {
+            "deobfuscated": "blah.com;",
+            "behaviour": {"blah": {"score": 2.0, "marks": []}},
+            "score": 3,
+            "families": [],
+            "extracted": [{"type": "base64_decoded", "data": b"blah"}],
+        }
         overpower_class_instance._handle_ps1_profiler_output(output, res, "blah")
         assert len(res.sections) == 3
         assert not path.exists(path.join(overpower_class_instance.working_directory, "ps1profiler_base64_decoded_0"))
@@ -212,7 +218,8 @@ class TestOverpower:
         ps1_profiler_output = {"blah": "blah"}
         psdecode_output = ["blah"]
         suppl_ps1_profiler_output = path.join(
-            overpower_class_instance.working_directory, "suppl_ps1_profiler_output.json")
+            overpower_class_instance.working_directory, "suppl_ps1_profiler_output.json"
+        )
         suppl_psdecode_output = path.join(overpower_class_instance.working_directory, "suppl_psdecode_output.txt")
         overpower_class_instance._extract_supplementary(ps1_profiler_output, psdecode_output)
         assert path.exists(suppl_ps1_profiler_output)

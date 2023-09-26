@@ -33,13 +33,12 @@ FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e
 
 
 class Overpower(ServiceBase):
-
     def __init__(self, config: Optional[Dict] = None) -> None:
         super(Overpower, self).__init__(config)
         self.artifact_hashes = None
         self.artifact_list = None
         self.safe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
-        self.identify = get_identify(use_cache=environ.get('PRIVILEGED', 'false').lower() == 'true')
+        self.identify = get_identify(use_cache=environ.get("PRIVILEGED", "false").lower() == "true")
 
     def _run_psdecode(self, request: ServiceRequest, fake_web_download: bool = True) -> List[str]:
         """
@@ -51,10 +50,15 @@ class Overpower(ServiceBase):
         tool_timeout = request.get_param("tool_timeout")
 
         args = [
-            "pwsh", "-Command", "PSDecode", request.file_path,
+            "pwsh",
+            "-Command",
+            "PSDecode",
+            request.file_path,
             "-verbose",
-            "-dump", self.working_directory,
-            "-timeout", f"{tool_timeout}",
+            "-dump",
+            self.working_directory,
+            "-timeout",
+            f"{tool_timeout}",
         ]
 
         if fake_web_download:
@@ -122,8 +126,13 @@ class Overpower(ServiceBase):
         # PowerShellProfiler
         rerun_psdecode = False
         files_to_profile = [(request.file_name, request.file_path)]
-        files_to_profile.extend([(layer, path.join(self.working_directory, layer))
-                                for layer in sorted(listdir(self.working_directory)) if "layer" in layer])
+        files_to_profile.extend(
+            [
+                (layer, path.join(self.working_directory, layer))
+                for layer in sorted(listdir(self.working_directory))
+                if "layer" in layer
+            ]
+        )
         total_ps1_profiler_output: Dict[str, Any] = {}
         start_time = time()
         self.log.debug("Starting PowerShellProfiler...")
@@ -131,8 +140,8 @@ class Overpower(ServiceBase):
             self.log.debug(f"Profiling {file_to_profile}")
             total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
             do_we_rerun_psdecode = self._handle_ps1_profiler_output(
-                total_ps1_profiler_output[file_to_profile],
-                request.result, file_to_profile)
+                total_ps1_profiler_output[file_to_profile], request.result, file_to_profile
+            )
 
             # If we already ran PSDecode with faking web downloads, and it is determined that
             # we should re-run PSDecode, then do so
@@ -223,7 +232,7 @@ class Overpower(ServiceBase):
                 title_text=f"Signature: {tag}",
                 parent=suspicious_res_sec,
             )
-            if details.get('marks'):
+            if details.get("marks"):
                 profiler_sig_section.add_line(f"Marks: {', '.join(details['marks'])}")
 
                 # Special Mshta Downloader case
@@ -240,8 +249,14 @@ class Overpower(ServiceBase):
             if tag == SUSPICIOUS_BEHAVIOUR_COMBO:
                 # If there is a suspicious behaviour combo seen, we should flag the IOCs seen in actions with a signature that scores 500
                 for result_section in result.sections:
-                    if result_section.heuristic and result_section.heuristic.heur_id == 5 and any("network" in key for key in result_section.tags.keys()):
-                        self.log.debug("Added the suspicious_behaviour_combo_url signature to the result section to score the tagged URLs")
+                    if (
+                        result_section.heuristic
+                        and result_section.heuristic.heur_id == 5
+                        and any("network" in key for key in result_section.tags.keys())
+                    ):
+                        self.log.debug(
+                            "Added the suspicious_behaviour_combo_url signature to the result section to score the tagged URLs"
+                        )
                         result_section.heuristic.add_signature_id("suspicious_behaviour_combo_url")
                         suspicious_behaviour_combo_url_sig = True
                         break
@@ -298,7 +313,9 @@ class Overpower(ServiceBase):
                 # If we see a suspicious behaviour combination being used, were able to
                 # attribute it to a URL, and there are multiple URLs extracted statically, it's
                 # worth running PSDecode again
-                if suspicious_behaviour_combo_url_sig and (len(ioc_res_sec.tags.get("network.static.uri", [])) > 2 or static_uri_counter > 3):
+                if suspicious_behaviour_combo_url_sig and (
+                    len(ioc_res_sec.tags.get("network.static.uri", [])) > 2 or static_uri_counter > 3
+                ):
                     return True
 
         return False
@@ -314,7 +331,7 @@ class Overpower(ServiceBase):
         actions: List[str] = []
         for index, line in enumerate(output):
             if "############################## Actions ##############################" in line:
-                actions = output[index + 1:]
+                actions = output[index + 1 :]
                 break
         if not subsequent_run:
             psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
@@ -397,8 +414,7 @@ class Overpower(ServiceBase):
                 # We also want to rename the artifact that this file is a duplicate of
                 # to avoid naming conflicts
                 artifact = next(
-                    (artifact for artifact in self.artifact_list if artifact["sha256"] == artifact_sha256),
-                    None
+                    (artifact for artifact in self.artifact_list if artifact["sha256"] == artifact_sha256), None
                 )
                 if artifact:
                     artifact["name"] = artifact_sha256
@@ -428,13 +444,15 @@ class Overpower(ServiceBase):
                 self.log.debug(f"Ignoring {file_path} since the parent file is not interesting.")
                 continue
 
-            self.artifact_list.append({
-                "name": file,
-                "path": file_path,
-                "description": description,
-                "to_be_extracted": to_be_extracted,
-                "sha256": artifact_sha256,
-            })
+            self.artifact_list.append(
+                {
+                    "name": file,
+                    "path": file_path,
+                    "description": description,
+                    "to_be_extracted": to_be_extracted,
+                    "sha256": artifact_sha256,
+                }
+            )
 
             for f in files_to_move:
                 if "/" in f:
@@ -447,7 +465,9 @@ class Overpower(ServiceBase):
         for artifact in self.artifact_list:
             self.log.debug(
                 f"Adding extracted file: {artifact['path']}"
-                if artifact["to_be_extracted"] else f"Adding supplementary file: {artifact['path']}")
+                if artifact["to_be_extracted"]
+                else f"Adding supplementary file: {artifact['path']}"
+            )
 
     @staticmethod
     def _handle_specific_written_files(file_type: str, file_path: str, result: Result) -> None:
