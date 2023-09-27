@@ -133,25 +133,29 @@ class Overpower(ServiceBase):
                 if "layer" in layer
             ]
         )
-        total_ps1_profiler_output: Dict[str, Any] = {}
-        start_time = time()
-        self.log.debug("Starting PowerShellProfiler...")
-        for file_to_profile, file_path in files_to_profile:
-            self.log.debug(f"Profiling {file_to_profile}")
-            total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
-            do_we_rerun_psdecode = self._handle_ps1_profiler_output(
-                total_ps1_profiler_output[file_to_profile], request.result, file_to_profile
-            )
+        # We do not want a loop of PowerShellProfiler extractions
+        if request.temp_submission_data.get("deobfuscated_by_ps1profiler") and request.task.file_name == DEOBFUS_FILE:
+            pass
+        else:
+            total_ps1_profiler_output: Dict[str, Any] = {}
+            start_time = time()
+            self.log.debug("Starting PowerShellProfiler...")
+            for file_to_profile, file_path in files_to_profile:
+                self.log.debug(f"Profiling {file_to_profile}")
+                total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
+                do_we_rerun_psdecode = self._handle_ps1_profiler_output(
+                    total_ps1_profiler_output[file_to_profile], request.result, file_to_profile
+                )
 
-            # If we already ran PSDecode with faking web downloads, and it is determined that
-            # we should re-run PSDecode, then do so
-            if not rerun_psdecode and do_we_rerun_psdecode and fake_web_download:
-                rerun_psdecode = True
+                # If we already ran PSDecode with faking web downloads, and it is determined that
+                # we should re-run PSDecode, then do so
+                if not rerun_psdecode and do_we_rerun_psdecode and fake_web_download:
+                    rerun_psdecode = True
 
-            self.log.debug(f"Completed profiling {file_to_profile}")
+                self.log.debug(f"Completed profiling {file_to_profile}")
 
-        time_elapsed = time() - start_time
-        self.log.debug(f"PS1Profiler took {round(time_elapsed)}s to complete.")
+            time_elapsed = time() - start_time
+            self.log.debug(f"PS1Profiler took {round(time_elapsed)}s to complete.")
 
         if rerun_psdecode:
             # First, remove fake files
@@ -165,7 +169,7 @@ class Overpower(ServiceBase):
 
         worth_extracting = len(request.result.sections) > 0
         self.artifact_hashes.add(request.sha256)
-        self._prepare_artifacts(request.result, worth_extracting)
+        self._prepare_artifacts(request, worth_extracting)
 
         # Adding sandbox artifacts using the OntologyResults helper class
         _ = OntologyResults.handle_artifacts(self.artifact_list, request)
@@ -385,9 +389,10 @@ class Overpower(ServiceBase):
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
 
-    def _prepare_artifacts(self, result: Result, worth_extracting: bool = True) -> None:
+    def _prepare_artifacts(self, request: ServiceRequest, worth_extracting: bool = True) -> None:
         """
         This method prepares artifacts that have been dumped by PowerShell de-obfuscation tools
+        :param request: The ServiceRequest object
         :param worth_extracting: A flag indicating if we should extract files or not.
         :return: None
         """
@@ -427,8 +432,9 @@ class Overpower(ServiceBase):
             else:
                 self.artifact_hashes.add(artifact_sha256)
             to_be_extracted = True
-            if DEOBFUS_FILE in file:
+            if DEOBFUS_FILE == file:
                 description = "De-obfuscated layer from PowerShellProfiler"
+                request.temp_submission_data["deobfuscated_by_ps1profiler"] = True
             elif "layer" in file:
                 description = "Layer of de-obfuscated PowerShell from PSDecode"
                 # We don't want to extract these since it is redundant. PSDecode already ran on them.
@@ -459,7 +465,7 @@ class Overpower(ServiceBase):
                     file_name = f.split("/")[-1]
                     if file == file_name:
                         file_type_details = self.identify.fileinfo(file_path, generate_hashes=False)
-                        self._handle_specific_written_files(file_type_details["type"], file_path, result)
+                        self._handle_specific_written_files(file_type_details["type"], file_path, request.result)
                         break
 
         for artifact in self.artifact_list:

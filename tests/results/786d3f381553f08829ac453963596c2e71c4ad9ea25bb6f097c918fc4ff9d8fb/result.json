@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 230,
+    "score": 151,
     "sections": [
       {
         "auto_collapse": false,
@@ -12,12 +12,12 @@
         "depth": 0,
         "heuristic": null,
         "tags": {},
-        "title_text": "Suspicious Content Detected in 8f17242fd8a6ffbdda9969e09c04ae54f499ef9768693e29068f41bc54ea4bcd",
+        "title_text": "Suspicious Content Detected in 786d3f381553f08829ac453963596c2e71c4ad9ea25bb6f097c918fc4ff9d8fb",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Start-Process, START, rundll32",
+        "body": "Marks: New-Object, IO.MemoryStream, IO.StreamReader",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -40,7 +40,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: START, rundll32",
+        "body": "Marks: Invoke-Expression, .Invoke(",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -51,19 +51,19 @@
           "heur_id": 3,
           "score": 10,
           "score_map": {
-            "Starts RunDll": 10
+            "Script Execution": 10
           },
           "signatures": {
-            "Starts RunDll": 1
+            "Script Execution": 1
           }
         },
         "tags": {},
-        "title_text": "Signature: Starts RunDll",
+        "title_text": "Signature: Script Execution",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [-1..-, [array]::Reverse",
+        "body": "Marks: Convert, FromBase64String, Text.Encoding, Compression.CompressionMode]::Decompress, IO.Compression.DeflateStream, IO.MemoryStream",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -72,16 +72,16 @@
           "attack_ids": [],
           "frequency": 1,
           "heur_id": 3,
-          "score": 100,
+          "score": 10,
           "score_map": {
-            "Obfuscation": 100
+            "Compression": 10
           },
           "signatures": {
-            "Obfuscation": 1
+            "Compression": 1
           }
         },
         "tags": {},
-        "title_text": "Signature: Obfuscation",
+        "title_text": "Signature: Compression",
         "zeroize_on_tag_safe": false
       },
       {
@@ -109,6 +109,29 @@
       },
       {
         "auto_collapse": false,
+        "body": "Marks: Principal.WindowsBuiltInRole], Administrator, Get-Date",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Enumeration": 10
+          },
+          "signatures": {
+            "Enumeration": 1
+          }
+        },
+        "tags": {},
+        "title_text": "Signature: Enumeration",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": "Marks: IO.File, WriteAllBytes",
         "body_config": {},
         "body_format": "TEXT",
@@ -129,20 +152,72 @@
         "tags": {},
         "title_text": "Signature: Byte Usage",
         "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"159.203.143.66\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://159.203.143.66/r/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/r/\"}]",
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "tags": {
+          "network": {
+            "static": {
+              "ip": [
+                "159.203.143.66"
+              ],
+              "uri": [
+                "http://159.203.143.66/r/"
+              ],
+              "uri_path": [
+                "/r/"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from 786d3f381553f08829ac453963596c2e71c4ad9ea25bb6f097c918fc4ff9d8fb",
+        "zeroize_on_tag_safe": false
       }
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "deobfuscated.ps1",
+        "sha256": "31fc1fe5dbb50c922918afb10c8a0f489db286aa0e084bd1a9f7327bf37e1687"
+      },
+      {
+        "name": "ps1profiler_base64_decoded_1",
+        "sha256": "ceb3b2cce642a3dcda3a370c282fd0ae6daf7521a44350d302b4a1351e4ac3db"
+      }
+    ],
     "supplementary": [
       {
-        "name": "6983f9e85b94ff078cebd685167566f006949def14dbcc499fbf50c77f74c441",
-        "sha256": "6983f9e85b94ff078cebd685167566f006949def14dbcc499fbf50c77f74c441"
+        "name": "layer_0.ps1",
+        "sha256": "9bd72d3cdf689325053151fabf71c1c2300e28d9977ded90db19f00895dee9ff"
       }
     ]
   },
   "results": {
     "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
       {
         "attack_ids": [],
         "heur_id": 3,
@@ -154,14 +229,14 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Starts RunDll"
+          "Script Execution"
         ]
       },
       {
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Obfuscation"
+          "Compression"
         ]
       },
       {
@@ -175,11 +250,40 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
+          "Enumeration"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
           "Byte Usage"
         ]
       }
     ],
-    "tags": {},
+    "tags": {
+      "network.static.ip": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "159.203.143.66"
+        }
+      ],
+      "network.static.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://159.203.143.66/r/"
+        }
+      ],
+      "network.static.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/r/"
+        }
+      ]
+    },
     "temp_submission_data": {
       "deobfuscated_by_ps1profiler": true
     }
