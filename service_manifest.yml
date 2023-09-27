@@ -17,6 +17,8 @@ enabled: true
 is_external: false
 licence_count: 0
 
+uses_temp_submission_data: true
+
 submission_params:
   # Generic parameters
   - default: 90
