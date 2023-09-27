@@ -1,5 +1,6 @@
 import os
 import shutil
+from hashlib import sha256
 from json import dumps
 from os import path
 from os.path import join
@@ -82,6 +83,41 @@ def dummy_completed_process_instance():
             return self
 
     yield DummyCompletedProcess()
+
+
+@pytest.fixture
+def dummy_task_class():
+    class DummyTask:
+        def __init__(self):
+            self.supplementary = []
+            self.extracted = []
+            self.file_name = "blah.js"
+
+    yield DummyTask
+
+
+@pytest.fixture
+def dummy_request_class_instance(dummy_task_class):
+    class DummyRequest:
+        SERVICE_CONFIG = {}
+
+        def __init__(self):
+            super(DummyRequest, self).__init__()
+            self.temp_submission_data = {}
+            self.result = None
+            self.file_contents = b""
+            self.file_type = "code/html"
+            self.sha256 = sha256(self.file_contents).hexdigest()
+            self.deep_scan = False
+            self.task = dummy_task_class()
+
+        def add_supplementary(*args):
+            pass
+
+        def get_param(self, param):
+            return self.SERVICE_CONFIG[param]
+
+    yield DummyRequest()
 
 
 class TestOverpower:
@@ -233,7 +269,7 @@ class TestOverpower:
             shutil.rmtree(overpower_class_instance.working_directory)
 
     @staticmethod
-    def test_prepare_artifacts(overpower_class_instance):
+    def test_prepare_artifacts(overpower_class_instance, dummy_request_class_instance):
         res = Result()
         overpower_class_instance.artifact_list = []
         overpower_class_instance.artifact_hashes = set()
@@ -251,7 +287,7 @@ class TestOverpower:
         with open(item_4, "w") as f:
             f.write("blah_2")
 
-        overpower_class_instance._prepare_artifacts(res)
+        overpower_class_instance._prepare_artifacts(dummy_request_class_instance)
         assert overpower_class_instance.artifact_list[0] == {
             "name": DEOBFUS_FILE,
             "path": item_0,
@@ -283,7 +319,7 @@ class TestOverpower:
 
         overpower_class_instance.artifact_list = []
         overpower_class_instance.artifact_hashes = set()
-        overpower_class_instance._prepare_artifacts(res, False)
+        overpower_class_instance._prepare_artifacts(dummy_request_class_instance, False)
         assert overpower_class_instance.artifact_list[0] == {
             "name": "layer1.txt",
             "path": item_1,

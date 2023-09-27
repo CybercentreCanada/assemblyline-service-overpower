@@ -254,6 +254,8 @@
         }
       ]
     },
-    "temp_submission_data": {}
+    "temp_submission_data": {
+      "deobfuscated_by_ps1profiler": true
+    }
   }
 }
