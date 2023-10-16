@@ -20,6 +20,7 @@
             "suspicious_behaviour_combo_url": 1
           }
         },
+        "promote_to": null,
         "tags": {
           "file": {
             "path": [
@@ -63,6 +64,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
@@ -89,6 +91,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in b046afae14b4d84b78db462e060a8606c68bd96514477fbf8e9721bb17d2f4ed",
         "zeroize_on_tag_safe": false
@@ -112,6 +115,7 @@
             "Downloader": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
@@ -135,6 +139,7 @@
             "Starts Process": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Starts Process",
         "zeroize_on_tag_safe": false
@@ -158,6 +163,7 @@
             "Starts RunDll": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Starts RunDll",
         "zeroize_on_tag_safe": false
@@ -181,6 +187,7 @@
             "Sleeps": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Sleeps",
         "zeroize_on_tag_safe": false
@@ -204,6 +211,7 @@
             "Suspicious Behaviour Combo": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
@@ -228,6 +236,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "static": {
@@ -278,6 +287,7 @@
             "suspicious_behaviour_combo_url": 1
           }
         },
+        "promote_to": null,
         "tags": {
           "file": {
             "path": [
@@ -336,6 +346,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {

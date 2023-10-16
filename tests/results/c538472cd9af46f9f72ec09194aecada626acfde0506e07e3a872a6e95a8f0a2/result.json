@@ -18,6 +18,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -30,6 +31,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in c538472cd9af46f9f72ec09194aecada626acfde0506e07e3a872a6e95a8f0a2",
         "zeroize_on_tag_safe": false
@@ -53,6 +55,7 @@
             "Script Execution": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Script Execution",
         "zeroize_on_tag_safe": false
@@ -76,6 +79,7 @@
             "Compression": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Compression",
         "zeroize_on_tag_safe": false
@@ -99,6 +103,7 @@
             "Sleeps": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Sleeps",
         "zeroize_on_tag_safe": false
@@ -122,6 +127,7 @@
             "Deobfuscation": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Deobfuscation",
         "zeroize_on_tag_safe": false
@@ -145,6 +151,7 @@
             "Obfuscation:Char Frequency": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Obfuscation:Char Frequency",
         "zeroize_on_tag_safe": false

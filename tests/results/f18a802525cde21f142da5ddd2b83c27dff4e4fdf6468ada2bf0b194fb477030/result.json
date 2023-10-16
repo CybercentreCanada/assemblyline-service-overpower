@@ -20,6 +20,7 @@
             "suspicious_behaviour_combo_url": 1
           }
         },
+        "promote_to": null,
         "tags": {
           "file": {
             "path": [
@@ -63,6 +64,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
@@ -89,6 +91,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in f18a802525cde21f142da5ddd2b83c27dff4e4fdf6468ada2bf0b194fb477030",
         "zeroize_on_tag_safe": false
@@ -112,6 +115,7 @@
             "Negative Context": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Negative Context",
         "zeroize_on_tag_safe": false
@@ -135,6 +139,7 @@
             "Downloader": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
@@ -158,6 +163,7 @@
             "Compression": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Compression",
         "zeroize_on_tag_safe": false
@@ -181,6 +187,7 @@
             "Hidden Window": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Hidden Window",
         "zeroize_on_tag_safe": false
@@ -204,6 +211,7 @@
             "Persistence": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Persistence",
         "zeroize_on_tag_safe": false
@@ -227,6 +235,7 @@
             "Deobfuscation": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Deobfuscation",
         "zeroize_on_tag_safe": false
@@ -250,6 +259,7 @@
             "One Liner": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: One Liner",
         "zeroize_on_tag_safe": false
@@ -273,6 +283,7 @@
             "Suspicious Behaviour Combo": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
@@ -297,6 +308,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "static": {

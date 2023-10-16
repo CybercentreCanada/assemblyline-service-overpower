@@ -20,6 +20,7 @@
             "suspicious_behaviour_combo_url": 1
           }
         },
+        "promote_to": null,
         "tags": {
           "file": {
             "path": [
@@ -63,6 +64,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
@@ -89,6 +91,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in 35867e49e1c048ad00c9f40c10ec62a2c5e81c3b9b25511ea70fa44501fbe57e",
         "zeroize_on_tag_safe": false
@@ -112,6 +115,7 @@
             "Negative Context": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Negative Context",
         "zeroize_on_tag_safe": false
@@ -135,6 +139,7 @@
             "Downloader": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
@@ -158,6 +163,7 @@
             "Hidden Window": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Hidden Window",
         "zeroize_on_tag_safe": false
@@ -181,6 +187,7 @@
             "Sleeps": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Sleeps",
         "zeroize_on_tag_safe": false
@@ -205,6 +212,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "static": {
@@ -252,6 +260,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in layer_0.ps1",
         "zeroize_on_tag_safe": false
@@ -275,6 +284,7 @@
             "Starts Process": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Starts Process",
         "zeroize_on_tag_safe": false
@@ -298,6 +308,7 @@
             "Starts RunDll": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Starts RunDll",
         "zeroize_on_tag_safe": false
@@ -321,6 +332,7 @@
             "Suspicious Behaviour Combo": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
@@ -342,6 +354,7 @@
             "suspicious_behaviour_combo_url": 1
           }
         },
+        "promote_to": null,
         "tags": {
           "file": {
             "path": [
@@ -406,6 +419,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
