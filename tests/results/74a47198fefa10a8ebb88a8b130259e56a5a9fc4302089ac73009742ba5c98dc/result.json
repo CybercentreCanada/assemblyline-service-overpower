@@ -18,6 +18,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -30,6 +31,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in 74a47198fefa10a8ebb88a8b130259e56a5a9fc4302089ac73009742ba5c98dc",
         "zeroize_on_tag_safe": false
@@ -53,6 +55,7 @@
             "Downloader": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
@@ -76,6 +79,7 @@
             "Script Execution": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Script Execution",
         "zeroize_on_tag_safe": false
@@ -99,6 +103,7 @@
             "Hidden Window": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Hidden Window",
         "zeroize_on_tag_safe": false
@@ -122,6 +127,7 @@
             "Uses WMI": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Uses WMI",
         "zeroize_on_tag_safe": false
@@ -145,6 +151,7 @@
             "Suspicious Behaviour Combo": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false

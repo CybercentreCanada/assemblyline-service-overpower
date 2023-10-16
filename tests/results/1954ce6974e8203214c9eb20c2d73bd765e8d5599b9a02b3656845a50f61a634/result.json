@@ -18,6 +18,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -42,6 +43,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
@@ -69,6 +71,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in 1954ce6974e8203214c9eb20c2d73bd765e8d5599b9a02b3656845a50f61a634",
         "zeroize_on_tag_safe": false
@@ -92,6 +95,7 @@
             "Obfuscation:Char Frequency": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Obfuscation:Char Frequency",
         "zeroize_on_tag_safe": false
@@ -104,6 +108,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in layer_1.ps1",
         "zeroize_on_tag_safe": false
@@ -127,6 +132,7 @@
             "Downloader": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
@@ -150,6 +156,7 @@
             "Script Execution": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Script Execution",
         "zeroize_on_tag_safe": false
@@ -173,6 +180,7 @@
             "Ping": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Ping",
         "zeroize_on_tag_safe": false
@@ -196,6 +204,7 @@
             "Suspicious Behaviour Combo": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
@@ -220,6 +229,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "static": {

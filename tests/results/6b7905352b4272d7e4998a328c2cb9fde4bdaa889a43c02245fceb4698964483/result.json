@@ -18,6 +18,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "file": {
             "path": [
@@ -61,6 +62,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
@@ -87,6 +89,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in 6b7905352b4272d7e4998a328c2cb9fde4bdaa889a43c02245fceb4698964483",
         "zeroize_on_tag_safe": false
@@ -110,6 +113,7 @@
             "Downloader": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
@@ -134,6 +138,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "static": {

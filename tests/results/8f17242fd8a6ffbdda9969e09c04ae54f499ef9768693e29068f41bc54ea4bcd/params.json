@@ -1,5 +1,5 @@
 {
     "options": {
-        "test_extra": false
+        "test_extra": true
     }
 }
