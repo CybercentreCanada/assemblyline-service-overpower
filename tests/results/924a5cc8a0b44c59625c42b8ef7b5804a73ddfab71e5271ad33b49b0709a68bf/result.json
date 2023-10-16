@@ -18,6 +18,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -42,6 +43,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
@@ -68,6 +70,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in 924a5cc8a0b44c59625c42b8ef7b5804a73ddfab71e5271ad33b49b0709a68bf",
         "zeroize_on_tag_safe": false
@@ -91,6 +94,7 @@
             "One Liner": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: One Liner",
         "zeroize_on_tag_safe": false
@@ -115,6 +119,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "static": {

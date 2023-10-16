@@ -20,6 +20,7 @@
             "suspicious_behaviour_combo_url": 1
           }
         },
+        "promote_to": null,
         "tags": {
           "file": {
             "path": [
@@ -63,6 +64,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "dynamic": {
@@ -89,6 +91,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in 8dcad766215c455f6c70f5e78ebb1776e5e436775cbb7f66f1d5d4ccd217e03a",
         "zeroize_on_tag_safe": false
@@ -112,6 +115,7 @@
             "Downloader": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Downloader",
         "zeroize_on_tag_safe": false
@@ -135,6 +139,7 @@
             "Starts Process": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Starts Process",
         "zeroize_on_tag_safe": false
@@ -158,6 +163,7 @@
             "Hidden Window": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Hidden Window",
         "zeroize_on_tag_safe": false
@@ -181,6 +187,7 @@
             "Suspicious Behaviour Combo": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
@@ -205,6 +212,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "network": {
             "static": {

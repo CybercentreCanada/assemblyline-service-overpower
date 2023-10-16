@@ -18,6 +18,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {
           "attribution": {
             "family": [
@@ -47,6 +48,7 @@
             "Code Injection": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Code Injection",
         "zeroize_on_tag_safe": false
@@ -70,6 +72,7 @@
             "Sleeps": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Sleeps",
         "zeroize_on_tag_safe": false
@@ -93,6 +96,7 @@
             "Byte Usage": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Byte Usage",
         "zeroize_on_tag_safe": false
@@ -116,6 +120,7 @@
             "Obfuscation:Char Frequency": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Obfuscation:Char Frequency",
         "zeroize_on_tag_safe": false

@@ -18,6 +18,7 @@
           "score_map": {},
           "signatures": {}
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
@@ -30,6 +31,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in c4cf9f8de6d0be53e5ba263fe8eeb33c199a21f70004d83e06bbded76dc5f322",
         "zeroize_on_tag_safe": false
@@ -53,6 +55,7 @@
             "Script Execution": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Script Execution",
         "zeroize_on_tag_safe": false
@@ -76,6 +79,7 @@
             "Compression": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Compression",
         "zeroize_on_tag_safe": false
@@ -99,6 +103,7 @@
             "Deobfuscation": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Deobfuscation",
         "zeroize_on_tag_safe": false
@@ -122,6 +127,7 @@
             "One Liner": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: One Liner",
         "zeroize_on_tag_safe": false
@@ -145,6 +151,7 @@
             "Obfuscation:Char Frequency": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Obfuscation:Char Frequency",
         "zeroize_on_tag_safe": false
@@ -168,6 +175,7 @@
             "Suspicious Behaviour Combo": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Suspicious Behaviour Combo",
         "zeroize_on_tag_safe": false
@@ -180,6 +188,7 @@
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
         "tags": {},
         "title_text": "Suspicious Content Detected in layer_0.ps1",
         "zeroize_on_tag_safe": false
@@ -203,6 +212,7 @@
             "Embedded File": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Embedded File",
         "zeroize_on_tag_safe": false
@@ -226,6 +236,7 @@
             "Starts Process": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Starts Process",
         "zeroize_on_tag_safe": false
@@ -249,6 +260,7 @@
             "Hidden Window": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Hidden Window",
         "zeroize_on_tag_safe": false
@@ -272,6 +284,7 @@
             "Byte Usage": 1
           }
         },
+        "promote_to": null,
         "tags": {},
         "title_text": "Signature: Byte Usage",
         "zeroize_on_tag_safe": false
