@@ -85,6 +85,38 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive FileSystem IOCs:\n\t- %APPDATA%\\svhost.exe\nAggressive Network IOCs:\n\t- https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "file": {
+            "path": [
+              "%APPDATA%\\svhost.exe"
+            ]
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "oiartzunirratia.eus"
+              ],
+              "uri": [
+                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+              ],
+              "uri_path": [
+                "/install/clean/Lcovlccdxd.exe"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -293,6 +325,11 @@
     "tags": {
       "file.path": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "%APPDATA%\\svhost.exe"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -312,6 +349,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "oiartzunirratia.eus"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "oiartzunirratia.eus"
         }
       ],
       "network.dynamic.uri": [
@@ -326,6 +368,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
         }
       ],
       "network.dynamic.uri_path": [
@@ -338,6 +385,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "/install/clean/Lcovlccdxd.exe"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "/install/clean/Lcovlccdxd.exe"
         }

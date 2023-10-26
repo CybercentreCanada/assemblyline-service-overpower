@@ -19,7 +19,7 @@ __date__ = "X"
 # The garbage_list is used to prevent loops for functions that don't replace content but simply append to existing
 garbage_list = list()
 
-DEOBFUS_FILE = "deobfuscated.ps1"
+DEOBFUS_FILE_PREFIX = "deobfuscated_by_ps1profiler_"
 
 REGEX_INDICATORS = "regex_indicators"
 STR_INDICATORS = "str_indicators"
@@ -1933,7 +1933,7 @@ def profile_ps1(sample_path, working_dir):
     output["behaviour"] = behaviour_tags
 
     # Write what we've parsed out for further analysis
-    alt_data = os.path.join(working_dir, DEOBFUS_FILE)
+    alt_data = os.path.join(working_dir, f"{DEOBFUS_FILE_PREFIX + os.path.splitext(os.path.basename(sample_path))[0]}")
     with open(alt_data, "w") as f:
         f.write(output["deobfuscated"].rstrip())
 

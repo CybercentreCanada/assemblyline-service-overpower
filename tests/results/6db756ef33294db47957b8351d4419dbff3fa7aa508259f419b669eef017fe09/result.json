@@ -333,7 +333,15 @@
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated.ps1",
+        "name": "deobfuscated_by_ps1profiler_layer_1",
+        "sha256": "4095a819328a961d77d9c5cb461a569b209ebefeee83f2e82bd57c225a37f7b2"
+      },
+      {
+        "name": "deobfuscated_by_ps1profiler_6db756ef33294db47957b8351d4419dbff3fa7aa508259f419b669eef017fe09",
+        "sha256": "9fa1d526e35d9671dab8d9cdc59bed18eac6858e2451b6ccc73fb6d782f4419a"
+      },
+      {
+        "name": "deobfuscated_by_ps1profiler_layer_2",
         "sha256": "d605a2483304f2a324d4d4350c27e3280aac986fe40007e325841ec3abf2f141"
       }
     ],
@@ -343,7 +351,7 @@
         "sha256": "03f5c72073d2f0efe9fc48d900631807d94d77302307d0a27fb5b95469af0681"
       },
       {
-        "name": "layer_0.ps1",
+        "name": "35b84df60a53824137133bfe0c5d763519669a9759b26d201fbdb3b990f221e8",
         "sha256": "35b84df60a53824137133bfe0c5d763519669a9759b26d201fbdb3b990f221e8"
       },
       {
