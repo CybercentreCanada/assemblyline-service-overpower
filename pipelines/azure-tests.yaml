@@ -54,7 +54,6 @@ jobs:
           set -x # echo on
           [ ! -d "$(pwd)/tests" ] && echo "No tests found" && exit
           sudo apt-get update
-          sudo apt-get install -y libfuzzy-dev libfuzzy2 wget apt-transport-https software-properties-common
           if [[ -f "$(pwd)/pkglist.txt" ]]; then
             grep -vE '^#' "$(pwd)/pkglist.txt" | xargs sudo apt install -y
           fi
