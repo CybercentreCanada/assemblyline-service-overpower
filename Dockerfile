@@ -45,7 +45,7 @@ RUN pip install --no-cache-dir --user --requirement requirements.txt && rm -rf ~
 # Install Box-PS fork from source
 RUN wget https://github.com/cccs-kevin/box-ps/archive/refs/heads/master.zip -O /opt/al_support/box-ps.zip
 RUN unzip /opt/al_support/box-ps.zip -d /opt/al_support/box-ps
-RUN python -m pip install -e /opt/al_support/box-ps/box-ps-master/pyboxps-3.8.x/
+RUN python -m pip install -e /opt/al_support/box-ps/box-ps-master/pyboxps-3.8+/
 # This environment variable is required
 ENV BOXPS /opt/al_support/box-ps/box-ps-master
 
