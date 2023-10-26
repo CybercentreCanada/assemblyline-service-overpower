@@ -85,6 +85,48 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\nhttp://199.247.30.203/FfYIJfx.dat\n\thttp://94.131.117.111/EtXtKVmFMGNf.dat\n\thttp://85.239.41.205/B7hQgGuHC94A.dat\n\thttp://104.225.129.114/c4bOTpyL4I.dat\n\thttp://216.146.25.129/bvWVah0daMG.dat\n\thttp://141.94.86.90/1XAVN.dat\n\t199.247.30.203\n\t94.131.117.111\n\t85.239.41.205\n\t104.225.129.114\n\t216.146.25.129\n\t141.94.86.90",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "ip": [
+                "199.247.30.203",
+                "94.131.117.111",
+                "85.239.41.205",
+                "104.225.129.114",
+                "216.146.25.129",
+                "141.94.86.90"
+              ],
+              "uri": [
+                "http://199.247.30.203/FfYIJfx.dat",
+                "http://94.131.117.111/EtXtKVmFMGNf.dat",
+                "http://85.239.41.205/B7hQgGuHC94A.dat",
+                "http://104.225.129.114/c4bOTpyL4I.dat",
+                "http://216.146.25.129/bvWVah0daMG.dat",
+                "http://141.94.86.90/1XAVN.dat"
+              ],
+              "uri_path": [
+                "/FfYIJfx.dat",
+                "/EtXtKVmFMGNf.dat",
+                "/B7hQgGuHC94A.dat",
+                "/c4bOTpyL4I.dat",
+                "/bvWVah0daMG.dat",
+                "/1XAVN.dat"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -388,6 +430,10 @@
       {
         "name": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36",
         "sha256": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36"
+      },
+      {
+        "name": "report.json",
+        "sha256": "40fa8ccc3f12e6672c2f9a355049d55c746c852096de8de7ebbd41325098c6d1"
       }
     ]
   },
@@ -477,6 +523,11 @@
       ],
       "network.dynamic.ip": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "104.225.129.114"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -487,6 +538,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "104.225.129.114"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "141.94.86.90"
         },
         {
           "heur_id": 5,
@@ -513,6 +569,11 @@
           "value": "199.247.30.203"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "199.247.30.203"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -523,6 +584,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "199.247.30.203"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "216.146.25.129"
         },
         {
           "heur_id": 5,
@@ -537,6 +603,11 @@
           "value": "216.146.25.129"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "85.239.41.205"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -547,6 +618,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "85.239.41.205"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "94.131.117.111"
         },
         {
           "heur_id": 5,
@@ -563,6 +639,11 @@
       ],
       "network.dynamic.uri": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://104.225.129.114/c4bOTpyL4I.dat"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -573,6 +654,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "http://104.225.129.114/c4bOTpyL4I.dat"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://141.94.86.90/1XAVN.dat"
         },
         {
           "heur_id": 5,
@@ -599,6 +685,11 @@
           "value": "http://199.247.30.203/FfYIJfx.dat"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://199.247.30.203/FfYIJfx.dat"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -609,6 +700,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "http://199.247.30.203/FfYIJfx.dat"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://216.146.25.129/bvWVah0daMG.dat"
         },
         {
           "heur_id": 5,
@@ -623,6 +719,11 @@
           "value": "http://216.146.25.129/bvWVah0daMG.dat"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://85.239.41.205/B7hQgGuHC94A.dat"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -633,6 +734,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "http://85.239.41.205/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://94.131.117.111/EtXtKVmFMGNf.dat"
         },
         {
           "heur_id": 5,
@@ -649,6 +755,11 @@
       ],
       "network.dynamic.uri_path": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/1XAVN.dat"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -661,6 +772,11 @@
           "value": "/1XAVN.dat"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/B7hQgGuHC94A.dat"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -671,6 +787,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/EtXtKVmFMGNf.dat"
         },
         {
           "heur_id": 5,
@@ -697,6 +818,11 @@
           "value": "/FfYIJfx.dat"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/FfYIJfx.dat"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -709,6 +835,11 @@
           "value": "/FfYIJfx.dat"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/bvWVah0daMG.dat"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -719,6 +850,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/bvWVah0daMG.dat"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/c4bOTpyL4I.dat"
         },
         {
           "heur_id": 5,

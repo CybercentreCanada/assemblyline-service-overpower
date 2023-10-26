@@ -85,6 +85,33 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\nhttps://shoru.net/db/main_db",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "shoru.net"
+              ],
+              "uri": [
+                "https://shoru.net/db/main_db"
+              ],
+              "uri_path": [
+                "/db/main_db"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -215,6 +242,10 @@
       {
         "name": "37e0f95a86453f4ff227aa2d8403d3f0f2d2ceecb6dccf36e20bafbe09658a3d",
         "sha256": "37e0f95a86453f4ff227aa2d8403d3f0f2d2ceecb6dccf36e20bafbe09658a3d"
+      },
+      {
+        "name": "report.json",
+        "sha256": "d5a36256041e3e45ff852ad6d9fa2ce8cb676451c56bf86fbb7f1790277afc37"
       }
     ]
   },
@@ -281,6 +312,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "shoru.net"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "shoru.net"
         }
       ],
       "network.dynamic.uri": [
@@ -295,6 +331,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://shoru.net/db/main_db"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://shoru.net/db/main_db"
         }
       ],
       "network.dynamic.uri_path": [
@@ -307,6 +348,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "/db/main_db"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "/db/main_db"
         }

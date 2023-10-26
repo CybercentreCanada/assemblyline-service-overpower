@@ -85,6 +85,38 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive FileSystem IOCs:\nC:\\Users\\Public\\WindowsKeys.ps1\nAggressive Network IOCs:\nhttps://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "file": {
+            "path": [
+              "C:\\Users\\Public\\WindowsKeys.ps1"
+            ]
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "www.4sync.com"
+              ],
+              "uri": [
+                "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+              ],
+              "uri_path": [
+                "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -330,11 +362,20 @@
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "deobfuscated_by_ps1profiler_f18a802525cde21f142da5ddd2b83c27dff4e4fdf6468ada2bf0b194fb477030",
+        "sha256": "8400271affc1092a325c92ecf36a25ca0640cbe5cf7056a8e6237b9d7a6cae29"
+      }
+    ],
     "supplementary": [
       {
         "name": "653c9f77da9471a1d6834341d2de45469148b6fed56c9261dcaf4897f5da166f",
         "sha256": "653c9f77da9471a1d6834341d2de45469148b6fed56c9261dcaf4897f5da166f"
+      },
+      {
+        "name": "report.json",
+        "sha256": "bd5b25f3f78498d5458661f185c306de651ff2aa0ae32b518f623159c78c6ee5"
       }
     ]
   },
@@ -422,6 +463,11 @@
             "suspicious_behaviour_combo_url"
           ],
           "value": "./C:/Users/Public/WindowsKeys.ps1"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "C:\\Users\\Public\\WindowsKeys.ps1"
         }
       ],
       "network.dynamic.domain": [
@@ -434,6 +480,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "www.4sync.com"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "www.4sync.com"
         }
@@ -450,6 +501,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
         }
       ],
       "network.dynamic.uri_path": [
@@ -462,6 +518,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
         }

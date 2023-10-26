@@ -85,6 +85,54 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\nhttps://hotellosmirtos.com/sjn/Tn0Q3nieE\n\thttps://gsscorporationltd.com/okSfj/ElnfP\n\thttps://citytech-solutions.com/6Mh1k/VyRQIueel74\n\thttps://carladvogadatributaria.com/tvnq9/H78n9QOL\n\thttps://mrcrizquna.com/L7ccN/raQf0mzg0gq\n\thttps://zainco.net/OdOU/5nz7Cc739ffc\n\thttps://erg-eg.com/ocmb/CjVa5TV\n\thttps://nayadofoundation.org/wXaKm/x7GY6orRR",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "hotellosmirtos.com",
+                "gsscorporationltd.com",
+                "citytech-solutions.com",
+                "carladvogadatributaria.com",
+                "mrcrizquna.com",
+                "zainco.net",
+                "erg-eg.com",
+                "nayadofoundation.org"
+              ],
+              "uri": [
+                "https://hotellosmirtos.com/sjn/Tn0Q3nieE",
+                "https://gsscorporationltd.com/okSfj/ElnfP",
+                "https://citytech-solutions.com/6Mh1k/VyRQIueel74",
+                "https://carladvogadatributaria.com/tvnq9/H78n9QOL",
+                "https://mrcrizquna.com/L7ccN/raQf0mzg0gq",
+                "https://zainco.net/OdOU/5nz7Cc739ffc",
+                "https://erg-eg.com/ocmb/CjVa5TV",
+                "https://nayadofoundation.org/wXaKm/x7GY6orRR"
+              ],
+              "uri_path": [
+                "/sjn/Tn0Q3nieE",
+                "/okSfj/ElnfP",
+                "/6Mh1k/VyRQIueel74",
+                "/tvnq9/H78n9QOL",
+                "/L7ccN/raQf0mzg0gq",
+                "/OdOU/5nz7Cc739ffc",
+                "/ocmb/CjVa5TV",
+                "/wXaKm/x7GY6orRR"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -462,8 +510,17 @@
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "deobfuscated_by_ps1profiler_35867e49e1c048ad00c9f40c10ec62a2c5e81c3b9b25511ea70fa44501fbe57e",
+        "sha256": "bc9fddd2e33ece40965564940a4d42e88fcc7975190807e2b0817f91c40ad586"
+      }
+    ],
     "supplementary": [
+      {
+        "name": "report.json",
+        "sha256": "6561333eabe01cabcd2f092cf5a0c8f2929350ec32933e485d5ecdb38ee97df6"
+      },
       {
         "name": "677be4ccd2e2fdf0902d7ef283feca01a7886bd80a3f1c790503813b180a683c",
         "sha256": "677be4ccd2e2fdf0902d7ef283feca01a7886bd80a3f1c790503813b180a683c"
@@ -570,6 +627,11 @@
       ],
       "network.dynamic.domain": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "carladvogadatributaria.com"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -580,6 +642,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "carladvogadatributaria.com"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "citytech-solutions.com"
         },
         {
           "heur_id": 5,
@@ -594,6 +661,11 @@
           "value": "citytech-solutions.com"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "erg-eg.com"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -604,6 +676,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "erg-eg.com"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "gsscorporationltd.com"
         },
         {
           "heur_id": 5,
@@ -630,6 +707,11 @@
           "value": "hotellosmirtos.com"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "hotellosmirtos.com"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -640,6 +722,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "hotellosmirtos.com"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "mrcrizquna.com"
         },
         {
           "heur_id": 5,
@@ -654,6 +741,11 @@
           "value": "mrcrizquna.com"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "nayadofoundation.org"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -664,6 +756,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "nayadofoundation.org"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "zainco.net"
         },
         {
           "heur_id": 5,
@@ -680,6 +777,11 @@
       ],
       "network.dynamic.uri": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://carladvogadatributaria.com/tvnq9/H78n9QOL"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -690,6 +792,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://carladvogadatributaria.com/tvnq9/H78n9QOL"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://citytech-solutions.com/6Mh1k/VyRQIueel74"
         },
         {
           "heur_id": 5,
@@ -704,6 +811,11 @@
           "value": "https://citytech-solutions.com/6Mh1k/VyRQIueel74"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://erg-eg.com/ocmb/CjVa5TV"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -714,6 +826,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://erg-eg.com/ocmb/CjVa5TV"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://gsscorporationltd.com/okSfj/ElnfP"
         },
         {
           "heur_id": 5,
@@ -740,6 +857,11 @@
           "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -750,6 +872,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://mrcrizquna.com/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 5,
@@ -764,6 +891,11 @@
           "value": "https://mrcrizquna.com/L7ccN/raQf0mzg0gq"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://nayadofoundation.org/wXaKm/x7GY6orRR"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -774,6 +906,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://nayadofoundation.org/wXaKm/x7GY6orRR"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://zainco.net/OdOU/5nz7Cc739ffc"
         },
         {
           "heur_id": 5,
@@ -790,6 +927,11 @@
       ],
       "network.dynamic.uri_path": [
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/6Mh1k/VyRQIueel74"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -800,6 +942,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/6Mh1k/VyRQIueel74"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 5,
@@ -814,6 +961,11 @@
           "value": "/L7ccN/raQf0mzg0gq"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/OdOU/5nz7Cc739ffc"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -826,6 +978,11 @@
           "value": "/OdOU/5nz7Cc739ffc"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/ocmb/CjVa5TV"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -836,6 +993,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/ocmb/CjVa5TV"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/okSfj/ElnfP"
         },
         {
           "heur_id": 5,
@@ -862,6 +1024,11 @@
           "value": "/sjn/Tn0Q3nieE"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/sjn/Tn0Q3nieE"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -874,6 +1041,11 @@
           "value": "/sjn/Tn0Q3nieE"
         },
         {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/tvnq9/H78n9QOL"
+        },
+        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -884,6 +1056,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/tvnq9/H78n9QOL"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/wXaKm/x7GY6orRR"
         },
         {
           "heur_id": 5,

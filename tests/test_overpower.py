@@ -14,7 +14,7 @@ from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
 from assemblyline_v4_service.common.task import Task
 from overpower import Overpower
-from tools.ps1_profiler import DEOBFUS_FILE
+from tools.ps1_profiler import DEOBFUS_FILE_PREFIX
 
 # Getting absolute paths, names and regexes
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -270,11 +270,10 @@ class TestOverpower:
 
     @staticmethod
     def test_prepare_artifacts(overpower_class_instance, dummy_request_class_instance):
-        res = Result()
         overpower_class_instance.artifact_list = []
         overpower_class_instance.artifact_hashes = set()
 
-        item_0 = join(overpower_class_instance.working_directory, DEOBFUS_FILE)
+        item_0 = join(overpower_class_instance.working_directory, f"{DEOBFUS_FILE_PREFIX}layer1.txt")
         item_1 = join(overpower_class_instance.working_directory, "layer1.txt")
         item_2 = join(overpower_class_instance.working_directory, "suppl")
         item_3 = join(overpower_class_instance.working_directory, "executable.bin")
@@ -289,7 +288,7 @@ class TestOverpower:
 
         overpower_class_instance._prepare_artifacts(dummy_request_class_instance)
         assert overpower_class_instance.artifact_list[0] == {
-            "name": DEOBFUS_FILE,
+            "name": f"{DEOBFUS_FILE_PREFIX}layer1.txt",
             "path": item_0,
             "description": "De-obfuscated layer from PowerShellProfiler",
             "to_be_extracted": True,

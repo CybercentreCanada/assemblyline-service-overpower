@@ -25,6 +25,25 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive FileSystem IOCs:\n\\C_DRIVE\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "file": {
+            "path": [
+              "C:\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe"
+            ]
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -294,6 +313,10 @@
   "files": {
     "extracted": [
       {
+        "name": "deobfuscated_by_ps1profiler_c4cf9f8de6d0be53e5ba263fe8eeb33c199a21f70004d83e06bbded76dc5f322",
+        "sha256": "826eb249239c08254e17f828efba6633cfa5ffa6f3dc8f3ab411f1179a858a72"
+      },
+      {
         "name": "a869ac3fa2ed34c5d13fc7ac4f8753f68cc2921959f8fe087cae9a1a7b646d39",
         "sha256": "a869ac3fa2ed34c5d13fc7ac4f8753f68cc2921959f8fe087cae9a1a7b646d39"
       }
@@ -304,8 +327,12 @@
         "sha256": "73cec58229e0c660cad2a0aeb2b599147fb39ae3d0cfcffff9d10cedf430dcde"
       },
       {
-        "name": "layer_0.ps1",
+        "name": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed",
         "sha256": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed"
+      },
+      {
+        "name": "report.json",
+        "sha256": "fd13d5f658f69617b89ba199d60d13a7211f21bb8d72325969772677e9234971"
       }
     ]
   },
@@ -387,7 +414,15 @@
         "signatures": []
       }
     ],
-    "tags": {},
+    "tags": {
+      "file.path": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "C:\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe"
+        }
+      ]
+    },
     "temp_submission_data": {
       "deobfuscated_by_ps1profiler": true
     }

@@ -143,8 +143,12 @@
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated.ps1",
+        "name": "deobfuscated_by_ps1profiler_layer_0",
         "sha256": "34eb5c5354c0b835df51b08adb6ba1fa261d63bffb07bbdacd7f3e7b96a1ebf5"
+      },
+      {
+        "name": "deobfuscated_by_ps1profiler_924a5cc8a0b44c59625c42b8ef7b5804a73ddfab71e5271ad33b49b0709a68bf",
+        "sha256": "3ea860b0ee59bc7404a1aa842c9e212defffcdc8482e84fa3dda6c94ef6dbc6c"
       },
       {
         "name": "agafX.cmd",

@@ -1,8 +1,30 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 151,
+    "score": 140,
     "sections": [
+      {
+        "auto_collapse": false,
+        "body": "Aggressive FileSystem IOCs:\n\\C_DRIVE\\Users\\victim\\AppData\\Roaming\\swiftcr.exe\n\t\\C_DRIVE\\Users\\victim\\AppData\\Roaming\\userpref.dll\n\tHKCU:\\Control Panel\\Desktop\n\tU:\\Control",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "file": {
+            "path": [
+              "C:\\Users\\victim\\AppData\\Roaming\\swiftcr.exe",
+              "C:\\Users\\victim\\AppData\\Roaming\\userpref.dll",
+              "HKCU:\\Control Panel\\Desktop",
+              "U:\\Control"
+            ]
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
       {
         "auto_collapse": false,
         "body": null,
@@ -13,12 +35,12 @@
         "heuristic": null,
         "promote_to": null,
         "tags": {},
-        "title_text": "Suspicious Content Detected in 786d3f381553f08829ac453963596c2e71c4ad9ea25bb6f097c918fc4ff9d8fb",
+        "title_text": "Suspicious Content Detected in 8a14efe45843057c5d7a8ec7258c3bb6757a7b8ce5831c98873e0242041b8de8",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: New-Object, IO.MemoryStream, IO.StreamReader",
+        "body": "Marks: Start-Process, START, rundll32",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -42,7 +64,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Invoke-Expression, .Invoke(",
+        "body": "Marks: START, rundll32",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -53,20 +75,20 @@
           "heur_id": 3,
           "score": 10,
           "score_map": {
-            "Script Execution": 10
+            "Starts RunDll": 10
           },
           "signatures": {
-            "Script Execution": 1
+            "Starts RunDll": 1
           }
         },
         "promote_to": null,
         "tags": {},
-        "title_text": "Signature: Script Execution",
+        "title_text": "Signature: Starts RunDll",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Convert, FromBase64String, Text.Encoding, Compression.CompressionMode]::Decompress, IO.Compression.DeflateStream, IO.MemoryStream",
+        "body": "Marks: Start-Sleep, sleep -s",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -77,20 +99,20 @@
           "heur_id": 3,
           "score": 10,
           "score_map": {
-            "Compression": 10
+            "Sleeps": 10
           },
           "signatures": {
-            "Compression": 1
+            "Sleeps": 1
           }
         },
         "promote_to": null,
         "tags": {},
-        "title_text": "Signature: Compression",
+        "title_text": "Signature: Sleeps",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [Convert]::FromBase64String(",
+        "body": "Marks: HKCU:\\, New-ItemProperty, -Path, -Name, -PropertyType, -Value",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -101,39 +123,15 @@
           "heur_id": 3,
           "score": 10,
           "score_map": {
-            "Deobfuscation": 10
+            "Registry": 10
           },
           "signatures": {
-            "Deobfuscation": 1
+            "Registry": 1
           }
         },
         "promote_to": null,
         "tags": {},
-        "title_text": "Signature: Deobfuscation",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "Marks: Principal.WindowsBuiltInRole], Administrator, Get-Date",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 10,
-          "score_map": {
-            "Enumeration": 10
-          },
-          "signatures": {
-            "Enumeration": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {},
-        "title_text": "Signature: Enumeration",
+        "title_text": "Signature: Registry",
         "zeroize_on_tag_safe": false
       },
       {
@@ -159,81 +157,41 @@
         "tags": {},
         "title_text": "Signature: Byte Usage",
         "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"159.203.143.66\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://159.203.143.66/r/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/r/\"}]",
-        "body_config": {
-          "column_order": [
-            "ioc_type",
-            "ioc"
-          ]
-        },
-        "body_format": "TABLE",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 1,
-          "score": 1,
-          "score_map": {},
-          "signatures": {}
-        },
-        "promote_to": null,
-        "tags": {
-          "network": {
-            "static": {
-              "ip": [
-                "159.203.143.66"
-              ],
-              "uri": [
-                "http://159.203.143.66/r/"
-              ],
-              "uri_path": [
-                "/r/"
-              ]
-            }
-          }
-        },
-        "title_text": "IOC(s) extracted from 786d3f381553f08829ac453963596c2e71c4ad9ea25bb6f097c918fc4ff9d8fb",
-        "zeroize_on_tag_safe": false
       }
     ]
   },
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated_by_ps1profiler_786d3f381553f08829ac453963596c2e71c4ad9ea25bb6f097c918fc4ff9d8fb",
-        "sha256": "0d57c2083eeb18f2729221d5e7aff827659a23c4f751b2d73a071466bf4c0118"
+        "name": "30252A9C7B082C5E72C5EE8EEDAF37A72109064712209CF2D645947312D00781",
+        "sha256": "30252a9c7b082c5e72c5ee8eedaf37a72109064712209cf2d645947312d00781"
+      },
+      {
+        "name": "739D52CF78560AB2C1DCD0F272006549D15312F0DCCCC420BF669717422DA441",
+        "sha256": "739d52cf78560ab2c1dcd0f272006549d15312f0dcccc420bf669717422da441"
       },
       {
         "name": "deobfuscated_by_ps1profiler_layer_0",
-        "sha256": "31fc1fe5dbb50c922918afb10c8a0f489db286aa0e084bd1a9f7327bf37e1687"
+        "sha256": "bc6da7d79e622e6e17286084037d8e9591c0140c7195f8c890764cd2c15f7fb0"
       },
       {
-        "name": "ps1profiler_base64_decoded_1",
-        "sha256": "ceb3b2cce642a3dcda3a370c282fd0ae6daf7521a44350d302b4a1351e4ac3db"
+        "name": "deobfuscated_by_ps1profiler_8a14efe45843057c5d7a8ec7258c3bb6757a7b8ce5831c98873e0242041b8de8",
+        "sha256": "e3ce7bcf40ba29fda4dd09d6a6191f14f69cd40d0627837543b7b2cd172f7d6c"
       }
     ],
     "supplementary": [
       {
-        "name": "report.json",
-        "sha256": "515b0d6a57f6d2256918236c063b736e68b5988e082c7b8873f1dc35b974cf49"
+        "name": "layer_0.ps1",
+        "sha256": "05ffc8166e2900af1f140d20372e167bb80eda8ccd325ee8472eef47cbce457e"
       },
       {
-        "name": "layer_0.ps1",
-        "sha256": "9bd72d3cdf689325053151fabf71c1c2300e28d9977ded90db19f00895dee9ff"
+        "name": "report.json",
+        "sha256": "67cbf1006c5c4158bef936f5305f550befdc18152bbb9decf10589382e05a0c9"
       }
     ]
   },
   "results": {
     "heuristics": [
-      {
-        "attack_ids": [],
-        "heur_id": 1,
-        "signatures": []
-      },
       {
         "attack_ids": [],
         "heur_id": 3,
@@ -245,28 +203,21 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Script Execution"
+          "Starts RunDll"
         ]
       },
       {
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Compression"
+          "Sleeps"
         ]
       },
       {
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Deobfuscation"
-        ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "Enumeration"
+          "Registry"
         ]
       },
       {
@@ -278,25 +229,26 @@
       }
     ],
     "tags": {
-      "network.static.ip": [
+      "file.path": [
         {
-          "heur_id": 1,
+          "heur_id": null,
           "signatures": [],
-          "value": "159.203.143.66"
-        }
-      ],
-      "network.static.uri": [
+          "value": "C:\\Users\\victim\\AppData\\Roaming\\swiftcr.exe"
+        },
         {
-          "heur_id": 1,
+          "heur_id": null,
           "signatures": [],
-          "value": "http://159.203.143.66/r/"
-        }
-      ],
-      "network.static.uri_path": [
+          "value": "C:\\Users\\victim\\AppData\\Roaming\\userpref.dll"
+        },
         {
-          "heur_id": 1,
+          "heur_id": null,
           "signatures": [],
-          "value": "/r/"
+          "value": "HKCU:\\Control Panel\\Desktop"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "U:\\Control"
         }
       ]
     },

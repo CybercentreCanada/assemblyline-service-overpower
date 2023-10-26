@@ -83,6 +83,33 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\nhttp://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "focusmedica.in"
+              ],
+              "uri": [
+                "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
+              ],
+              "uri_path": [
+                "/fmlib/IxBABMh0I2cLM3qq1GVv/"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -163,6 +190,10 @@
     "extracted": [],
     "supplementary": [
       {
+        "name": "report.json",
+        "sha256": "37b5e199c19fbd2744b9afcdab4ede97d23f159f3951505be7d6279d4b499dc8"
+      },
+      {
         "name": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb",
         "sha256": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb"
       }
@@ -211,6 +242,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "focusmedica.in"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "focusmedica.in"
         }
       ],
       "network.dynamic.uri": [
@@ -223,6 +259,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
       ],
       "network.dynamic.uri_path": [
@@ -233,6 +274,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
