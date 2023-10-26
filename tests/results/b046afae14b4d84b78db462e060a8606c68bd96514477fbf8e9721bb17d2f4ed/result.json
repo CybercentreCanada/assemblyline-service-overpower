@@ -85,7 +85,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\nhttp://199.247.30.203/FfYIJfx.dat\n\thttp://94.131.117.111/EtXtKVmFMGNf.dat\n\thttp://85.239.41.205/B7hQgGuHC94A.dat\n\thttp://104.225.129.114/c4bOTpyL4I.dat\n\thttp://216.146.25.129/bvWVah0daMG.dat\n\thttp://141.94.86.90/1XAVN.dat\n\t199.247.30.203\n\t94.131.117.111\n\t85.239.41.205\n\t104.225.129.114\n\t216.146.25.129\n\t141.94.86.90",
+        "body": "Aggressive Network IOCs:\nhttp://199.247.30.203/FfYIJfx.dat\n\t- http://94.131.117.111/EtXtKVmFMGNf.dat\n\t- http://85.239.41.205/B7hQgGuHC94A.dat\n\t- http://104.225.129.114/c4bOTpyL4I.dat\n\t- http://216.146.25.129/bvWVah0daMG.dat\n\t- http://141.94.86.90/1XAVN.dat\n\t- 199.247.30.203\n\t- 94.131.117.111\n\t- 85.239.41.205\n\t- 104.225.129.114\n\t- 216.146.25.129\n\t- 141.94.86.90",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -430,10 +430,6 @@
       {
         "name": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36",
         "sha256": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36"
-      },
-      {
-        "name": "report.json",
-        "sha256": "40fa8ccc3f12e6672c2f9a355049d55c746c852096de8de7ebbd41325098c6d1"
       }
     ]
   },

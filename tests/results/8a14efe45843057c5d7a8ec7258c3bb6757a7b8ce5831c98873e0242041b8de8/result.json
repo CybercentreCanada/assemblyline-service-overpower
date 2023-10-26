@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n\\C_DRIVE\\Users\\victim\\AppData\\Roaming\\swiftcr.exe\n\t\\C_DRIVE\\Users\\victim\\AppData\\Roaming\\userpref.dll\n\tHKCU:\\Control Panel\\Desktop\n\tU:\\Control",
+        "body": "Aggressive FileSystem IOCs:\n\\C_DRIVE\\Users\\victim\\AppData\\Roaming\\swiftcr.exe\n\t- \\C_DRIVE\\Users\\victim\\AppData\\Roaming\\userpref.dll\n\t- HKCU:\\Control Panel\\Desktop\n\t- U:\\Control",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -183,10 +183,6 @@
       {
         "name": "layer_0.ps1",
         "sha256": "05ffc8166e2900af1f140d20372e167bb80eda8ccd325ee8472eef47cbce457e"
-      },
-      {
-        "name": "report.json",
-        "sha256": "67cbf1006c5c4158bef936f5305f550befdc18152bbb9decf10589382e05a0c9"
       }
     ]
   },

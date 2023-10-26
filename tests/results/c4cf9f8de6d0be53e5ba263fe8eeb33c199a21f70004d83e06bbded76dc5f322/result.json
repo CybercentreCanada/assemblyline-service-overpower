@@ -25,7 +25,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n\\C_DRIVE\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe",
+        "body": "Aggressive FileSystem IOCs:\n\t- \\C_DRIVE\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -329,10 +329,6 @@
       {
         "name": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed",
         "sha256": "9efb2dbd3ed4722fee4c37fa71a5a72ef35b40216bbb7cd83a88da81d74191ed"
-      },
-      {
-        "name": "report.json",
-        "sha256": "fd13d5f658f69617b89ba199d60d13a7211f21bb8d72325969772677e9234971"
       }
     ]
   },

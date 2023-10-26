@@ -96,7 +96,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\nC:\\Users\\Public\\apple.png\n\tC:ProgramDatainvoice.pdf\nAggressive Network IOCs:\nhttp://deal.real\n\thttps://transfer.sh/get/vpiHmi/invoice.pdf",
+        "body": "Aggressive FileSystem IOCs:\nC:\\Users\\Public\\apple.png\n\t- C:ProgramDatainvoice.pdf\nAggressive Network IOCs:\nhttp://deal.real\n\t- https://transfer.sh/get/vpiHmi/invoice.pdf",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -252,10 +252,6 @@
       {
         "name": "0d9513514e300353ae162f538801a5df0bcb61311411adab1ce48e88b8dfa1b3",
         "sha256": "0d9513514e300353ae162f538801a5df0bcb61311411adab1ce48e88b8dfa1b3"
-      },
-      {
-        "name": "report.json",
-        "sha256": "6623bab753facf4ca39dd6ca599a9cf2761a62477ecf9d7cbfca8de229f8a4ee"
       }
     ]
   },

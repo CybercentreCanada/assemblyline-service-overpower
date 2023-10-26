@@ -85,7 +85,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\nhttps://shoru.net/db/main_db",
+        "body": "Aggressive Network IOCs:\n\t- https://shoru.net/db/main_db",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -242,10 +242,6 @@
       {
         "name": "37e0f95a86453f4ff227aa2d8403d3f0f2d2ceecb6dccf36e20bafbe09658a3d",
         "sha256": "37e0f95a86453f4ff227aa2d8403d3f0f2d2ceecb6dccf36e20bafbe09658a3d"
-      },
-      {
-        "name": "report.json",
-        "sha256": "d5a36256041e3e45ff852ad6d9fa2ce8cb676451c56bf86fbb7f1790277afc37"
       }
     ]
   },

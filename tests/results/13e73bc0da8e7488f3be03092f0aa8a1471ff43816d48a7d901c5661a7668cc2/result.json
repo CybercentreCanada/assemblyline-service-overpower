@@ -64,7 +64,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\ngithub.com/john-xor/temp/blob/main/index.html?raw=true",
+        "body": "Aggressive Network IOCs:\n\t- github.com/john-xor/temp/blob/main/index.html?raw=true",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -125,12 +125,7 @@
         "sha256": "dd514045a1d288772c4f44ab64fb8b3eccd553e0273f669b99c1656e584e7bf8"
       }
     ],
-    "supplementary": [
-      {
-        "name": "report.json",
-        "sha256": "a0c0836d93357ec7dcc4e69aed06c8eaad476601d7f3a1c803df0c01cffc6b38"
-      }
-    ]
+    "supplementary": []
   },
   "results": {
     "heuristics": [

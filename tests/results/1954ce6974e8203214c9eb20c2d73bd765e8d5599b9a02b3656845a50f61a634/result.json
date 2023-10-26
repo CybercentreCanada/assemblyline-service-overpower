@@ -65,7 +65,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\nhttps://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0",
+        "body": "Aggressive Network IOCs:\n\t- https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -297,10 +297,6 @@
       {
         "name": "9f9ddee64a563a9ebb3e7d6f9c156ee07a884984bc31c6ab669420b549834c02",
         "sha256": "9f9ddee64a563a9ebb3e7d6f9c156ee07a884984bc31c6ab669420b549834c02"
-      },
-      {
-        "name": "report.json",
-        "sha256": "c0fdb9acafa73bc1b7b205dd93a8369c27313227792c250dc9d7e19f84707bdc"
       },
       {
         "name": "layer_2.ps1",

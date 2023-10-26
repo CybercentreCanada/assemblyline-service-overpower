@@ -275,7 +275,7 @@ class TestOverpower:
 
         item_0 = join(overpower_class_instance.working_directory, f"{DEOBFUS_FILE_PREFIX}layer1.txt")
         item_1 = join(overpower_class_instance.working_directory, "layer1.txt")
-        item_2 = join(overpower_class_instance.working_directory, "suppl")
+        item_2 = join(overpower_class_instance.working_directory, "suppl_")
         item_3 = join(overpower_class_instance.working_directory, "executable.bin")
         items = [item_0, item_1, item_2, item_3]
         for index, item in enumerate(items):

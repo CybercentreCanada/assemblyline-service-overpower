@@ -85,7 +85,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\nhttps://hotellosmirtos.com/sjn/Tn0Q3nieE\n\thttps://gsscorporationltd.com/okSfj/ElnfP\n\thttps://citytech-solutions.com/6Mh1k/VyRQIueel74\n\thttps://carladvogadatributaria.com/tvnq9/H78n9QOL\n\thttps://mrcrizquna.com/L7ccN/raQf0mzg0gq\n\thttps://zainco.net/OdOU/5nz7Cc739ffc\n\thttps://erg-eg.com/ocmb/CjVa5TV\n\thttps://nayadofoundation.org/wXaKm/x7GY6orRR",
+        "body": "Aggressive Network IOCs:\nhttps://hotellosmirtos.com/sjn/Tn0Q3nieE\n\t- https://gsscorporationltd.com/okSfj/ElnfP\n\t- https://citytech-solutions.com/6Mh1k/VyRQIueel74\n\t- https://carladvogadatributaria.com/tvnq9/H78n9QOL\n\t- https://mrcrizquna.com/L7ccN/raQf0mzg0gq\n\t- https://zainco.net/OdOU/5nz7Cc739ffc\n\t- https://erg-eg.com/ocmb/CjVa5TV\n\t- https://nayadofoundation.org/wXaKm/x7GY6orRR",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -517,10 +517,6 @@
       }
     ],
     "supplementary": [
-      {
-        "name": "report.json",
-        "sha256": "6561333eabe01cabcd2f092cf5a0c8f2929350ec32933e485d5ecdb38ee97df6"
-      },
       {
         "name": "677be4ccd2e2fdf0902d7ef283feca01a7886bd80a3f1c790503813b180a683c",
         "sha256": "677be4ccd2e2fdf0902d7ef283feca01a7886bd80a3f1c790503813b180a683c"

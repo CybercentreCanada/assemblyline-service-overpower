@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n..\\\nAggressive Network IOCs:\nhttps://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY",
+        "body": "Aggressive FileSystem IOCs:\n\t- ..\\\nAggressive Network IOCs:\n\t- https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -235,10 +235,6 @@
       {
         "name": "6445a9935df6bb99679ca705bf5bf4b6bc7abebf43fc672f2137d630bf9d636f",
         "sha256": "6445a9935df6bb99679ca705bf5bf4b6bc7abebf43fc672f2137d630bf9d636f"
-      },
-      {
-        "name": "report.json",
-        "sha256": "69151b2b0ce039c9131ae6002f311eb42fa39398ff7eb46e42c9e8e429b74a0e"
       }
     ]
   },

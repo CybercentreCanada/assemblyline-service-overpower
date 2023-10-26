@@ -85,7 +85,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n%APPDATA%\\svhost.exe\nAggressive Network IOCs:\nhttps://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe",
+        "body": "Aggressive FileSystem IOCs:\n\t- %APPDATA%\\svhost.exe\nAggressive Network IOCs:\n\t- https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -271,10 +271,6 @@
       {
         "name": "4c71d0762784da7354cea1dccff804fd031788c0baca5b40caf5730e72590f44",
         "sha256": "4c71d0762784da7354cea1dccff804fd031788c0baca5b40caf5730e72590f44"
-      },
-      {
-        "name": "report.json",
-        "sha256": "6e7ebbd9824b8c56076fa096e341d07d4e5039d4e3584663ab4f8d199205e22b"
       }
     ]
   },

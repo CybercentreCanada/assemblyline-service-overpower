@@ -218,10 +218,6 @@
     ],
     "supplementary": [
       {
-        "name": "report.json",
-        "sha256": "515b0d6a57f6d2256918236c063b736e68b5988e082c7b8873f1dc35b974cf49"
-      },
-      {
         "name": "layer_0.ps1",
         "sha256": "9bd72d3cdf689325053151fabf71c1c2300e28d9977ded90db19f00895dee9ff"
       }

@@ -2,6 +2,7 @@ import re
 from json import dumps
 from os import environ, getcwd, listdir, makedirs, path, remove, rmdir, walk
 from shutil import copy
+from shutil import move as shutil_move
 from subprocess import PIPE, Popen, TimeoutExpired
 from time import time
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -431,14 +432,20 @@ class Overpower(ServiceBase):
         boxps_result_section = ResultTextSection("Interesting BoxPS Insights")
         if output.aggressive_fs_iocs:
             boxps_result_section.add_line("Aggressive FileSystem IOCs:")
-            boxps_result_section.add_line("\n\t".join(output.aggressive_fs_iocs))
+            if len(output.aggressive_fs_iocs) == 1:
+                boxps_result_section.add_line(f"\t- {output.aggressive_fs_iocs[0]}")
+            else:
+                boxps_result_section.add_line("\n\t- ".join(output.aggressive_fs_iocs))
             for item in output.aggressive_fs_iocs:
                 if item not in ["..\\"]:
                     boxps_result_section.add_tag("file.path", item.replace("\\C_DRIVE", "C:"))
 
         if output.aggressive_net_iocs:
             boxps_result_section.add_line("Aggressive Network IOCs:")
-            boxps_result_section.add_line("\n\t".join(output.aggressive_net_iocs))
+            if len(output.aggressive_net_iocs) == 1:
+                boxps_result_section.add_line(f"\t- {output.aggressive_net_iocs[0]}")
+            else:
+                boxps_result_section.add_line("\n\t- ".join(output.aggressive_net_iocs))
             for item in output.aggressive_net_iocs:
                 _ = add_tag(boxps_result_section, "network.dynamic.uri", item)
 
@@ -460,6 +467,10 @@ class Overpower(ServiceBase):
             psdecode_suppl_path = path.join(self.working_directory, "suppl_psdecode_output.txt")
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
+        for boxps_file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
+            boxps_file_path = path.join(self.working_directory, "boxps", boxps_file)
+            if path.exists(boxps_file_path):
+                shutil_move(boxps_file_path, path.join(self.working_directory, "boxps", f"suppl_{boxps_file}"))
 
     def _prepare_artifacts(self, request: ServiceRequest, worth_extracting: bool = True) -> None:
         """
@@ -483,7 +494,8 @@ class Overpower(ServiceBase):
                 file_path = path.join(root, file)
                 # Skip BoxPS execution artifacts
                 if root.endswith("boxps"):
-                    if file in ["stderr.txt", "layers.ps1", "stdout.txt"]:
+                    # These files are handled in _extract_supplementary
+                    if file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
                         continue
 
                 artifact_sha256 = get_sha256_for_file(file_path)
@@ -512,15 +524,12 @@ class Overpower(ServiceBase):
                 if file.startswith(DEOBFUS_FILE_PREFIX):
                     description = "De-obfuscated layer from PowerShellProfiler"
                     request.temp_submission_data["deobfuscated_by_ps1profiler"] = True
-                elif "layer" in file:
+                elif file.startswith("layer"):
                     description = "Layer of de-obfuscated PowerShell from PSDecode"
                     # We don't want to extract these since it is redundant. PSDecode already ran on them.
                     to_be_extracted = False
-                elif "suppl" in file:
+                elif file.startswith("suppl_"):
                     description = "Output from PowerShell tool"
-                    to_be_extracted = False
-                elif root.endswith("boxps") and file == "report.json":
-                    description = "Output from BoxPS tool"
                     to_be_extracted = False
                 else:
                     description = "Overpower Dump"

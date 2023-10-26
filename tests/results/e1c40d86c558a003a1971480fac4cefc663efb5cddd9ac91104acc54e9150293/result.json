@@ -194,10 +194,6 @@
       {
         "name": "layer_0.ps1",
         "sha256": "3a98e19ba428a9ef3c4956a92b40c44456048c717b7884d046cec45ce3f64c63"
-      },
-      {
-        "name": "report.json",
-        "sha256": "68916de7d23803374a2cf71c7724fb2c62d4000e18bcdc7d69885a1d552a021f"
       }
     ]
   },
