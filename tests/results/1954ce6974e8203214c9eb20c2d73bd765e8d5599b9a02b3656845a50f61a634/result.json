@@ -65,6 +65,33 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\n\t- https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "onedrive.live.com"
+              ],
+              "uri": [
+                "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
+              ],
+              "uri_path": [
+                "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -254,7 +281,11 @@
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated.ps1",
+        "name": "deobfuscated_by_ps1profiler_layer_1",
+        "sha256": "16fb1142ed3e0b6e3bc44d70861fad876d89ae0776cacd15ac841cbec8d8654b"
+      },
+      {
+        "name": "deobfuscated_by_ps1profiler_layer_2",
         "sha256": "34543e9ea6ed60dfd9cf2216525fde89c65ee1de06b8d839003fdba2f2f3c8ca"
       }
     ],
@@ -262,6 +293,10 @@
       {
         "name": "layer_0.ps1",
         "sha256": "7fa916a80b5ae2f17b026fd3c8d0ff0734b911260a001772ed7202218c3fe491"
+      },
+      {
+        "name": "9f9ddee64a563a9ebb3e7d6f9c156ee07a884984bc31c6ab669420b549834c02",
+        "sha256": "9f9ddee64a563a9ebb3e7d6f9c156ee07a884984bc31c6ab669420b549834c02"
       },
       {
         "name": "layer_2.ps1",
@@ -337,9 +372,19 @@
           "heur_id": 1,
           "signatures": [],
           "value": "onedrive.live.com"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "onedrive.live.com"
         }
       ],
       "network.dynamic.uri": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
+        },
         {
           "heur_id": 1,
           "signatures": [],
@@ -347,6 +392,11 @@
         }
       ],
       "network.dynamic.uri_path": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
+        },
         {
           "heur_id": 1,
           "signatures": [],

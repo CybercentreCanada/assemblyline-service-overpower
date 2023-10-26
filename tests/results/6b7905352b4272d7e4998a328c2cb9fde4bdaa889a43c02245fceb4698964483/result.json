@@ -83,6 +83,33 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\n\t- http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "focusmedica.in"
+              ],
+              "uri": [
+                "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
+              ],
+              "uri_path": [
+                "/fmlib/IxBABMh0I2cLM3qq1GVv/"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -211,6 +238,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "focusmedica.in"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "focusmedica.in"
         }
       ],
       "network.dynamic.uri": [
@@ -223,6 +255,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
       ],
       "network.dynamic.uri_path": [
@@ -233,6 +270,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }

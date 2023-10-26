@@ -5,6 +5,33 @@
     "sections": [
       {
         "auto_collapse": false,
+        "body": "Aggressive FileSystem IOCs:\n\t- ..\\\nAggressive Network IOCs:\n\t- https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "arm.texchi.xyz"
+              ],
+              "uri": [
+                "https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
+              ],
+              "uri_path": [
+                "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -255,6 +282,27 @@
       }
     ],
     "tags": {
+      "network.dynamic.domain": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "arm.texchi.xyz"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
+        }
+      ],
       "network.static.domain": [
         {
           "heur_id": 1,

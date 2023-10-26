@@ -64,6 +64,27 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\n\t- github.com/john-xor/temp/blob/main/index.html?raw=true",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "github.com"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}]",
         "body_config": {
           "column_order": [
@@ -100,7 +121,7 @@
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated.ps1",
+        "name": "deobfuscated_by_ps1profiler_13e73bc0da8e7488f3be03092f0aa8a1471ff43816d48a7d901c5661a7668cc2",
         "sha256": "dd514045a1d288772c4f44ab64fb8b3eccd553e0273f669b99c1656e584e7bf8"
       }
     ],
@@ -128,6 +149,11 @@
       "network.dynamic.domain": [
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "github.com"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "github.com"
         }

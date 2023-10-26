@@ -96,6 +96,44 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive FileSystem IOCs:\nC:\\Users\\Public\\apple.png\n\t- C:ProgramDatainvoice.pdf\nAggressive Network IOCs:\nhttp://deal.real\n\t- https://transfer.sh/get/vpiHmi/invoice.pdf",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "file": {
+            "path": [
+              "C:\\Users\\Public\\apple.png",
+              "C:ProgramDatainvoice.pdf"
+            ],
+            "string": {
+              "extracted": [
+                "http://deal.real"
+              ]
+            }
+          },
+          "network": {
+            "dynamic": {
+              "domain": [
+                "transfer.sh"
+              ],
+              "uri": [
+                "https://transfer.sh/get/vpiHmi/invoice.pdf"
+              ],
+              "uri_path": [
+                "/get/vpiHmi/invoice.pdf"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -204,7 +242,12 @@
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "deobfuscated_by_ps1profiler_958ed6efd9131c1207df57aeae8b5e0635d135e53d51bbf3d2c3ea1e770d6a97",
+        "sha256": "7f19edd6c484a1324998eff332f4c2f8b3ddb8e6fa53889d7db3cc676d6957cb"
+      }
+    ],
     "supplementary": [
       {
         "name": "0d9513514e300353ae162f538801a5df0bcb61311411adab1ce48e88b8dfa1b3",
@@ -255,6 +298,16 @@
           "heur_id": 5,
           "signatures": [],
           "value": "C:ProgramDatainvoice.pdf"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "C:ProgramDatainvoice.pdf"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "C:\\Users\\Public\\apple.png"
         }
       ],
       "file.string.extracted": [
@@ -265,6 +318,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "http://deal.real"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "http://deal.real"
         },
@@ -284,6 +342,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "transfer.sh"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "transfer.sh"
         }
       ],
       "network.dynamic.uri": [
@@ -296,6 +359,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         }
       ],
       "network.dynamic.uri_path": [
@@ -306,6 +374,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "/get/vpiHmi/invoice.pdf"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "/get/vpiHmi/invoice.pdf"
         }

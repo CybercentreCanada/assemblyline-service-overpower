@@ -85,6 +85,33 @@
       },
       {
         "auto_collapse": false,
+        "body": "Aggressive Network IOCs:\n\t- https://shoru.net/db/main_db",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "shoru.net"
+              ],
+              "uri": [
+                "https://shoru.net/db/main_db"
+              ],
+              "uri_path": [
+                "/db/main_db"
+              ]
+            }
+          }
+        },
+        "title_text": "Interesting BoxPS Insights",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -281,6 +308,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "shoru.net"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "shoru.net"
         }
       ],
       "network.dynamic.uri": [
@@ -295,6 +327,11 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://shoru.net/db/main_db"
+        },
+        {
+          "heur_id": null,
+          "signatures": [],
+          "value": "https://shoru.net/db/main_db"
         }
       ],
       "network.dynamic.uri_path": [
@@ -307,6 +344,11 @@
         },
         {
           "heur_id": 1,
+          "signatures": [],
+          "value": "/db/main_db"
+        },
+        {
+          "heur_id": null,
           "signatures": [],
           "value": "/db/main_db"
         }

@@ -130,7 +130,7 @@
   "files": {
     "extracted": [
       {
-        "name": "deobfuscated.ps1",
+        "name": "deobfuscated_by_ps1profiler_e12bd3b17523762c38cb9e2d2fb151b8f7d78d3321bcd0732d971224e19f2428",
         "sha256": "64be933d42ac4186ea3fb0e6bd85adbcf86d8c7f4339d7c62c5ac567a23b0393"
       }
     ],
