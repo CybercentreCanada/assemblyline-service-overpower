@@ -83,7 +83,7 @@ jobs:
           sudo mkdir /opt/al_support/
           sudo wget https://github.com/cccs-kevin/box-ps/archive/refs/heads/master.zip -O /opt/al_support/box-ps.zip
           sudo unzip /opt/al_support/box-ps.zip -d /opt/al_support/box-ps
-          sudo env "PATH=$PATH" python -m pip install -e /opt/al_support/box-ps/box-ps-master/pyboxps-3.11/
+          sudo env "PATH=$PATH" python -m pip install -e /opt/al_support/box-ps/box-ps-master/pyboxps-3.8/
           export BOXPS="/opt/al_support/box-ps/box-ps-master"
           [ -f $(pwd)/tests/requirements.txt ] && sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r $(pwd)/tests/requirements.txt
           sudo rm -rf /tmp/* /var/lib/apt/lists/* ~/.cache/pip
