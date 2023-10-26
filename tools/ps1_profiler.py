@@ -947,7 +947,7 @@ def family_finder(content_data: str) -> Dict[str, Dict[str, List]]:
 
     # Family: Mimikittenz
     # Reference: https://github.com/putterpanda/mimikittenz/
-    if any(entry in content_data.lower() for entry in ["inspectproc", "readprocessmemory", "mimikittenz"]):
+    if all(entry in content_data.lower() for entry in ["inspectproc", "readprocessmemory", "mimikittenz"]):
         families["Mimikittenz"][STR_INDICATORS].extend(["inspectproc", "readprocessmemory", "mimikittenz"])
 
     # Family: PowerSploit
