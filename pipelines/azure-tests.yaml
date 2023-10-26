@@ -78,13 +78,17 @@ jobs:
           pwsh -Command printenv PSModulePath
           pwsh -Command Get-Module -ListAvailable -Name PSDecode
           sudo rm -rf /var/lib/apt/lists/*
+          echo "Installing pip requirements"
           sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir assemblyline assemblyline_v4_service
           [ -f $(pwd)/requirements.txt ] && sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r $(pwd)/requirements.txt
+          echo "Installing Box-PS"
           sudo mkdir /opt/al_support/
           sudo wget https://github.com/cccs-kevin/box-ps/archive/refs/heads/master.zip -O /opt/al_support/box-ps.zip
           sudo unzip /opt/al_support/box-ps.zip -d /opt/al_support/box-ps
-          sudo env "PATH=$PATH" python -m pip install -e "/opt/al_support/box-ps/box-ps-master/pyboxps-3.8/"
+          sudo env "PATH=$PATH" python -m pip install -e /opt/al_support/box-ps/box-ps-master/pyboxps-3.8.x/
           export BOXPS="/opt/al_support/box-ps/box-ps-master"
+          echo "Testing boxps"
+          boxps
           [ -f $(pwd)/tests/requirements.txt ] && sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r $(pwd)/tests/requirements.txt
           sudo rm -rf /tmp/* /var/lib/apt/lists/* ~/.cache/pip
         workingDirectory: $(full_self_location)
