@@ -6,8 +6,9 @@ ENV SERVICE_PATH overpower.Overpower
 USER root
 # Update the list of packages
 RUN apt-get update
-# Install pre-requisite packages.
-RUN apt-get install -y wget apt-transport-https software-properties-common
+# Install apt dependencies
+COPY pkglist.txt pkglist.txt
+RUN apt-get update && grep -vE '^#' pkglist.txt | xargs apt-get install -y && rm -rf /var/lib/apt/lists/*
 # Download the Microsoft repository GPG keys
 RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb
 # Register the Microsoft repository GPG keys
