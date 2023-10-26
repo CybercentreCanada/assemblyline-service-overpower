@@ -1,6 +1,6 @@
 import re
 from json import dumps
-from os import environ, getcwd, listdir, path, remove, rmdir, walk
+from os import environ, getcwd, listdir, makedirs, path, remove, rmdir, walk
 from shutil import copy
 from subprocess import PIPE, Popen, TimeoutExpired
 from time import time
@@ -14,7 +14,16 @@ from assemblyline_service_utilities.common.tag_helper import add_tag
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultTableSection, ResultTextSection
-from tools.ps1_profiler import DEOBFUS_FILE, REGEX_INDICATORS, STR_INDICATORS, SUSPICIOUS_BEHAVIOUR_COMBO, profile_ps1
+from pyboxps.boxps import BoxPS
+from pyboxps.boxps_report import BoxPSReport
+from pyboxps.errors import BoxPSScriptSyntaxError, BoxPSTimeoutError
+from tools.ps1_profiler import (
+    DEOBFUS_FILE_PREFIX,
+    REGEX_INDICATORS,
+    STR_INDICATORS,
+    SUSPICIOUS_BEHAVIOUR_COMBO,
+    profile_ps1,
+)
 
 TRANSLATE_SCORE = {
     1.0: 10,  # Low Risk (0-14% hit rate)
@@ -82,6 +91,34 @@ class Overpower(ServiceBase):
 
         return psdecode_output
 
+    def _run_boxps(self, request: ServiceRequest) -> Optional[BoxPSReport]:
+        """
+        This method runs the BoxPS tool and returns what was written to STDOUT
+        :param request: The ServiceRequest object
+        :return: A BoxPSReport representing the BoxPS analysis
+        """
+        tool_timeout = request.get_param("tool_timeout")
+
+        boxps = BoxPS(boxps_path="/opt/al_support/box-ps/box-ps-master")
+        start_time = time()
+
+        self.log.debug("Starting BoxPS...")
+        makedirs(path.join(self.working_directory, "boxps"), exist_ok=True)
+        try:
+            _, boxps_output = boxps.sandbox(
+                in_file=request.file_path,
+                out_dir=path.join(self.working_directory, "boxps"),
+                timeout=tool_timeout,
+                report_only=False,
+            )
+        except (BoxPSScriptSyntaxError, BoxPSTimeoutError):
+            boxps_output = None
+
+        time_elapsed = time() - start_time
+        self.log.debug(f"BoxPS took {round(time_elapsed)}s to complete.")
+
+        return boxps_output
+
     def _move_unsafe_new_files_to_working_dir(self) -> Set[str]:
         """
         Since we are running samples right on the Docker container, there is a chance that samples could drop
@@ -106,6 +143,9 @@ class Overpower(ServiceBase):
         for file in sorted(listdir(self.working_directory)):
             file_path = path.join(self.working_directory, file)
 
+            if path.isdir(file_path):
+                continue
+
             artifact_sha256 = get_sha256_for_file(file_path)
 
             if artifact_sha256 in [FAKE_FILE_CONTENT]:
@@ -123,6 +163,11 @@ class Overpower(ServiceBase):
         psdecode_output = self._run_psdecode(request, fake_web_download=fake_web_download)
         self._handle_psdecode_output(psdecode_output, request.result)
 
+        # Box-PS
+        boxps_output = self._run_boxps(request)
+        if boxps_output:
+            self._handle_boxps_output(boxps_output, request.result)
+
         # PowerShellProfiler
         rerun_psdecode = False
         files_to_profile = [(request.file_name, request.file_path)]
@@ -134,7 +179,9 @@ class Overpower(ServiceBase):
             ]
         )
         # We do not want a loop of PowerShellProfiler extractions
-        if request.temp_submission_data.get("deobfuscated_by_ps1profiler") and request.task.file_name == DEOBFUS_FILE:
+        if request.temp_submission_data.get("deobfuscated_by_ps1profiler") and request.task.file_name.startswith(
+            DEOBFUS_FILE_PREFIX
+        ):
             pass
         else:
             total_ps1_profiler_output: Dict[str, Any] = {}
@@ -373,6 +420,31 @@ class Overpower(ServiceBase):
         if psdecode_actions_res_sec.body:
             result.add_section(psdecode_actions_res_sec)
 
+    def _handle_boxps_output(self, output: BoxPSReport, result: Result) -> None:
+        """
+        This method converts the output from the BoxPS tool into ResultSections
+        :param output: The output from the BoxPS tool
+        :param result: A Result object containing the service results
+        :param subsequent_run: A boolean indicating if this output is from a subsquent run of BoxPS
+        :return: None
+        """
+        boxps_result_section = ResultTextSection("Interesting BoxPS Insights")
+        if output.aggressive_fs_iocs:
+            boxps_result_section.add_line("Aggressive FileSystem IOCs:")
+            boxps_result_section.add_line("\n\t".join(output.aggressive_fs_iocs))
+            for item in output.aggressive_fs_iocs:
+                if item not in ["..\\"]:
+                    boxps_result_section.add_tag("file.path", item.replace("\\C_DRIVE", "C:"))
+
+        if output.aggressive_net_iocs:
+            boxps_result_section.add_line("Aggressive Network IOCs:")
+            boxps_result_section.add_line("\n\t".join(output.aggressive_net_iocs))
+            for item in output.aggressive_net_iocs:
+                _ = add_tag(boxps_result_section, "network.dynamic.uri", item)
+
+        if boxps_result_section.body:
+            result.add_section(boxps_result_section)
+
     def _extract_supplementary(self, ps1_profiler_output: Dict[str, Any], psdecode_output: List[str]) -> None:
         """
         This method adds the stdout/output from tools as supplementary files
@@ -406,67 +478,75 @@ class Overpower(ServiceBase):
                     rmdir(dir_path)
 
         # Retrieve artifacts
-        for file in sorted(listdir(self.working_directory)):
-            file_path = path.join(self.working_directory, file)
+        for root, _, files in walk(self.working_directory):
+            for file in sorted(files):
+                file_path = path.join(root, file)
+                # Skip BoxPS execution artifacts
+                if root.endswith("boxps"):
+                    if file in ["stderr.txt", "layers.ps1", "stdout.txt"]:
+                        continue
 
-            artifact_sha256 = get_sha256_for_file(file_path)
+                artifact_sha256 = get_sha256_for_file(file_path)
 
-            if artifact_sha256 in [FAKE_FILE_CONTENT]:
-                continue
+                if artifact_sha256 in [FAKE_FILE_CONTENT]:
+                    continue
 
-            if artifact_sha256 in self.artifact_hashes:
-                self.log.debug(f"Ignoring {file_path} since it is a duplicate extracted file...")
-                # We also want to rename the artifact that this file is a duplicate of
-                # to avoid naming conflicts
-                artifact = next(
-                    (artifact for artifact in self.artifact_list if artifact["sha256"] == artifact_sha256), None
-                )
-                if artifact:
-                    artifact["name"] = artifact_sha256
-                    # If there is an extracted file with the same hash as a layer file from PSDecode, then set
-                    # that file to supplementary
-                    if "layer" in file and artifact["to_be_extracted"]:
-                        self.log.debug(f"Setting artifact {artifact_sha256} to supplmentary")
-                        artifact["to_be_extracted"] = False
-                continue
-            else:
-                self.artifact_hashes.add(artifact_sha256)
-            to_be_extracted = True
-            if DEOBFUS_FILE == file:
-                description = "De-obfuscated layer from PowerShellProfiler"
-                request.temp_submission_data["deobfuscated_by_ps1profiler"] = True
-            elif "layer" in file:
-                description = "Layer of de-obfuscated PowerShell from PSDecode"
-                # We don't want to extract these since it is redundant. PSDecode already ran on them.
-                to_be_extracted = False
-            elif "suppl" in file:
-                description = "Output from PowerShell tool"
-                to_be_extracted = False
-            else:
-                description = "Overpower Dump"
+                if artifact_sha256 in self.artifact_hashes:
+                    self.log.debug(f"Ignoring {file_path} since it is a duplicate extracted file...")
+                    # We also want to rename the artifact that this file is a duplicate of
+                    # to avoid naming conflicts
+                    artifact = next(
+                        (artifact for artifact in self.artifact_list if artifact["sha256"] == artifact_sha256), None
+                    )
+                    if artifact:
+                        artifact["name"] = artifact_sha256
+                        # If there is an extracted file with the same hash as a layer file from PSDecode, then set
+                        # that file to supplementary
+                        if "layer" in file and artifact["to_be_extracted"]:
+                            self.log.debug(f"Setting artifact {artifact_sha256} to supplmentary")
+                            artifact["to_be_extracted"] = False
+                    continue
+                else:
+                    self.artifact_hashes.add(artifact_sha256)
                 to_be_extracted = True
+                if file.startswith(DEOBFUS_FILE_PREFIX):
+                    description = "De-obfuscated layer from PowerShellProfiler"
+                    request.temp_submission_data["deobfuscated_by_ps1profiler"] = True
+                elif "layer" in file:
+                    description = "Layer of de-obfuscated PowerShell from PSDecode"
+                    # We don't want to extract these since it is redundant. PSDecode already ran on them.
+                    to_be_extracted = False
+                elif "suppl" in file:
+                    description = "Output from PowerShell tool"
+                    to_be_extracted = False
+                elif root.endswith("boxps") and file == "report.json":
+                    description = "Output from BoxPS tool"
+                    to_be_extracted = False
+                else:
+                    description = "Overpower Dump"
+                    to_be_extracted = True
 
-            if not worth_extracting and to_be_extracted:
-                self.log.debug(f"Ignoring {file_path} since the parent file is not interesting.")
-                continue
+                if not worth_extracting and to_be_extracted:
+                    self.log.debug(f"Ignoring {file_path} since the parent file is not interesting.")
+                    continue
 
-            self.artifact_list.append(
-                {
-                    "name": file,
-                    "path": file_path,
-                    "description": description,
-                    "to_be_extracted": to_be_extracted,
-                    "sha256": artifact_sha256,
-                }
-            )
+                self.artifact_list.append(
+                    {
+                        "name": file,
+                        "path": file_path,
+                        "description": description,
+                        "to_be_extracted": to_be_extracted,
+                        "sha256": artifact_sha256,
+                    }
+                )
 
-            for f in files_to_move:
-                if "/" in f:
-                    file_name = f.split("/")[-1]
-                    if file == file_name:
-                        file_type_details = self.identify.fileinfo(file_path, generate_hashes=False)
-                        self._handle_specific_written_files(file_type_details["type"], file_path, request.result)
-                        break
+                for f in files_to_move:
+                    if "/" in f:
+                        file_name = f.split("/")[-1]
+                        if file == file_name:
+                            file_type_details = self.identify.fileinfo(file_path, generate_hashes=False)
+                            self._handle_specific_written_files(file_type_details["type"], file_path, request.result)
+                            break
 
         for artifact in self.artifact_list:
             self.log.debug(
