@@ -617,6 +617,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Script Execution", "Ping"],
         ["Downloader", "Script Execution", "Mshta"],
         ["Downloader", "Imports BitsTransfer", "Deobfuscation", "Compression", "Sleeps"],
+        ["Downloader", "Script Execution", "Uses WMI"],
     ]
 
     for behaviour, checks in behaviour_col.items():
