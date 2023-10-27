@@ -25,7 +25,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n\t- \\C_DRIVE\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe",
+        "body": "\t- \\C_DRIVE\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -39,7 +39,7 @@
             ]
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "FileSystem Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {

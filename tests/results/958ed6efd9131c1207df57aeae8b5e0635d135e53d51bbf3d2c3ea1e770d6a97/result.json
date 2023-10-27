@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 23,
+    "score": 24,
     "sections": [
       {
         "auto_collapse": false,
@@ -96,7 +96,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\nC:\\Users\\Public\\apple.png\n\t- C:ProgramDatainvoice.pdf\nAggressive Network IOCs:\nhttp://deal.real\n\t- https://transfer.sh/get/vpiHmi/invoice.pdf",
+        "body": "\t- C:\\Users\\Public\\apple.png\n\t- C:ProgramDatainvoice.pdf",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -108,7 +108,30 @@
             "path": [
               "C:\\Users\\Public\\apple.png",
               "C:ProgramDatainvoice.pdf"
-            ],
+            ]
+          }
+        },
+        "title_text": "FileSystem Actions detected by Box-PS",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "\t- http://deal.real\n\t- https://transfer.sh/get/vpiHmi/invoice.pdf",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 7,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "promote_to": null,
+        "tags": {
+          "file": {
             "string": {
               "extracted": [
                 "http://deal.real"
@@ -129,7 +152,7 @@
             }
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -285,6 +308,11 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 7,
+        "signatures": []
       }
     ],
     "tags": {
@@ -322,7 +350,7 @@
           "value": "http://deal.real"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "http://deal.real"
         },
@@ -344,7 +372,7 @@
           "value": "transfer.sh"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "transfer.sh"
         }
@@ -361,7 +389,7 @@
           "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         }
@@ -378,7 +406,7 @@
           "value": "/get/vpiHmi/invoice.pdf"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "/get/vpiHmi/invoice.pdf"
         }

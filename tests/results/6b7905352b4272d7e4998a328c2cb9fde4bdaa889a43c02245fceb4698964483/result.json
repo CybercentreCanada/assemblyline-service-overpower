@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 13,
+    "score": 14,
     "sections": [
       {
         "auto_collapse": false,
@@ -83,12 +83,19 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\n\t- http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/",
+        "body": "\t- http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 7,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
         "promote_to": null,
         "tags": {
           "network": {
@@ -105,7 +112,7 @@
             }
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -218,6 +225,11 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 7,
+        "signatures": []
       }
     ],
     "tags": {
@@ -240,7 +252,7 @@
           "value": "focusmedica.in"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "focusmedica.in"
         }
@@ -257,7 +269,7 @@
           "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }
@@ -274,7 +286,7 @@
           "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "/fmlib/IxBABMh0I2cLM3qq1GVv/"
         }

@@ -14,7 +14,7 @@ from assemblyline_service_utilities.common.dynamic_service_helper import Ontolog
 from assemblyline_service_utilities.common.tag_helper import add_tag
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Result, ResultTableSection, ResultTextSection
+from assemblyline_v4_service.common.result import Heuristic, Result, ResultTableSection, ResultTextSection
 from pyboxps.boxps import BoxPS
 from pyboxps.boxps_report import BoxPSReport
 from pyboxps.errors import BoxPSScriptSyntaxError, BoxPSTimeoutError
@@ -40,6 +40,9 @@ INVOKE_EXPRESSION_ACTION = "[Invoke-Expression]"
 
 # The SHA256 representation when PSDecode creates a fake file when pretending to download something
 FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e3b9f8"
+
+# This regular expression is used to find GPG keys statically in the code
+GPG_KEY_REGEX = r"(?:^|\n).*\becho\b\s*['\"]([a-zA-Z0-9]+)['\"]\s*\|.*\bgpg\b.*"
 
 
 class Overpower(ServiceBase):
@@ -94,9 +97,9 @@ class Overpower(ServiceBase):
 
     def _run_boxps(self, request: ServiceRequest) -> Optional[BoxPSReport]:
         """
-        This method runs the BoxPS tool and returns what was written to STDOUT
+        This method runs the Box-PS tool and returns what was written to STDOUT
         :param request: The ServiceRequest object
-        :return: A BoxPSReport representing the BoxPS analysis
+        :return: A BoxPSReport representing the Box-PS analysis
         """
         tool_timeout = request.get_param("tool_timeout")
 
@@ -116,7 +119,7 @@ class Overpower(ServiceBase):
             boxps_output = None
 
         time_elapsed = time() - start_time
-        self.log.debug(f"BoxPS took {round(time_elapsed)}s to complete.")
+        self.log.debug(f"Box-PS took {round(time_elapsed)}s to complete.")
 
         return boxps_output
 
@@ -212,6 +215,8 @@ class Overpower(ServiceBase):
             psdecode_output = self._run_psdecode(request, fake_web_download=False)
             self._handle_psdecode_output(psdecode_output, request.result, subsequent_run=True)
 
+        self.gpg_key_hunter(request)
+
         if add_supplementary:
             self._extract_supplementary(total_ps1_profiler_output, psdecode_output)
 
@@ -303,7 +308,7 @@ class Overpower(ServiceBase):
                 for result_section in result.sections:
                     if (
                         result_section.heuristic
-                        and result_section.heuristic.heur_id == 5
+                        and result_section.heuristic.heur_id in [5, 7]
                         and any("network" in key for key in result_section.tags.keys())
                     ):
                         self.log.debug(
@@ -311,7 +316,6 @@ class Overpower(ServiceBase):
                         )
                         result_section.heuristic.add_signature_id("suspicious_behaviour_combo_url")
                         suspicious_behaviour_combo_url_sig = True
-                        break
 
         if len(suspicious_res_sec.subsections) > 0 or suspicious_res_sec.heuristic is not None:
             result.add_section(suspicious_res_sec)
@@ -423,34 +427,33 @@ class Overpower(ServiceBase):
 
     def _handle_boxps_output(self, output: BoxPSReport, result: Result) -> None:
         """
-        This method converts the output from the BoxPS tool into ResultSections
-        :param output: The output from the BoxPS tool
+        This method converts the output from the Box-PS tool into ResultSections
+        :param output: The output from the Box-PS tool
         :param result: A Result object containing the service results
         :param subsequent_run: A boolean indicating if this output is from a subsquent run of BoxPS
         :return: None
         """
-        boxps_result_section = ResultTextSection("Interesting BoxPS Insights")
         if output.aggressive_fs_iocs:
-            boxps_result_section.add_line("Aggressive FileSystem IOCs:")
+            boxps_fs_section = ResultTextSection("FileSystem Actions detected by Box-PS")
             if len(output.aggressive_fs_iocs) == 1:
-                boxps_result_section.add_line(f"\t- {output.aggressive_fs_iocs[0]}")
+                boxps_fs_section.add_line(f"\t- {output.aggressive_fs_iocs[0]}")
             else:
-                boxps_result_section.add_line("\n\t- ".join(output.aggressive_fs_iocs))
+                boxps_fs_section.add_line("\t- " + "\n\t- ".join(output.aggressive_fs_iocs))
             for item in output.aggressive_fs_iocs:
                 if item not in ["..\\"]:
-                    boxps_result_section.add_tag("file.path", item.replace("\\C_DRIVE", "C:"))
+                    boxps_fs_section.add_tag("file.path", item.replace("\\C_DRIVE", "C:"))
+            result.add_section(boxps_fs_section)
 
         if output.aggressive_net_iocs:
-            boxps_result_section.add_line("Aggressive Network IOCs:")
+            heur = Heuristic(7)
+            boxps_net_section = ResultTextSection(heur.name, heuristic=heur)
             if len(output.aggressive_net_iocs) == 1:
-                boxps_result_section.add_line(f"\t- {output.aggressive_net_iocs[0]}")
+                boxps_net_section.add_line(f"\t- {output.aggressive_net_iocs[0]}")
             else:
-                boxps_result_section.add_line("\n\t- ".join(output.aggressive_net_iocs))
+                boxps_net_section.add_line("\t- " + "\n\t- ".join(output.aggressive_net_iocs))
             for item in output.aggressive_net_iocs:
-                _ = add_tag(boxps_result_section, "network.dynamic.uri", item)
-
-        if boxps_result_section.body:
-            result.add_section(boxps_result_section)
+                _ = add_tag(boxps_net_section, "network.dynamic.uri", item)
+            result.add_section(boxps_net_section)
 
     def _extract_supplementary(self, ps1_profiler_output: Dict[str, Any], psdecode_output: List[str]) -> None:
         """
@@ -492,7 +495,7 @@ class Overpower(ServiceBase):
         for root, _, files in walk(self.working_directory):
             for file in sorted(files):
                 file_path = path.join(root, file)
-                # Skip BoxPS execution artifacts
+                # Skip Box-PS execution artifacts
                 if root.endswith("boxps"):
                     # These files are handled in _extract_supplementary
                     if file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
@@ -566,6 +569,13 @@ class Overpower(ServiceBase):
 
     @staticmethod
     def _handle_specific_written_files(file_type: str, file_path: str, result: Result) -> None:
+        """
+        This method looks for iocs in batch files and assigns signatures if applicable
+        :param file_type: The type of the written file to be handled
+        :param file_path: The path of the written file to be handled
+        :param result: A Result object containing the service results
+        :return: None
+        """
         if file_type == "code/batch":
             with open(file_path, "r") as f:
                 body = f.read()
@@ -575,3 +585,21 @@ class Overpower(ServiceBase):
                 url_sec.set_heuristic(4)
                 url_sec.heuristic.add_signature_id("suspicious_url_found")
                 result.add_section(url_sec)
+
+    @staticmethod
+    def gpg_key_hunter(request: ServiceRequest) -> None:
+        """
+        This method looks for GPG keys statically used in the code
+        :param request: The ServiceRequest object
+        :return: None
+        """
+        matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode())
+
+        if not matches:
+            return
+
+        if "passwords" in request.temp_submission_data and isinstance(request.temp_submission_data["passwords"], list):
+            request.temp_submission_data["passwords"].extend(set(matches))
+        else:
+            request.temp_submission_data["passwords"] = sorted(set(matches))
+        request.temp_submission_data["passwords"].sort()
