@@ -1,16 +1,38 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1121,
+    "score": 1621,
     "sections": [
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n\t- ..\\\nAggressive Network IOCs:\n\t- https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY",
+        "body": "\t- ..\\",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
         "heuristic": null,
+        "promote_to": null,
+        "tags": {},
+        "title_text": "FileSystem Actions detected by Box-PS",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "\t- https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 7,
+          "score": 500,
+          "score_map": {},
+          "signatures": {
+            "suspicious_behaviour_combo_url": 1
+          }
+        },
         "promote_to": null,
         "tags": {
           "network": {
@@ -27,7 +49,7 @@
             }
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -279,27 +301,40 @@
         "signatures": [
           "Mshta"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 7,
+        "signatures": [
+          "suspicious_behaviour_combo_url"
+        ]
       }
     ],
     "tags": {
       "network.dynamic.domain": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "arm.texchi.xyz"
         }
       ],
       "network.dynamic.uri": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
         }
       ],
       "network.dynamic.uri_path": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
         }
       ],

@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 3,
+    "score": 4,
     "sections": [
       {
         "auto_collapse": false,
@@ -64,12 +64,19 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\n\t- github.com/john-xor/temp/blob/main/index.html?raw=true",
+        "body": "\t- github.com/john-xor/temp/blob/main/index.html?raw=true",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 7,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
         "promote_to": null,
         "tags": {
           "network": {
@@ -80,7 +87,7 @@
             }
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -143,6 +150,11 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 7,
+        "signatures": []
       }
     ],
     "tags": {
@@ -153,7 +165,7 @@
           "value": "github.com"
         },
         {
-          "heur_id": null,
+          "heur_id": 7,
           "signatures": [],
           "value": "github.com"
         }

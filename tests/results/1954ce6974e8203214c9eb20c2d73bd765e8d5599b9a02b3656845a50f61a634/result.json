@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 633,
+    "score": 1133,
     "sections": [
       {
         "auto_collapse": false,
@@ -65,12 +65,21 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive Network IOCs:\n\t- https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0",
+        "body": "\t- https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
         "depth": 0,
-        "heuristic": null,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 7,
+          "score": 500,
+          "score_map": {},
+          "signatures": {
+            "suspicious_behaviour_combo_url": 1
+          }
+        },
         "promote_to": null,
         "tags": {
           "network": {
@@ -87,7 +96,7 @@
             }
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -359,6 +368,13 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 7,
+        "signatures": [
+          "suspicious_behaviour_combo_url"
+        ]
       }
     ],
     "tags": {
@@ -374,15 +390,19 @@
           "value": "onedrive.live.com"
         },
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "onedrive.live.com"
         }
       ],
       "network.dynamic.uri": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
         },
         {
@@ -393,8 +413,10 @@
       ],
       "network.dynamic.uri_path": [
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
         },
         {

@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1032,
+    "score": 1532,
     "sections": [
       {
         "auto_collapse": false,
@@ -85,7 +85,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n\t- %APPDATA%\\svhost.exe\nAggressive Network IOCs:\n\t- https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe",
+        "body": "\t- %APPDATA%\\svhost.exe",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -97,7 +97,30 @@
             "path": [
               "%APPDATA%\\svhost.exe"
             ]
-          },
+          }
+        },
+        "title_text": "FileSystem Actions detected by Box-PS",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "\t- https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 7,
+          "score": 500,
+          "score_map": {},
+          "signatures": {
+            "suspicious_behaviour_combo_url": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {
           "network": {
             "dynamic": {
               "domain": [
@@ -112,7 +135,7 @@
             }
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -320,6 +343,13 @@
         "signatures": [
           "suspicious_behaviour_combo_url"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 7,
+        "signatures": [
+          "suspicious_behaviour_combo_url"
+        ]
       }
     ],
     "tags": {
@@ -351,8 +381,10 @@
           "value": "oiartzunirratia.eus"
         },
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "oiartzunirratia.eus"
         }
       ],
@@ -370,8 +402,10 @@
           "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
         },
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
         }
       ],
@@ -389,8 +423,10 @@
           "value": "/install/clean/Lcovlccdxd.exe"
         },
         {
-          "heur_id": null,
-          "signatures": [],
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "/install/clean/Lcovlccdxd.exe"
         }
       ],

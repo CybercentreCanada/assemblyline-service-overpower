@@ -78,6 +78,14 @@ heuristics:
     filetype: '.*'
     description: Ps1 Profiler detected Mshta.exe being used for downloading
 
+  - heur_id: 7
+    name: Network Actions detected by Box-PS
+    score: 1
+    filetype: '.*'
+    description: Box-PS detected aggressive network indicators
+    signature_score_map:
+      suspicious_behaviour_combo_url: 500
+
 docker_config:
   allow_internet_access: false
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG

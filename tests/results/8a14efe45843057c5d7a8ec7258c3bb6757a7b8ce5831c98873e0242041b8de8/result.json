@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "Aggressive FileSystem IOCs:\n\\C_DRIVE\\Users\\victim\\AppData\\Roaming\\swiftcr.exe\n\t- \\C_DRIVE\\Users\\victim\\AppData\\Roaming\\userpref.dll\n\t- HKCU:\\Control Panel\\Desktop\n\t- U:\\Control",
+        "body": "\t- \\C_DRIVE\\Users\\victim\\AppData\\Roaming\\swiftcr.exe\n\t- \\C_DRIVE\\Users\\victim\\AppData\\Roaming\\userpref.dll\n\t- HKCU:\\Control Panel\\Desktop\n\t- U:\\Control",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -22,7 +22,7 @@
             ]
           }
         },
-        "title_text": "Interesting BoxPS Insights",
+        "title_text": "FileSystem Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
