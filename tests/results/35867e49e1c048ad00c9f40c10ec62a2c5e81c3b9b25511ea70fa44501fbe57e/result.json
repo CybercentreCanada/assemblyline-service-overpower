@@ -521,10 +521,6 @@
   "files": {
     "extracted": [
       {
-        "name": "params.json",
-        "sha256": "442e6d03fa43babce8f908c0c3e1f7308c0e4e810fd3ea1040ca7c88eabd7fb7"
-      },
-      {
         "name": "deobfuscated_by_ps1profiler_35867e49e1c048ad00c9f40c10ec62a2c5e81c3b9b25511ea70fa44501fbe57e",
         "sha256": "bc9fddd2e33ece40965564940a4d42e88fcc7975190807e2b0817f91c40ad586"
       }
