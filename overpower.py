@@ -593,7 +593,10 @@ class Overpower(ServiceBase):
         :param request: The ServiceRequest object
         :return: None
         """
-        matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode())
+        try:
+            matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode())
+        except Exception:
+            matches = []
 
         if not matches:
             return
