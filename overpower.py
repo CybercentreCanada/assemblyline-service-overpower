@@ -11,7 +11,9 @@ from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.forge import get_identify
 from assemblyline.common.str_utils import safe_str, truncate
 from assemblyline_service_utilities.common.dynamic_service_helper import OntologyResults, extract_iocs_from_text_blob
+from assemblyline_service_utilities.common.safelist_helper import is_tag_safelisted
 from assemblyline_service_utilities.common.tag_helper import add_tag
+from assemblyline_v4_service.common.api import ServiceAPIError
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Heuristic, Result, ResultTableSection, ResultTextSection
@@ -52,6 +54,14 @@ class Overpower(ServiceBase):
         self.artifact_list = None
         self.safe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
         self.identify = get_identify(use_cache=environ.get("PRIVILEGED", "false").lower() == "true")
+        self.safelist: Dict[str, Dict[str, List[str]]] = {}
+
+    def start(self):
+        try:
+            self.safelist = self.get_api_interface().get_safelist()
+        except ServiceAPIError as e:
+            self.log.warning(f"Couldn't retrieve safelist from service: {e}. Continuing without it..")
+            self.safelist = {}
 
     def _run_psdecode(self, request: ServiceRequest, fake_web_download: bool = True) -> List[str]:
         """
@@ -348,7 +358,9 @@ class Overpower(ServiceBase):
                     static_file_lines.append(line)
             ioc_res_sec = ResultTableSection(f"IOC(s) extracted from {file_name}")
             for static_file_line in static_file_lines:
-                extract_iocs_from_text_blob(truncate(static_file_line, 1000), ioc_res_sec, is_network_static=True)
+                extract_iocs_from_text_blob(
+                    truncate(static_file_line, 1000), ioc_res_sec, is_network_static=True, safelist=self.safelist
+                )
             if ioc_res_sec.body:
                 # Removing duplicate IOCs
                 for tag, values in ioc_res_sec.tags.items():
@@ -447,13 +459,19 @@ class Overpower(ServiceBase):
         if output.aggressive_net_iocs:
             heur = Heuristic(7)
             boxps_net_section = ResultTextSection(heur.name, heuristic=heur)
-            if len(output.aggressive_net_iocs) == 1:
-                boxps_net_section.add_line(f"\t- {output.aggressive_net_iocs[0]}")
+            boxps_iocs = [
+                ioc
+                for ioc in output.aggressive_net_iocs
+                if not is_tag_safelisted(ioc, ["network.dynamic.domain", "network.dynamic.uri"], self.safelist)
+            ]
+            if len(boxps_iocs) == 1:
+                boxps_net_section.add_line(f"\t- {boxps_iocs[0]}")
             else:
-                boxps_net_section.add_line("\t- " + "\n\t- ".join(output.aggressive_net_iocs))
-            for item in output.aggressive_net_iocs:
+                boxps_net_section.add_line("\t- " + "\n\t- ".join(boxps_iocs))
+            for item in boxps_iocs:
                 _ = add_tag(boxps_net_section, "network.dynamic.uri", item)
-            result.add_section(boxps_net_section)
+            if boxps_net_section.body:
+                result.add_section(boxps_net_section)
 
     def _extract_supplementary(self, ps1_profiler_output: Dict[str, Any], psdecode_output: List[str]) -> None:
         """
