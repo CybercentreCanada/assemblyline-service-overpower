@@ -1907,7 +1907,12 @@ def profile_ps1(sample_path, working_dir):
     # Open file for processing, ignore errors
     with open(sample_path, "rb") as fh:
         try:
-            original_data = fh.read().decode()
+            file_contents = fh.read()
+            if file_contents.startswith(b"\xff\xfe"):
+                original_data = file_contents.decode("utf-16")
+            else:
+                original_data = file_contents.decode()
+
         except UnicodeDecodeError as e:
             print(f"Could not decode {sample_path} due to {e}.")
             original_data = ""
