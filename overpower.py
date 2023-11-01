@@ -612,7 +612,10 @@ class Overpower(ServiceBase):
         :return: None
         """
         try:
-            matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode())
+            if request.file_contents.startswith(b"\xff\xfe"):
+                matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode("utf-16"))
+            else:
+                matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode())
         except Exception:
             matches = []
 
