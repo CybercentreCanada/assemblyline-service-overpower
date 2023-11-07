@@ -4,7 +4,8 @@ from os import environ, getcwd, listdir, makedirs, path, remove, rmdir, walk
 from shutil import copy
 from shutil import move as shutil_move
 from subprocess import PIPE, Popen, TimeoutExpired
-from time import time
+from threading import Thread
+from time import sleep, time
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from assemblyline.common.digests import get_sha256_for_file
@@ -19,7 +20,7 @@ from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Heuristic, Result, ResultTableSection, ResultTextSection
 from pyboxps.boxps import BoxPS
 from pyboxps.boxps_report import BoxPSReport
-from pyboxps.errors import BoxPSScriptSyntaxError, BoxPSTimeoutError
+from pyboxps.errors import BoxPSReportError, BoxPSScriptSyntaxError, BoxPSTimeoutError
 from tools.ps1_profiler import (
     DEOBFUS_FILE_PREFIX,
     REGEX_INDICATORS,
@@ -46,6 +47,11 @@ FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e
 # This regular expression is used to find GPG keys statically in the code
 GPG_KEY_REGEX = r"(?:^|\n).*\becho\b\s*['\"]([a-zA-Z0-9]+)['\"]\s*\|.*\bgpg\b.*"
 
+# Enumerations
+PSDECODE = "PSDecode"
+BOX_PS = "Box-PS"
+PS1_PROFILER = "PowerShellProfiler"
+
 
 class Overpower(ServiceBase):
     def __init__(self, config: Optional[Dict] = None) -> None:
@@ -63,47 +69,37 @@ class Overpower(ServiceBase):
             self.log.warning(f"Couldn't retrieve safelist from service: {e}. Continuing without it..")
             self.safelist = {}
 
-    def _run_psdecode(self, request: ServiceRequest, fake_web_download: bool = True) -> List[str]:
+    def _run_tool(
+        self,
+        tool_name: str,
+        args: List[str],
+        resp: Dict[str, Any],
+    ) -> None:
         """
-        This method runs the PSDecode tool and returns what was written to STDOUT
-        :param request: The ServiceRequest object
-        :param fake_web_download: A flag that is used for indicating if a web request to download a file to disk should be faked.
-        :return: A list of strings representing each line that PSDecode wrote to STDOUT
+        This method runs a tool and appends the stdout from that tool to the dictionary
+        :param tool_name: The name of the tool to be run
+        :param args: A list of arguments to use to run the tool
+        :param resp: A dictionary used to contain the stdout from a tool
+        :return: None
         """
-        tool_timeout = request.get_param("tool_timeout")
-
-        args = [
-            "pwsh",
-            "-Command",
-            "PSDecode",
-            request.file_path,
-            "-verbose",
-            "-dump",
-            self.working_directory,
-            "-timeout",
-            f"{tool_timeout}",
-        ]
-
-        if fake_web_download:
-            args.append("-fakefile")
-
+        self.log.debug(f"Running {tool_name}...")
         start_time = time()
-        psdecode_output: List[str] = []
-        self.log.debug("Starting PSDecode...")
+        resp[tool_name] = []
         try:
-            # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform
-            # the deobfuscation when setting the tool_timeout param...
             # Stream stdout to resp rather than waiting for process to finish
-            with Popen(args=args, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+            with Popen(
+                args=args,
+                stdout=PIPE,
+                bufsize=1,
+                universal_newlines=True,
+            ) as p:
                 for line in p.stdout:
-                    psdecode_output.append(line)
+                    resp[tool_name].append(line)
         except TimeoutExpired:
-            self.log.debug(f"PSDecode took longer than {tool_timeout}s to complete.")
-
-        time_elapsed = time() - start_time
-        self.log.debug(f"PSDecode took {round(time_elapsed)}s to complete.")
-
-        return psdecode_output
+            pass
+        except Exception as e:
+            self.log.warning(f"{tool_name} crashed due to {repr(e)}")
+        self.log.debug(f"Completed running {tool_name}! Time elapsed: {round(time() - start_time)}s")
 
     def _run_boxps(self, request: ServiceRequest) -> Optional[BoxPSReport]:
         """
@@ -116,7 +112,7 @@ class Overpower(ServiceBase):
         boxps = BoxPS(boxps_path="/opt/al_support/box-ps/box-ps-master")
         start_time = time()
 
-        self.log.debug("Starting BoxPS...")
+        self.log.debug(f"Starting {BOX_PS}...")
         makedirs(path.join(self.working_directory, "boxps"), exist_ok=True)
         try:
             _, boxps_output = boxps.sandbox(
@@ -125,11 +121,11 @@ class Overpower(ServiceBase):
                 timeout=tool_timeout,
                 report_only=False,
             )
-        except (BoxPSScriptSyntaxError, BoxPSTimeoutError):
+        except (BoxPSReportError, BoxPSScriptSyntaxError, BoxPSTimeoutError):
             boxps_output = None
 
         time_elapsed = time() - start_time
-        self.log.debug(f"Box-PS took {round(time_elapsed)}s to complete.")
+        self.log.debug(f"{BOX_PS} took {round(time_elapsed)}s to complete.")
 
         return boxps_output
 
@@ -163,19 +159,52 @@ class Overpower(ServiceBase):
             artifact_sha256 = get_sha256_for_file(file_path)
 
             if artifact_sha256 in [FAKE_FILE_CONTENT]:
-                self.log.debug(f"Removed fake file '{file}' in preparation for subsequent PSDecode run...")
+                self.log.debug(f"Removed fake file '{file}' in preparation for subsequent {PSDECODE} run...")
                 remove(file_path)
+
+    def _setup_psdecode_args(
+        self, request: ServiceRequest, tool_timeout: int, fake_web_download: bool = False
+    ) -> List[str]:
+        psdecode_args = [
+            "pwsh",
+            "-Command",
+            PSDECODE,
+            request.file_path,
+            "-verbose",
+            "-dump",
+            self.working_directory,
+            "-timeout",
+            f"{tool_timeout}",
+        ]
+
+        if fake_web_download:
+            psdecode_args.append("-fakefile")
+
+        return psdecode_args
 
     def execute(self, request: ServiceRequest) -> None:
         self.artifact_hashes = set()
         self.artifact_list: List[Dict[str, Any]] = []
         add_supplementary = request.get_param("add_supplementary")
         request.result = Result()
+        responses: Dict[str, List[str]] = {}
 
-        # PSDecode
+        # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform
+        # the deobfuscation when setting the tool_timeout param...
         fake_web_download = request.get_param("fake_web_download")
-        psdecode_output = self._run_psdecode(request, fake_web_download=fake_web_download)
-        self._handle_psdecode_output(psdecode_output, request.result)
+        tool_timeout = request.get_param("tool_timeout")
+
+        psdecode_args = self._setup_psdecode_args(request, tool_timeout, fake_web_download)
+        psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
+        psdecode_thr.start()
+
+        psdecode_thr.join(timeout=tool_timeout)
+        if psdecode_thr.is_alive():
+            self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
+            # Give the tool a chance to clean up after to the tool timeout
+            sleep(3)
+
+        self._handle_psdecode_output(responses[PSDECODE], request.result)
 
         # Box-PS
         boxps_output = self._run_boxps(request)
@@ -200,7 +229,7 @@ class Overpower(ServiceBase):
         else:
             total_ps1_profiler_output: Dict[str, Any] = {}
             start_time = time()
-            self.log.debug("Starting PowerShellProfiler...")
+            self.log.debug(f"Starting {PS1_PROFILER}...")
             for file_to_profile, file_path in files_to_profile:
                 self.log.debug(f"Profiling {file_to_profile}")
                 total_ps1_profiler_output[file_to_profile] = profile_ps1(file_path, self.working_directory)
@@ -216,19 +245,27 @@ class Overpower(ServiceBase):
                 self.log.debug(f"Completed profiling {file_to_profile}")
 
             time_elapsed = time() - start_time
-            self.log.debug(f"PS1Profiler took {round(time_elapsed)}s to complete.")
+            self.log.debug(f"{PS1_PROFILER} took {round(time_elapsed)}s to complete.")
 
         if rerun_psdecode:
             # First, remove fake files
             self._remove_fake_files()
             # We do not want to fake a successful web download on this second run
-            psdecode_output = self._run_psdecode(request, fake_web_download=False)
-            self._handle_psdecode_output(psdecode_output, request.result, subsequent_run=True)
+            responses[PSDECODE].clear()
+            psdecode_args = self._setup_psdecode_args(request, tool_timeout)
+            psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
+            psdecode_thr.start()
+            psdecode_thr.join(timeout=tool_timeout)
+            if psdecode_thr.is_alive():
+                self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
+                # Give the tool a chance to clean up after to the tool timeout
+                sleep(3)
+            self._handle_psdecode_output(responses[PSDECODE], request.result, subsequent_run=True)
 
         self.gpg_key_hunter(request)
 
         if add_supplementary:
-            self._extract_supplementary(total_ps1_profiler_output, psdecode_output)
+            self._extract_supplementary(total_ps1_profiler_output, responses[PSDECODE])
 
         worth_extracting = len(request.result.sections) > 0
         self.artifact_hashes.add(request.sha256)
@@ -402,9 +439,9 @@ class Overpower(ServiceBase):
                 actions = output[index + 1 :]
                 break
         if not subsequent_run:
-            psdecode_actions_res_sec = ResultTextSection("Actions detected with PSDecode")
+            psdecode_actions_res_sec = ResultTextSection(f"Actions detected with {PSDECODE}")
         else:
-            psdecode_actions_res_sec = ResultTextSection("Actions detected with subsequent run of PSDecode")
+            psdecode_actions_res_sec = ResultTextSection(f"Actions detected with subsequent run of {PSDECODE}")
 
         psdecode_actions_res_sec.set_heuristic(5)
 
@@ -446,7 +483,7 @@ class Overpower(ServiceBase):
         :return: None
         """
         if output.aggressive_fs_iocs:
-            boxps_fs_section = ResultTextSection("FileSystem Actions detected by Box-PS")
+            boxps_fs_section = ResultTextSection(f"FileSystem Actions detected by {BOX_PS}")
             if len(output.aggressive_fs_iocs) == 1:
                 boxps_fs_section.add_line(f"\t- {output.aggressive_fs_iocs[0]}")
             else:
@@ -543,10 +580,10 @@ class Overpower(ServiceBase):
                     self.artifact_hashes.add(artifact_sha256)
                 to_be_extracted = True
                 if file.startswith(DEOBFUS_FILE_PREFIX):
-                    description = "De-obfuscated layer from PowerShellProfiler"
+                    description = f"De-obfuscated layer from {PS1_PROFILER}"
                     request.temp_submission_data["deobfuscated_by_ps1profiler"] = True
                 elif file.startswith("layer"):
-                    description = "Layer of de-obfuscated PowerShell from PSDecode"
+                    description = f"Layer of de-obfuscated PowerShell from {PSDECODE}"
                     # We don't want to extract these since it is redundant. PSDecode already ran on them.
                     to_be_extracted = False
                 elif file.startswith("suppl_"):
