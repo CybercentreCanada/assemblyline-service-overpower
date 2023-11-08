@@ -20,7 +20,7 @@ from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Heuristic, Result, ResultTableSection, ResultTextSection
 from pyboxps.boxps import BoxPS
 from pyboxps.boxps_report import BoxPSReport
-from pyboxps.errors import BoxPSReportError, BoxPSScriptSyntaxError, BoxPSTimeoutError
+from pyboxps.errors import BoxPSReportError, BoxPSSandboxError, BoxPSScriptSyntaxError, BoxPSTimeoutError
 from tools.ps1_profiler import (
     DEOBFUS_FILE_PREFIX,
     REGEX_INDICATORS,
@@ -121,7 +121,7 @@ class Overpower(ServiceBase):
                 timeout=tool_timeout,
                 report_only=False,
             )
-        except (BoxPSReportError, BoxPSScriptSyntaxError, BoxPSTimeoutError):
+        except (BoxPSReportError, BoxPSSandboxError, BoxPSScriptSyntaxError, BoxPSTimeoutError):
             boxps_output = None
 
         time_elapsed = time() - start_time
