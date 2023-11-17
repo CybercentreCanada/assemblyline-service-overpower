@@ -91,7 +91,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"arm.texchi.xyz\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D\"}]",
+        "body": [
+          {
+            "ioc": "arm.texchi.xyz",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY%3D",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",

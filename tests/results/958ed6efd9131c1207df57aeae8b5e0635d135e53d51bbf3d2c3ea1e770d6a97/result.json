@@ -50,7 +50,24 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://deal.real\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
+        "body": [
+          {
+            "ioc": "transfer.sh",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "http://deal.real",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://transfer.sh/get/vpiHmi/invoice.pdf",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/get/vpiHmi/invoice.pdf",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -218,7 +235,24 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"transfer.sh\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://deal.real\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://transfer.sh/get/vpiHmi/invoice.pdf\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/get/vpiHmi/invoice.pdf\"}]",
+        "body": [
+          {
+            "ioc": "transfer.sh",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "http://deal.real",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://transfer.sh/get/vpiHmi/invoice.pdf",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/get/vpiHmi/invoice.pdf",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",

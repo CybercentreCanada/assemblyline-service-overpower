@@ -46,7 +46,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"shoru.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://shoru.net/db/main_db\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/db/main_db\"}]",
+        "body": [
+          {
+            "ioc": "shoru.net",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://shoru.net/db/main_db",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/db/main_db",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -206,7 +219,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"shoru.net\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://shoru.net/db/main_db\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/db/main_db\"}]",
+        "body": [
+          {
+            "ioc": "shoru.net",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://shoru.net/db/main_db",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/db/main_db",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",

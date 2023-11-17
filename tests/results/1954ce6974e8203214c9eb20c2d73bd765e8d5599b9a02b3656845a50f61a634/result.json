@@ -25,7 +25,24 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}]",
+        "body": [
+          {
+            "ioc": "google.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "onedrive.live.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -247,7 +264,24 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"google.com\"}, {\"ioc_type\": \"domain\", \"ioc\": \"onedrive.live.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\"}]",
+        "body": [
+          {
+            "ioc": "google.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "onedrive.live.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
