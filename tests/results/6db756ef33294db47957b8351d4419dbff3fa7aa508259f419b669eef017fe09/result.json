@@ -49,7 +49,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"103.10.68.110\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://103.10.68.110/zimbra/Tekstli.asd\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/zimbra/Tekstli.asd\"}]",
+        "body": [
+          {
+            "ioc": "103.10.68.110",
+            "ioc_type": "ip"
+          },
+          {
+            "ioc": "http://103.10.68.110/zimbra/Tekstli.asd",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/zimbra/Tekstli.asd",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
