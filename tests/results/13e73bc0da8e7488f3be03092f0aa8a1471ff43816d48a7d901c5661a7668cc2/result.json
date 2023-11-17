@@ -25,7 +25,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://github.com/john-xor/temp/blob/main/index.html?raw=true\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/john-xor/temp/blob/main/index.html?raw=true\"}]",
+        "body": [
+          {
+            "ioc": "github.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "http://github.com/john-xor/temp/blob/main/index.html?raw=true",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/john-xor/temp/blob/main/index.html?raw=true",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -92,7 +105,12 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"github.com\"}]",
+        "body": [
+          {
+            "ioc": "github.com",
+            "ioc_type": "domain"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",

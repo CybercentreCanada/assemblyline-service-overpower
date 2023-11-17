@@ -46,7 +46,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"www.4sync.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580\"}]",
+        "body": [
+          {
+            "ioc": "www.4sync.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
@@ -345,7 +358,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"domain\", \"ioc\": \"www.4sync.com\"}, {\"ioc_type\": \"uri\", \"ioc\": \"https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580\"}]",
+        "body": [
+          {
+            "ioc": "www.4sync.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",

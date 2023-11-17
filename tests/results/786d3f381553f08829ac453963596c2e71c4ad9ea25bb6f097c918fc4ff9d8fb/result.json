@@ -162,7 +162,20 @@
       },
       {
         "auto_collapse": false,
-        "body": "[{\"ioc_type\": \"ip\", \"ioc\": \"159.203.143.66\"}, {\"ioc_type\": \"uri\", \"ioc\": \"http://159.203.143.66/r/\"}, {\"ioc_type\": \"uri_path\", \"ioc\": \"/r/\"}]",
+        "body": [
+          {
+            "ioc": "159.203.143.66",
+            "ioc_type": "ip"
+          },
+          {
+            "ioc": "http://159.203.143.66/r/",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/r/",
+            "ioc_type": "uri_path"
+          }
+        ],
         "body_config": {
           "column_order": [
             "ioc_type",
