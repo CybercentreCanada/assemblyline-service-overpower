@@ -335,7 +335,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Get-Random -count 16", "Win32_NetworkAdapterConfiguration", "whoami", "POST"],
         ["Get-Random -Minimum", "System.Buffer]::BlockCopy", "GetResponseStream()", "POST"],
         ["*.vbs", "*.lnk", "DllOpen", "DllCall"],
-        ["start-process  -WindowStyle hidden -FilePath taskkill.exe -ArgumentList"],
+        ["start-process", "-WindowStyle", "hidden", "-FilePath", "taskkill.exe", "-ArgumentList"],
         ["$xorkey", "xordData"],
         ["powershell_payloads"],
         ["attackcode"],
@@ -392,6 +392,12 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["WScript.Shell", "ActiveXObject", "run"],
         ["START", "$ENV:APPDATA", "exe", "http"],
         ["START", "rundll32"],
+        # Inspired by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Modules/powershell_analyzer.py#L77
+        ["regsvr32 ", "C://", ".dll"],
+        ["regsvr32 ", "C:\\", ".dll"],
+        ["start ", ".exe)"],
+        ["CMD ", "/C ", "powershell"],
+        ["powershell ", "-exec ", "bypass ", "-c"],
     ]
 
     behaviour_col["Starts RunDll"] = [["START", "rundll32"]]
