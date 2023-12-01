@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1221,
+    "score": 1231,
     "sections": [
       {
         "auto_collapse": false,
@@ -99,7 +99,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: -bxor",
+        "body": "Marks: -bxor, System.Convert",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -123,7 +123,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [System.Convert]::FromBase64String(",
+        "body": "Marks: FromBase64String(",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -167,6 +167,30 @@
         "promote_to": null,
         "tags": {},
         "title_text": "Signature: Byte Usage",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Microsoft.Win32.UnsafeNativeMethods, Start-Job",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Evasion": 10
+          },
+          "signatures": {
+            "Evasion": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Evasion",
         "zeroize_on_tag_safe": false
       }
     ]
@@ -237,6 +261,13 @@
         "heur_id": 3,
         "signatures": [
           "Byte Usage"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Evasion"
         ]
       },
       {

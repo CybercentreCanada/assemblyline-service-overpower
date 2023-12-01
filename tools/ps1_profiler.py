@@ -116,6 +116,8 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "Ping": 1.0,
         "Mshta": 1.0,
         "Imports BitsTransfer": 1.0,
+        "Evasion": 1.0,
+        "Filesystem": 1.0,
         # Benign
         # Behaviours which are generally only seen in Benign scripts - subtracts from score.
         "Script Logging": -1.0,
@@ -359,21 +361,28 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     ]
 
     behaviour_col["Downloader"] = [
-        ["Net.WebClient"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
+        ["WebClient"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
         ["DownloadFile"],
         ["DownloadString"],
         ["DownloadData"],
         ["WebProxy", "Net.CredentialCache"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
         ["Start-BitsTransfer"],
         ["bitsadmin"],
-        ["Sockets.TCPClient", "GetStream"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
+        ["TCPClient"],
         ["$env:LocalAppData"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
         ["Invoke-WebRequest"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
         ["Net.WebRequest"],
         ["wget"],
         # ["Get-Content"],
         ["send", "open", "responseBody"],
-        ["HttpWebRequest", "GetResponse"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
+        ["HttpWebRequest"],
         ["InternetExplorer.Application", "Navigate"],
         ["Excel.Workbooks.Open('http"],
         ["Notepad", "SendKeys", "ForEach-Object", "Clipboard", "http"],
@@ -381,6 +390,19 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["iwr", "-outf"],
         # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.3
         [". ", "mshta.exe", "http"],
+        # Inspired by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
+        ["MSXML2.XMLH"],
+        ["Net.Sockets"],
+        ["Reverse TCP"],
+        ["GetSystemWebProxy"],
+        ["host"],
+        ["user-agent"],
+        ["Mozilla/4.0"],
+        ["PowerShellTcp"],
+        ["IPAddress"],
+        ["AcceptTcpClient"],
+        ["Invoke-RestMethod"],
+        ["-Uri"],
     ]
 
     behaviour_col["Starts Process"] = [
@@ -423,7 +445,8 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     behaviour_col["Compression"] = [
         ["Convert", "FromBase64String", "Text.Encoding"],
         ["IO.Compression.GzipStream"],
-        ["Compression.CompressionMode]::Decompress"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L2
+        ["Compression.CompressionMode"],
         ["IO.Compression.DeflateStream"],
         ["IO.MemoryStream"],
     ]
@@ -436,6 +459,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     ]
 
     behaviour_col["Custom Web Fields"] = [
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
         ["Headers.Add"],
         ["SessionKey", "SessiodID"],
         ["Method", "ContentType", "UserAgent", "WebRequest]::create"],
@@ -459,16 +483,25 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Obfuscation"] = [
         ["-Join", "[int]", "-as", "[char]"],
+        # Supported by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L2
         ["-bxor"],
         ["PtrToStringAnsi"],
         ["[-1..-"],
         ["[array]::Reverse"],
         ["$ENV:COMSPEC\\..\\"],
+        # Inspired by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L2
+        ["Text.Encoding"],
+        ["UTF8.GetString"],
+        ["System.Convert"],
+        ["EncodedCommand"],
+        # Inspired by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L35
+        ["Text.AsciiEncoding"],
     ]
 
     behaviour_col["Deobfuscation"] = [
-        ["[Convert]::FromBase64String("],
-        ["[System.Convert]::FromBase64String("],
+        # Supported/inspired by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L2
+        ["FromBase64String("],
+        ["FromHEXString("],
     ]
 
     behaviour_col["Crypto"] = [
@@ -595,6 +628,24 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
     behaviour_col["Mshta"] = [["mshta.exe"]]
 
     behaviour_col["Imports BitsTransfer"] = [["Import-Module", "BitsTransfer"]]
+
+    # Inspired by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L15
+    behaviour_col["Evasion"] = [
+        ["Microsoft.Win32.UnsafeNativeMethods"],
+        ["Start-Job"],
+        ["-EP Bypass"],
+        ["-ExecutionPolicy"],
+    ]
+
+    # Inspired by https://github.com/CYB3RMX/Qu1cksc0pe/blob/086db196d2de289f0784ae4d8ee03f34bf10354b/Systems/Windows/powershell_code_patterns.json#L24
+    behaviour_col["Filesystem"] = [
+        ["env:APPDATA"],
+        ["Remove-Item"],
+        ["expand-archive"],
+        ["New-Item"],
+        ["WriteAllText"],
+        ["IO.File"],
+    ]
 
     # Behavioural Combos combine a base grouping of behaviours to help raise the score of files without a lot of complexity.
     # Take care in adding to this list and use a minimum length of 3 behaviours (or 2 really good ones!).

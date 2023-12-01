@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 230,
+    "score": 240,
     "sections": [
       {
         "auto_collapse": false,
@@ -90,7 +90,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [Convert]::FromBase64String(",
+        "body": "Marks: FromBase64String(",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -134,6 +134,30 @@
         "promote_to": null,
         "tags": {},
         "title_text": "Signature: Byte Usage",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: IO.File",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Filesystem": 10
+          },
+          "signatures": {
+            "Filesystem": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Filesystem",
         "zeroize_on_tag_safe": false
       }
     ]
@@ -182,6 +206,13 @@
         "heur_id": 3,
         "signatures": [
           "Byte Usage"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Filesystem"
         ]
       }
     ],
