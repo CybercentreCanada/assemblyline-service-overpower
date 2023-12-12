@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 151,
+    "score": 261,
     "sections": [
       {
         "auto_collapse": false,
@@ -66,7 +66,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Convert, FromBase64String, Text.Encoding, Compression.CompressionMode]::Decompress, IO.Compression.DeflateStream, IO.MemoryStream",
+        "body": "Marks: Convert, FromBase64String, Text.Encoding, Compression.CompressionMode, IO.Compression.DeflateStream, IO.MemoryStream",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -90,7 +90,31 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [Convert]::FromBase64String(",
+        "body": "Marks: Text.Encoding, System.Convert",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Obfuscation": 100
+          },
+          "signatures": {
+            "Obfuscation": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Obfuscation",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: FromBase64String(",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -158,6 +182,30 @@
         "promote_to": null,
         "tags": {},
         "title_text": "Signature: Byte Usage",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: IO.File",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Filesystem": 10
+          },
+          "signatures": {
+            "Filesystem": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Filesystem",
         "zeroize_on_tag_safe": false
       },
       {
@@ -268,6 +316,13 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
+          "Obfuscation"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
           "Deobfuscation"
         ]
       },
@@ -283,6 +338,13 @@
         "heur_id": 3,
         "signatures": [
           "Byte Usage"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Filesystem"
         ]
       }
     ],
