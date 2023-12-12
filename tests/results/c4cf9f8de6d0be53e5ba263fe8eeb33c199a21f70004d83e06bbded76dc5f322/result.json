@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 861,
+    "score": 871,
     "sections": [
       {
         "auto_collapse": false,
@@ -105,7 +105,31 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: [System.Convert]::FromBase64String(",
+        "body": "Marks: Text.Encoding, System.Convert",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Obfuscation": 100
+          },
+          "signatures": {
+            "Obfuscation": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Obfuscation",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: FromBase64String(",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -149,30 +173,6 @@
         "promote_to": null,
         "tags": {},
         "title_text": "Signature: One Liner",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": null,
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 100,
-          "score_map": {
-            "Obfuscation:Char Frequency": 100
-          },
-          "signatures": {
-            "Obfuscation:Char Frequency": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {},
-        "title_text": "Signature: Obfuscation:Char Frequency",
         "zeroize_on_tag_safe": false
       },
       {
@@ -307,6 +307,30 @@
         "tags": {},
         "title_text": "Signature: Byte Usage",
         "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: IO.File",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Filesystem": 10
+          },
+          "signatures": {
+            "Filesystem": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Filesystem",
+        "zeroize_on_tag_safe": false
       }
     ]
   },
@@ -352,6 +376,13 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
+          "Obfuscation"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
           "Deobfuscation"
         ]
       },
@@ -360,13 +391,6 @@
         "heur_id": 3,
         "signatures": [
           "One Liner"
-        ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "Obfuscation:Char Frequency"
         ]
       },
       {
@@ -402,6 +426,13 @@
         "heur_id": 3,
         "signatures": [
           "Byte Usage"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Filesystem"
         ]
       },
       {

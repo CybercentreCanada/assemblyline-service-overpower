@@ -187,7 +187,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Net.WebClient, DownloadFile",
+        "body": "Marks: WebClient, DownloadFile",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",

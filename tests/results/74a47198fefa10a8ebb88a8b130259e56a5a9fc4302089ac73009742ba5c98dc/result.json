@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 541,
+    "score": 641,
     "sections": [
       {
         "auto_collapse": false,
@@ -38,7 +38,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: wget",
+        "body": "Marks: TCPClient, wget, Net.Sockets, AcceptTcpClient",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -106,6 +106,30 @@
         "promote_to": null,
         "tags": {},
         "title_text": "Signature: Hidden Window",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Text.Encoding",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 100,
+          "score_map": {
+            "Obfuscation": 100
+          },
+          "signatures": {
+            "Obfuscation": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Obfuscation",
         "zeroize_on_tag_safe": false
       },
       {
@@ -197,6 +221,13 @@
         "heur_id": 3,
         "signatures": [
           "Hidden Window"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Obfuscation"
         ]
       },
       {
