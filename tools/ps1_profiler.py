@@ -821,11 +821,12 @@ def family_finder(content_data: str) -> Dict[str, Dict[str, List]]:
     if re.search(r"\$w = Add-Type -memberDefinition \$[a-zA-Z0-9]{3,4} -Name", content_data):
         families["Magic Unicorn"][REGEX_INDICATORS].append("\$w = Add-Type -memberDefinition \$[a-zA-Z0-9]{3,4} -Name")
 
-    if all(entry in content_data.lower() for entry in ["sv", "gv", "value.tostring"]) and re.search(
-        r"[a-zA-Z0-9+/=]{250,}", content_data
-    ):
-        families["Magic Unicorn"][REGEX_INDICATORS].append("[a-zA-Z0-9+/=]{250,}")
-        families["Magic Unicorn"][STR_INDICATORS].extend(["sv", "gv", "value.tostring"])
+    # Removing this indicator as it is not a high-enough quality signature to provide attribution.
+    # if all(entry in content_data.lower() for entry in ["sv", "gv", "value.tostring"]) and re.search(
+    #     r"[a-zA-Z0-9+/=]{250,}", content_data
+    # ):
+    #     families["Magic Unicorn"][REGEX_INDICATORS].append("[a-zA-Z0-9+/=]{250,}")
+    #     families["Magic Unicorn"][STR_INDICATORS].extend(["sv", "gv", "value.tostring"])
 
     if re.search(r"\$[a-zA-Z0-9]{5,7} = \'\[DllImport.+Start-sleep 60};", content_data):
         families["Magic Unicorn Modified"][REGEX_INDICATORS].append(
