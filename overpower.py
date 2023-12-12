@@ -221,13 +221,13 @@ class Overpower(ServiceBase):
                 if "layer" in layer
             ]
         )
+        total_ps1_profiler_output: Dict[str, Any] = {}
         # We do not want a loop of PowerShellProfiler extractions
         if request.temp_submission_data.get("deobfuscated_by_ps1profiler") and request.task.file_name.startswith(
             DEOBFUS_FILE_PREFIX
         ):
             pass
         else:
-            total_ps1_profiler_output: Dict[str, Any] = {}
             start_time = time()
             self.log.debug(f"Starting {PS1_PROFILER}...")
             for file_to_profile, file_path in files_to_profile:
