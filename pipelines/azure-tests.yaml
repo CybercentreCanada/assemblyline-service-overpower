@@ -13,12 +13,12 @@ variables:
 
 resources:
   repositories:
-  - repository: unittest-samples
-    type: github
-    name: $(unittest_samples_repository)
-    ref: main
-    endpoint: github-repo-sa
-    trigger: none
+    - repository: unittest-samples
+      type: github
+      name: $(unittest_samples_repository)
+      ref: main
+      endpoint: github-repo-sa
+      trigger: none
 
 trigger: ["*"]
 pr: ["*"]
@@ -62,7 +62,8 @@ jobs:
           echo "Update the list of packages after we added packages.microsoft.com"
           sudo apt-get update
           echo "Install PowerShell"
-          sudo apt-get install -y powershell
+          # Pinning to version 7.3.3-1.deb
+          sudo apt-get install -y powershell=7.3.3-1.deb
           echo "Cleanup packages-microsoft-prod.deb"
           rm packages-microsoft-prod.deb
           echo "Create the directory for the PSDecode module"
