@@ -395,11 +395,11 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["Net.Sockets"],
         ["Reverse TCP"],
         ["GetSystemWebProxy"],
-        ["host"],
+        # ["host"], Too many false positives
         ["user-agent"],
         ["Mozilla/4.0"],
         ["PowerShellTcp"],
-        ["IPAddress"],
+        # ["IPAddress"], Too many false positives
         ["AcceptTcpClient"],
         ["Invoke-RestMethod"],
         ["-Uri"],
