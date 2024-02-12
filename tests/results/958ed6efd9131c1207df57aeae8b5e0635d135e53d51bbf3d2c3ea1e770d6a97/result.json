@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 24,
+    "score": 23,
     "sections": [
       {
         "auto_collapse": false,
@@ -109,67 +109,6 @@
           }
         },
         "title_text": "IOCs found in actions",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- C:\\Users\\Public\\apple.png\n\t- C:ProgramDatainvoice.pdf",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": null,
-        "promote_to": null,
-        "tags": {
-          "file": {
-            "path": [
-              "C:\\Users\\Public\\apple.png",
-              "C:ProgramDatainvoice.pdf"
-            ]
-          }
-        },
-        "title_text": "FileSystem Actions detected by Box-PS",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- http://deal.real\n\t- https://transfer.sh/get/vpiHmi/invoice.pdf",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 7,
-          "score": 1,
-          "score_map": {},
-          "signatures": {}
-        },
-        "promote_to": null,
-        "tags": {
-          "file": {
-            "string": {
-              "extracted": [
-                "http://deal.real"
-              ]
-            }
-          },
-          "network": {
-            "dynamic": {
-              "domain": [
-                "transfer.sh"
-              ],
-              "uri": [
-                "https://transfer.sh/get/vpiHmi/invoice.pdf"
-              ],
-              "uri_path": [
-                "/get/vpiHmi/invoice.pdf"
-              ]
-            }
-          }
-        },
-        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -342,11 +281,6 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": []
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 7,
-        "signatures": []
       }
     ],
     "tags": {
@@ -360,16 +294,6 @@
           "heur_id": 5,
           "signatures": [],
           "value": "C:ProgramDatainvoice.pdf"
-        },
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "C:ProgramDatainvoice.pdf"
-        },
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "C:\\Users\\Public\\apple.png"
         }
       ],
       "file.string.extracted": [
@@ -380,11 +304,6 @@
         },
         {
           "heur_id": 1,
-          "signatures": [],
-          "value": "http://deal.real"
-        },
-        {
-          "heur_id": 7,
           "signatures": [],
           "value": "http://deal.real"
         },
@@ -404,11 +323,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "transfer.sh"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [],
-          "value": "transfer.sh"
         }
       ],
       "network.dynamic.uri": [
@@ -421,11 +335,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [],
-          "value": "https://transfer.sh/get/vpiHmi/invoice.pdf"
         }
       ],
       "network.dynamic.uri_path": [
@@ -436,11 +345,6 @@
         },
         {
           "heur_id": 1,
-          "signatures": [],
-          "value": "/get/vpiHmi/invoice.pdf"
-        },
-        {
-          "heur_id": 7,
           "signatures": [],
           "value": "/get/vpiHmi/invoice.pdf"
         }

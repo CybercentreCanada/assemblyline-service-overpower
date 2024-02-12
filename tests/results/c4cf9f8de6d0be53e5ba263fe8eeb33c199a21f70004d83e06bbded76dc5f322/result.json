@@ -25,25 +25,6 @@
       },
       {
         "auto_collapse": false,
-        "body": "\t- \\C_DRIVE\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": null,
-        "promote_to": null,
-        "tags": {
-          "file": {
-            "path": [
-              "C:\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe"
-            ]
-          }
-        },
-        "title_text": "FileSystem Actions detected by Box-PS",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -441,15 +422,7 @@
         "signatures": []
       }
     ],
-    "tags": {
-      "file.path": [
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "C:\\Users\\victim\\AppData\\Local\\Temp\\pscp_putty.exe"
-        }
-      ]
-    },
+    "tags": {},
     "temp_submission_data": {
       "deobfuscated_by_ps1profiler": true
     }

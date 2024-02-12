@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1682,
+    "score": 1182,
     "sections": [
       {
         "auto_collapse": false,
@@ -94,61 +94,6 @@
           }
         },
         "title_text": "IOCs found in actions",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- C:\\Users\\Public\\WindowsKeys.ps1",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": null,
-        "promote_to": null,
-        "tags": {
-          "file": {
-            "path": [
-              "C:\\Users\\Public\\WindowsKeys.ps1"
-            ]
-          }
-        },
-        "title_text": "FileSystem Actions detected by Box-PS",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 7,
-          "score": 500,
-          "score_map": {},
-          "signatures": {
-            "suspicious_behaviour_combo_url": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {
-          "network": {
-            "dynamic": {
-              "domain": [
-                "www.4sync.com"
-              ],
-              "uri": [
-                "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
-              ],
-              "uri_path": [
-                "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
-              ]
-            }
-          }
-        },
-        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -560,13 +505,6 @@
         "signatures": [
           "suspicious_behaviour_combo_url"
         ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 7,
-        "signatures": [
-          "suspicious_behaviour_combo_url"
-        ]
       }
     ],
     "tags": {
@@ -577,11 +515,6 @@
             "suspicious_behaviour_combo_url"
           ],
           "value": "./C:/Users/Public/WindowsKeys.ps1"
-        },
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "C:\\Users\\Public\\WindowsKeys.ps1"
         }
       ],
       "network.dynamic.domain": [
@@ -595,13 +528,6 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "www.4sync.com"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
           "value": "www.4sync.com"
         }
       ],
@@ -617,13 +543,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://www.4sync.com/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
         }
       ],
       "network.dynamic.uri_path": [
@@ -637,13 +556,6 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
           "value": "/web/directDownload/QHZsERS6/rHb0lMWD.f2e6a9154ab6cd29b337d6b555367580"
         }
       ],

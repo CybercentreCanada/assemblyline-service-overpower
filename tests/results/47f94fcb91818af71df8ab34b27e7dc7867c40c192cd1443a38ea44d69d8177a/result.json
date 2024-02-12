@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1522,
+    "score": 1022,
     "sections": [
       {
         "auto_collapse": false,
@@ -94,42 +94,6 @@
           }
         },
         "title_text": "IOCs found in actions",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- https://shoru.net/db/main_db",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 7,
-          "score": 500,
-          "score_map": {},
-          "signatures": {
-            "suspicious_behaviour_combo_url": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {
-          "network": {
-            "dynamic": {
-              "domain": [
-                "shoru.net"
-              ],
-              "uri": [
-                "https://shoru.net/db/main_db"
-              ],
-              "uri_path": [
-                "/db/main_db"
-              ]
-            }
-          }
-        },
-        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -319,13 +283,6 @@
         "signatures": [
           "suspicious_behaviour_combo_url"
         ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 7,
-        "signatures": [
-          "suspicious_behaviour_combo_url"
-        ]
       }
     ],
     "tags": {
@@ -350,13 +307,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "shoru.net"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "shoru.net"
         }
       ],
       "network.dynamic.uri": [
@@ -371,13 +321,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://shoru.net/db/main_db"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://shoru.net/db/main_db"
         }
       ],
       "network.dynamic.uri_path": [
@@ -391,13 +334,6 @@
         {
           "heur_id": 1,
           "signatures": [],
-          "value": "/db/main_db"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
           "value": "/db/main_db"
         }
       ],
