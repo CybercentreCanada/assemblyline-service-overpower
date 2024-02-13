@@ -961,7 +961,7 @@ function Resolve_Env_Variables
             [string]$Command
         )
 
-        $env_pattern = [regex]'(?i)\$env\:\b\w+\b'
+        $env_pattern = [regex]'(?i)\$env\:\b\w+\b(\s*\+)'
         $matches = $env_pattern.Matches($Command)
 
         While ($matches.Count -gt 0){
@@ -969,7 +969,11 @@ function Resolve_Env_Variables
                 Write-Verbose "$($matches.Count) instance(s) of `$env:<variable-name>` detected... Replacing with './'!"
             }
             ForEach($match in $matches){
-                $Command = $Command.Replace($match, './')
+                if ($match.groups[1].Value) {
+                    $Command = $Command.Replace($match, "`'./`'+")
+                } else {
+                    $Command = $Command.Replace($match, './')
+                }
             }
             $matches = $env_pattern.Matches($Command)
         }
