@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1133,
+    "score": 633,
     "sections": [
       {
         "auto_collapse": false,
@@ -78,42 +78,6 @@
           }
         },
         "title_text": "IOCs found in actions",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 7,
-          "score": 500,
-          "score_map": {},
-          "signatures": {
-            "suspicious_behaviour_combo_url": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {
-          "network": {
-            "dynamic": {
-              "domain": [
-                "onedrive.live.com"
-              ],
-              "uri": [
-                "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
-              ],
-              "uri_path": [
-                "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
-              ]
-            }
-          }
-        },
-        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -402,13 +366,6 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": []
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 7,
-        "signatures": [
-          "suspicious_behaviour_combo_url"
-        ]
       }
     ],
     "tags": {
@@ -422,23 +379,9 @@
           "heur_id": 1,
           "signatures": [],
           "value": "onedrive.live.com"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "onedrive.live.com"
         }
       ],
       "network.dynamic.uri": [
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
-        },
         {
           "heur_id": 1,
           "signatures": [],
@@ -446,13 +389,6 @@
         }
       ],
       "network.dynamic.uri_path": [
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0"
-        },
         {
           "heur_id": 1,
           "signatures": [],
