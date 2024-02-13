@@ -234,8 +234,8 @@ class TestOverpower:
             shutil.rmtree(overpower_class_instance.working_directory)
 
     @staticmethod
-    def test_handle_psdecode_output(overpower_class_instance):
-        res = Result()
+    def test_handle_psdecode_output(overpower_class_instance, dummy_request_class_instance):
+        dummy_request_class_instance.result = Result()
         correct_res_sec = ResultSection("Actions detected with PSDecode")
         output = ["blah", "############################## Actions ##############################", "blah.com"]
         correct_res_sec.set_body("blah.com")
@@ -246,8 +246,8 @@ class TestOverpower:
             actions_ioc_table.add_row(TableRow(**item))
         actions_ioc_table.add_tag("network.dynamic.domain", "blah.com")
         actions_ioc_table.set_heuristic(1)
-        overpower_class_instance._handle_psdecode_output(output, res)
-        assert check_section_equality(res.sections[0], correct_res_sec)
+        overpower_class_instance._handle_psdecode_output(output, dummy_request_class_instance)
+        assert check_section_equality(dummy_request_class_instance.result.sections[0], correct_res_sec)
 
     @staticmethod
     def test_extract_supplementary(overpower_class_instance):

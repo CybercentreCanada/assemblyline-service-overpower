@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: .//znsrPecXVb.dMo\n\n[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: .//znsrPecXVb.dMo\n",
+        "body": "[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: /znsrPecXVb.dMo\n\n[Invoke-WebRequest] Download From: http://focusmedica.in/fmlib/IxBABMh0I2cLM3qq1GVv/ --> Save To: /znsrPecXVb.dMo\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -22,7 +22,7 @@
         "tags": {
           "file": {
             "path": [
-              ".//znsrPecXVb.dMo"
+              "/znsrPecXVb.dMo"
             ]
           },
           "network": {
@@ -187,12 +187,7 @@
   },
   "files": {
     "extracted": [],
-    "supplementary": [
-      {
-        "name": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb",
-        "sha256": "45f7e5b6f69813703c05f38c0537c59f9dd8e249c2b3a282a739a6b4128e69bb"
-      }
-    ]
+    "supplementary": []
   },
   "results": {
     "heuristics": [
@@ -224,7 +219,7 @@
         {
           "heur_id": 5,
           "signatures": [],
-          "value": ".//znsrPecXVb.dMo"
+          "value": "/znsrPecXVb.dMo"
         }
       ],
       "network.dynamic.domain": [
@@ -285,8 +280,6 @@
         }
       ]
     },
-    "temp_submission_data": {
-      "deobfuscated_by_ps1profiler": true
-    }
+    "temp_submission_data": {}
   }
 }

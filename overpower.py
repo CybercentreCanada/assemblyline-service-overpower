@@ -204,7 +204,7 @@ class Overpower(ServiceBase):
             # Give the tool a chance to clean up after to the tool timeout
             sleep(3)
 
-        self._handle_psdecode_output(responses[PSDECODE], request.result)
+        self._handle_psdecode_output(responses[PSDECODE], request)
 
         # Box-PS
         # boxps_output = self._run_boxps(request)
@@ -260,7 +260,7 @@ class Overpower(ServiceBase):
                 self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
                 # Give the tool a chance to clean up after to the tool timeout
                 sleep(3)
-            self._handle_psdecode_output(responses[PSDECODE], request.result, subsequent_run=True)
+            self._handle_psdecode_output(responses[PSDECODE], request, subsequent_run=True)
 
         self.gpg_key_hunter(request)
 
@@ -425,11 +425,11 @@ class Overpower(ServiceBase):
 
         return False
 
-    def _handle_psdecode_output(self, output: List[str], result: Result, subsequent_run: bool = False) -> None:
+    def _handle_psdecode_output(self, output: List[str], request: ServiceRequest, subsequent_run: bool = False) -> None:
         """
         This method converts the output from the PSDecode tool into ResultSections
         :param output: The output from the PSDecode tool
-        :param result: A Result object containing the service results
+        :param request: The ServiceRequest object
         :param subsequent_run: A boolean indicating if this output is from a subsquent run of PSDecode
         :return: None
         """
@@ -452,6 +452,8 @@ class Overpower(ServiceBase):
         psdecode_actions_res_sec.add_lines(actions)
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         iex_count = 0
+        urls_seen_in_actions: Set[str] = set()
+        paths_seen_in_actions: Set[str] = set()
         for action in actions:
             extract_iocs_from_text_blob(action, actions_ioc_table)
             if action.startswith(INVOKE_EXPRESSION_ACTION):
@@ -459,11 +461,21 @@ class Overpower(ServiceBase):
             match = re.search(DOWNLOAD_FILE_REGEX, action, re.IGNORECASE)
             if match and len(match.regs) == 3:
                 url = match.group(1)
+                urls_seen_in_actions.add(url)
                 path = match.group(2)
+                paths_seen_in_actions.add(path)
                 was_tag_added = add_tag(psdecode_actions_res_sec, "network.dynamic.uri", url)
                 if not was_tag_added:
                     psdecode_actions_res_sec.add_tag("file.string.extracted", url)
                 psdecode_actions_res_sec.add_tag("file.path", path)
+
+            if action.startswith("[Start-Process]") and paths_seen_in_actions:
+                # The only way we get here is if a DOWNLOAD_FILE_REGEX hit exists, which means a file was downloaded
+                # from a URL to disk
+                for path_seen in paths_seen_in_actions:
+                    if path_seen in action or path_seen.startswith("./") and path_seen[2:] in action:
+                        for url_seen in urls_seen_in_actions:
+                            request.add_extracted_uri("File downloaded and executed", uri=url_seen)
 
         if iex_count >= 3:
             psdecode_actions_res_sec.heuristic.add_signature_id("multiple_iex_calls", 250)
@@ -472,7 +484,7 @@ class Overpower(ServiceBase):
             actions_ioc_table.set_heuristic(1)
             psdecode_actions_res_sec.add_subsection(actions_ioc_table)
         if psdecode_actions_res_sec.body:
-            result.add_section(psdecode_actions_res_sec)
+            request.result.add_section(psdecode_actions_res_sec)
 
     # def _handle_boxps_output(self, output: BoxPSReport, result: Result) -> None:
     #     """

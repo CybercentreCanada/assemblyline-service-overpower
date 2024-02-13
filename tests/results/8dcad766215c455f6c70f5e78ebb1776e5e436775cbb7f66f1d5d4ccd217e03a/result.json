@@ -260,7 +260,12 @@
     ]
   },
   "files": {
-    "extracted": [],
+    "extracted": [
+      {
+        "name": "https://oiartzunirratia.eus/install/clean/Lcovlccdxd.exe",
+        "sha256": "06c9f629ff9fefb7e2c22394e5c2fe26eca59dec0cbcb41814621a19dd4618f9"
+      }
+    ],
     "supplementary": [
       {
         "name": "4c71d0762784da7354cea1dccff804fd031788c0baca5b40caf5730e72590f44",
