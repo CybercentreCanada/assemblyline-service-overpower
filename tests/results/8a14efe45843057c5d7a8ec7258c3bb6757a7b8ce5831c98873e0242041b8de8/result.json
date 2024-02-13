@@ -1,8 +1,28 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 150,
+    "score": 161,
     "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[Start-Process] -FilePath ./\\swiftcr.exe\n\n[Test-Path] ./\\userpref.dll\n",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
       {
         "auto_collapse": false,
         "body": null,
@@ -159,14 +179,59 @@
         "tags": {},
         "title_text": "Signature: Filesystem",
         "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in layer_1.ps1",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "One Liner": 10
+          },
+          "signatures": {
+            "One Liner": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: One Liner",
+        "zeroize_on_tag_safe": false
       }
     ]
   },
   "files": {
     "extracted": [
       {
+        "name": "\\swiftcr.exe",
+        "sha256": "30252a9c7b082c5e72c5ee8eedaf37a72109064712209cf2d645947312d00781"
+      },
+      {
         "name": "deobfuscated_by_ps1profiler_layer_0",
-        "sha256": "bc6da7d79e622e6e17286084037d8e9591c0140c7195f8c890764cd2c15f7fb0"
+        "sha256": "4f29cad2650dfb7453186aeacf078fb7acc61b8e71451ed3df1a2229f676b26d"
+      },
+      {
+        "name": "\\userpref.dll",
+        "sha256": "739d52cf78560ab2c1dcd0f272006549d15312f0dcccc420bf669717422da441"
       },
       {
         "name": "deobfuscated_by_ps1profiler_8a14efe45843057c5d7a8ec7258c3bb6757a7b8ce5831c98873e0242041b8de8",
@@ -176,7 +241,11 @@
     "supplementary": [
       {
         "name": "layer_0.ps1",
-        "sha256": "05ffc8166e2900af1f140d20372e167bb80eda8ccd325ee8472eef47cbce457e"
+        "sha256": "1745a0e8bc4681211ad91a82e5631af6e0c47a12676ba7cd8bd2f92fb048d179"
+      },
+      {
+        "name": "60a33e6cf5151f2d52eddae9685cfa270426aa89d8dbc7dfb854606f1d1a40fe",
+        "sha256": "60a33e6cf5151f2d52eddae9685cfa270426aa89d8dbc7dfb854606f1d1a40fe"
       }
     ]
   },
@@ -223,6 +292,18 @@
         "signatures": [
           "Filesystem"
         ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "One Liner"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": []
       }
     ],
     "tags": {},
