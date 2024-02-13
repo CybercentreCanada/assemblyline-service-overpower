@@ -1,6 +1,6 @@
 import re
 from json import dumps
-from os import environ, getcwd, listdir, makedirs, path, remove, rmdir, walk
+from os import environ, getcwd, listdir, path, remove, rmdir, walk
 from shutil import copy
 from shutil import move as shutil_move
 from subprocess import PIPE, Popen, TimeoutExpired
@@ -12,15 +12,15 @@ from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.forge import get_identify
 from assemblyline.common.str_utils import safe_str, truncate
 from assemblyline_service_utilities.common.dynamic_service_helper import OntologyResults, extract_iocs_from_text_blob
-from assemblyline_service_utilities.common.safelist_helper import is_tag_safelisted
 from assemblyline_service_utilities.common.tag_helper import add_tag
 from assemblyline_v4_service.common.api import ServiceAPIError
 from assemblyline_v4_service.common.base import ServiceBase
 from assemblyline_v4_service.common.request import ServiceRequest
-from assemblyline_v4_service.common.result import Heuristic, Result, ResultTableSection, ResultTextSection
-from pyboxps.boxps import BoxPS
-from pyboxps.boxps_report import BoxPSReport
-from pyboxps.errors import BoxPSReportError, BoxPSSandboxError, BoxPSScriptSyntaxError, BoxPSTimeoutError
+from assemblyline_v4_service.common.result import Result, ResultTableSection, ResultTextSection
+
+# from pyboxps.boxps import BoxPS
+# from pyboxps.boxps_report import BoxPSReport
+# from pyboxps.errors import BoxPSReportError, BoxPSSandboxError, BoxPSScriptSyntaxError, BoxPSTimeoutError
 from tools.ps1_profiler import (
     DEOBFUS_FILE_PREFIX,
     REGEX_INDICATORS,
@@ -49,7 +49,7 @@ GPG_KEY_REGEX = r"(?:^|\n).*\becho\b\s*['\"]([a-zA-Z0-9]+)['\"]\s*\|.*\bgpg\b.*"
 
 # Enumerations
 PSDECODE = "PSDecode"
-BOX_PS = "Box-PS"
+# BOX_PS = "Box-PS"
 PS1_PROFILER = "PowerShellProfiler"
 
 
@@ -101,33 +101,33 @@ class Overpower(ServiceBase):
             self.log.warning(f"{tool_name} crashed due to {repr(e)}")
         self.log.debug(f"Completed running {tool_name}! Time elapsed: {round(time() - start_time)}s")
 
-    def _run_boxps(self, request: ServiceRequest) -> Optional[BoxPSReport]:
-        """
-        This method runs the Box-PS tool and returns what was written to STDOUT
-        :param request: The ServiceRequest object
-        :return: A BoxPSReport representing the Box-PS analysis
-        """
-        tool_timeout = request.get_param("tool_timeout")
+    # def _run_boxps(self, request: ServiceRequest) -> Optional[BoxPSReport]:
+    #     """
+    #     This method runs the Box-PS tool and returns what was written to STDOUT
+    #     :param request: The ServiceRequest object
+    #     :return: A BoxPSReport representing the Box-PS analysis
+    #     """
+    #     tool_timeout = request.get_param("tool_timeout")
 
-        boxps = BoxPS(boxps_path="/opt/al_support/box-ps/box-ps-master")
-        start_time = time()
+    #     boxps = BoxPS(boxps_path="/opt/al_support/box-ps/box-ps-master")
+    #     start_time = time()
 
-        self.log.debug(f"Starting {BOX_PS}...")
-        makedirs(path.join(self.working_directory, "boxps"), exist_ok=True)
-        try:
-            _, boxps_output = boxps.sandbox(
-                in_file=request.file_path,
-                out_dir=path.join(self.working_directory, "boxps"),
-                timeout=tool_timeout,
-                report_only=False,
-            )
-        except (BoxPSReportError, BoxPSSandboxError, BoxPSScriptSyntaxError, BoxPSTimeoutError):
-            boxps_output = None
+    #     self.log.debug(f"Starting {BOX_PS}...")
+    #     makedirs(path.join(self.working_directory, "boxps"), exist_ok=True)
+    #     try:
+    #         _, boxps_output = boxps.sandbox(
+    #             in_file=request.file_path,
+    #             out_dir=path.join(self.working_directory, "boxps"),
+    #             timeout=tool_timeout,
+    #             report_only=False,
+    #         )
+    #     except (BoxPSReportError, BoxPSSandboxError, BoxPSScriptSyntaxError, BoxPSTimeoutError):
+    #         boxps_output = None
 
-        time_elapsed = time() - start_time
-        self.log.debug(f"{BOX_PS} took {round(time_elapsed)}s to complete.")
+    #     time_elapsed = time() - start_time
+    #     self.log.debug(f"{BOX_PS} took {round(time_elapsed)}s to complete.")
 
-        return boxps_output
+    #     return boxps_output
 
     def _move_unsafe_new_files_to_working_dir(self) -> Set[str]:
         """
@@ -207,9 +207,9 @@ class Overpower(ServiceBase):
         self._handle_psdecode_output(responses[PSDECODE], request.result)
 
         # Box-PS
-        boxps_output = self._run_boxps(request)
-        if boxps_output:
-            self._handle_boxps_output(boxps_output, request.result)
+        # boxps_output = self._run_boxps(request)
+        # if boxps_output:
+        #     self._handle_boxps_output(boxps_output, request.result)
 
         # PowerShellProfiler
         rerun_psdecode = False
@@ -474,41 +474,41 @@ class Overpower(ServiceBase):
         if psdecode_actions_res_sec.body:
             result.add_section(psdecode_actions_res_sec)
 
-    def _handle_boxps_output(self, output: BoxPSReport, result: Result) -> None:
-        """
-        This method converts the output from the Box-PS tool into ResultSections
-        :param output: The output from the Box-PS tool
-        :param result: A Result object containing the service results
-        :param subsequent_run: A boolean indicating if this output is from a subsquent run of BoxPS
-        :return: None
-        """
-        if output.aggressive_fs_iocs:
-            boxps_fs_section = ResultTextSection(f"FileSystem Actions detected by {BOX_PS}")
-            if len(output.aggressive_fs_iocs) == 1:
-                boxps_fs_section.add_line(f"\t- {output.aggressive_fs_iocs[0]}")
-            else:
-                boxps_fs_section.add_line("\t- " + "\n\t- ".join(output.aggressive_fs_iocs))
-            for item in output.aggressive_fs_iocs:
-                if item not in ["..\\"]:
-                    boxps_fs_section.add_tag("file.path", item.replace("\\C_DRIVE", "C:"))
-            result.add_section(boxps_fs_section)
+    # def _handle_boxps_output(self, output: BoxPSReport, result: Result) -> None:
+    #     """
+    #     This method converts the output from the Box-PS tool into ResultSections
+    #     :param output: The output from the Box-PS tool
+    #     :param result: A Result object containing the service results
+    #     :param subsequent_run: A boolean indicating if this output is from a subsquent run of BoxPS
+    #     :return: None
+    #     """
+    #     if output.aggressive_fs_iocs:
+    #         boxps_fs_section = ResultTextSection(f"FileSystem Actions detected by {BOX_PS}")
+    #         if len(output.aggressive_fs_iocs) == 1:
+    #             boxps_fs_section.add_line(f"\t- {output.aggressive_fs_iocs[0]}")
+    #         else:
+    #             boxps_fs_section.add_line("\t- " + "\n\t- ".join(output.aggressive_fs_iocs))
+    #         for item in output.aggressive_fs_iocs:
+    #             if item not in ["..\\"]:
+    #                 boxps_fs_section.add_tag("file.path", item.replace("\\C_DRIVE", "C:"))
+    #         result.add_section(boxps_fs_section)
 
-        if output.aggressive_net_iocs:
-            heur = Heuristic(7)
-            boxps_net_section = ResultTextSection(heur.name, heuristic=heur)
-            boxps_iocs = [
-                ioc
-                for ioc in output.aggressive_net_iocs
-                if not is_tag_safelisted(ioc, ["network.dynamic.domain", "network.dynamic.uri"], self.safelist)
-            ]
-            if len(boxps_iocs) == 1:
-                boxps_net_section.add_line(f"\t- {boxps_iocs[0]}")
-            else:
-                boxps_net_section.add_line("\t- " + "\n\t- ".join(boxps_iocs))
-            for item in boxps_iocs:
-                _ = add_tag(boxps_net_section, "network.dynamic.uri", item)
-            if boxps_net_section.body:
-                result.add_section(boxps_net_section)
+    #     if output.aggressive_net_iocs:
+    #         heur = Heuristic(7)
+    #         boxps_net_section = ResultTextSection(heur.name, heuristic=heur)
+    #         boxps_iocs = [
+    #             ioc
+    #             for ioc in output.aggressive_net_iocs
+    #             if not is_tag_safelisted(ioc, ["network.dynamic.domain", "network.dynamic.uri"], self.safelist)
+    #         ]
+    #         if len(boxps_iocs) == 1:
+    #             boxps_net_section.add_line(f"\t- {boxps_iocs[0]}")
+    #         else:
+    #             boxps_net_section.add_line("\t- " + "\n\t- ".join(boxps_iocs))
+    #         for item in boxps_iocs:
+    #             _ = add_tag(boxps_net_section, "network.dynamic.uri", item)
+    #         if boxps_net_section.body:
+    #             result.add_section(boxps_net_section)
 
     def _extract_supplementary(self, ps1_profiler_output: Dict[str, Any], psdecode_output: List[str]) -> None:
         """
@@ -525,10 +525,10 @@ class Overpower(ServiceBase):
             psdecode_suppl_path = path.join(self.working_directory, "suppl_psdecode_output.txt")
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
-        for boxps_file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
-            boxps_file_path = path.join(self.working_directory, "boxps", boxps_file)
-            if path.exists(boxps_file_path):
-                shutil_move(boxps_file_path, path.join(self.working_directory, "boxps", f"suppl_{boxps_file}"))
+        # for boxps_file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
+        #     boxps_file_path = path.join(self.working_directory, "boxps", boxps_file)
+        #     if path.exists(boxps_file_path):
+        #         shutil_move(boxps_file_path, path.join(self.working_directory, "boxps", f"suppl_{boxps_file}"))
 
     def _prepare_artifacts(self, request: ServiceRequest, worth_extracting: bool = True) -> None:
         """
@@ -551,10 +551,10 @@ class Overpower(ServiceBase):
             for file in sorted(files):
                 file_path = path.join(root, file)
                 # Skip Box-PS execution artifacts
-                if root.endswith("boxps"):
-                    # These files are handled in _extract_supplementary
-                    if file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
-                        continue
+                # if root.endswith("boxps"):
+                #     # These files are handled in _extract_supplementary
+                #     if file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
+                #         continue
 
                 artifact_sha256 = get_sha256_for_file(file_path)
 

@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 4,
+    "score": 3,
     "sections": [
       {
         "auto_collapse": false,
@@ -77,34 +77,6 @@
       },
       {
         "auto_collapse": false,
-        "body": "\t- github.com/john-xor/temp/blob/main/index.html?raw=true",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 7,
-          "score": 1,
-          "score_map": {},
-          "signatures": {}
-        },
-        "promote_to": null,
-        "tags": {
-          "network": {
-            "dynamic": {
-              "domain": [
-                "github.com"
-              ]
-            }
-          }
-        },
-        "title_text": "Network Actions detected by Box-PS",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
         "body": [
           {
             "ioc": "github.com",
@@ -168,22 +140,12 @@
         "attack_ids": [],
         "heur_id": 5,
         "signatures": []
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 7,
-        "signatures": []
       }
     ],
     "tags": {
       "network.dynamic.domain": [
         {
           "heur_id": 1,
-          "signatures": [],
-          "value": "github.com"
-        },
-        {
-          "heur_id": 7,
           "signatures": [],
           "value": "github.com"
         }

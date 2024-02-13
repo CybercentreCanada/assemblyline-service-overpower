@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 2173,
+    "score": 1673,
     "sections": [
       {
         "auto_collapse": false,
@@ -94,63 +94,6 @@
           }
         },
         "title_text": "IOCs found in actions",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- https://hotellosmirtos.com/sjn/Tn0Q3nieE\n\t- https://gsscorporationltd.com/okSfj/ElnfP\n\t- https://citytech-solutions.com/6Mh1k/VyRQIueel74\n\t- https://carladvogadatributaria.com/tvnq9/H78n9QOL\n\t- https://mrcrizquna.com/L7ccN/raQf0mzg0gq\n\t- https://zainco.net/OdOU/5nz7Cc739ffc\n\t- https://erg-eg.com/ocmb/CjVa5TV\n\t- https://nayadofoundation.org/wXaKm/x7GY6orRR",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 7,
-          "score": 500,
-          "score_map": {},
-          "signatures": {
-            "suspicious_behaviour_combo_url": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {
-          "network": {
-            "dynamic": {
-              "domain": [
-                "hotellosmirtos.com",
-                "gsscorporationltd.com",
-                "citytech-solutions.com",
-                "carladvogadatributaria.com",
-                "mrcrizquna.com",
-                "zainco.net",
-                "erg-eg.com",
-                "nayadofoundation.org"
-              ],
-              "uri": [
-                "https://hotellosmirtos.com/sjn/Tn0Q3nieE",
-                "https://gsscorporationltd.com/okSfj/ElnfP",
-                "https://citytech-solutions.com/6Mh1k/VyRQIueel74",
-                "https://carladvogadatributaria.com/tvnq9/H78n9QOL",
-                "https://mrcrizquna.com/L7ccN/raQf0mzg0gq",
-                "https://zainco.net/OdOU/5nz7Cc739ffc",
-                "https://erg-eg.com/ocmb/CjVa5TV",
-                "https://nayadofoundation.org/wXaKm/x7GY6orRR"
-              ],
-              "uri_path": [
-                "/sjn/Tn0Q3nieE",
-                "/okSfj/ElnfP",
-                "/6Mh1k/VyRQIueel74",
-                "/tvnq9/H78n9QOL",
-                "/L7ccN/raQf0mzg0gq",
-                "/OdOU/5nz7Cc739ffc",
-                "/ocmb/CjVa5TV",
-                "/wXaKm/x7GY6orRR"
-              ]
-            }
-          }
-        },
-        "title_text": "Network Actions detected by Box-PS",
         "zeroize_on_tag_safe": false
       },
       {
@@ -880,13 +823,6 @@
         "signatures": [
           "suspicious_behaviour_combo_url"
         ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 7,
-        "signatures": [
-          "suspicious_behaviour_combo_url"
-        ]
       }
     ],
     "tags": {
@@ -908,13 +844,6 @@
       ],
       "network.dynamic.domain": [
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "carladvogadatributaria.com"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -925,13 +854,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "carladvogadatributaria.com"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "citytech-solutions.com"
         },
         {
           "heur_id": 5,
@@ -946,13 +868,6 @@
           "value": "citytech-solutions.com"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "erg-eg.com"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -963,13 +878,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "erg-eg.com"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "gsscorporationltd.com"
         },
         {
           "heur_id": 5,
@@ -996,13 +904,6 @@
           "value": "hotellosmirtos.com"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "hotellosmirtos.com"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1013,13 +914,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "hotellosmirtos.com"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "mrcrizquna.com"
         },
         {
           "heur_id": 5,
@@ -1034,13 +928,6 @@
           "value": "mrcrizquna.com"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "nayadofoundation.org"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1051,13 +938,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "nayadofoundation.org"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "zainco.net"
         },
         {
           "heur_id": 5,
@@ -1074,13 +954,6 @@
       ],
       "network.dynamic.uri": [
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://carladvogadatributaria.com/tvnq9/H78n9QOL"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1091,13 +964,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://carladvogadatributaria.com/tvnq9/H78n9QOL"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://citytech-solutions.com/6Mh1k/VyRQIueel74"
         },
         {
           "heur_id": 5,
@@ -1112,13 +978,6 @@
           "value": "https://citytech-solutions.com/6Mh1k/VyRQIueel74"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://erg-eg.com/ocmb/CjVa5TV"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1129,13 +988,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://erg-eg.com/ocmb/CjVa5TV"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://gsscorporationltd.com/okSfj/ElnfP"
         },
         {
           "heur_id": 5,
@@ -1162,13 +1014,6 @@
           "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1179,13 +1024,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://hotellosmirtos.com/sjn/Tn0Q3nieE"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://mrcrizquna.com/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 5,
@@ -1200,13 +1038,6 @@
           "value": "https://mrcrizquna.com/L7ccN/raQf0mzg0gq"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://nayadofoundation.org/wXaKm/x7GY6orRR"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1217,13 +1048,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://nayadofoundation.org/wXaKm/x7GY6orRR"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://zainco.net/OdOU/5nz7Cc739ffc"
         },
         {
           "heur_id": 5,
@@ -1240,13 +1064,6 @@
       ],
       "network.dynamic.uri_path": [
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/6Mh1k/VyRQIueel74"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1257,13 +1074,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/6Mh1k/VyRQIueel74"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/L7ccN/raQf0mzg0gq"
         },
         {
           "heur_id": 5,
@@ -1278,13 +1088,6 @@
           "value": "/L7ccN/raQf0mzg0gq"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/OdOU/5nz7Cc739ffc"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1297,13 +1100,6 @@
           "value": "/OdOU/5nz7Cc739ffc"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/ocmb/CjVa5TV"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1314,13 +1110,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/ocmb/CjVa5TV"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/okSfj/ElnfP"
         },
         {
           "heur_id": 5,
@@ -1347,13 +1136,6 @@
           "value": "/sjn/Tn0Q3nieE"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/sjn/Tn0Q3nieE"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1366,13 +1148,6 @@
           "value": "/sjn/Tn0Q3nieE"
         },
         {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/tvnq9/H78n9QOL"
-        },
-        {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
@@ -1383,13 +1158,6 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/tvnq9/H78n9QOL"
-        },
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/wXaKm/x7GY6orRR"
         },
         {
           "heur_id": 5,

@@ -1,57 +1,8 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 1621,
+    "score": 1121,
     "sections": [
-      {
-        "auto_collapse": false,
-        "body": "\t- ..\\",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": null,
-        "promote_to": null,
-        "tags": {},
-        "title_text": "FileSystem Actions detected by Box-PS",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "\t- https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 7,
-          "score": 500,
-          "score_map": {},
-          "signatures": {
-            "suspicious_behaviour_combo_url": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {
-          "network": {
-            "dynamic": {
-              "domain": [
-                "arm.texchi.xyz"
-              ],
-              "uri": [
-                "https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
-              ],
-              "uri_path": [
-                "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
-              ]
-            }
-          }
-        },
-        "title_text": "Network Actions detected by Box-PS",
-        "zeroize_on_tag_safe": false
-      },
       {
         "auto_collapse": false,
         "body": null,
@@ -314,43 +265,9 @@
         "signatures": [
           "Mshta"
         ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 7,
-        "signatures": [
-          "suspicious_behaviour_combo_url"
-        ]
       }
     ],
     "tags": {
-      "network.dynamic.domain": [
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "arm.texchi.xyz"
-        }
-      ],
-      "network.dynamic.uri": [
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "https://arm.texchi.xyz/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
-        }
-      ],
-      "network.dynamic.uri_path": [
-        {
-          "heur_id": 7,
-          "signatures": [
-            "suspicious_behaviour_combo_url"
-          ],
-          "value": "/OctpfpplSmd/kB7XqC07xt/pvsON52yWS/CLpIorS_6Y/aXbgXY"
-        }
-      ],
       "network.static.domain": [
         {
           "heur_id": 1,

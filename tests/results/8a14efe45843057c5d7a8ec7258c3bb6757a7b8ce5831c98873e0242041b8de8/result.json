@@ -5,28 +5,6 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "\t- \\C_DRIVE\\Users\\victim\\AppData\\Roaming\\swiftcr.exe\n\t- \\C_DRIVE\\Users\\victim\\AppData\\Roaming\\userpref.dll\n\t- HKCU:\\Control Panel\\Desktop\n\t- U:\\Control",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 0,
-        "heuristic": null,
-        "promote_to": null,
-        "tags": {
-          "file": {
-            "path": [
-              "C:\\Users\\victim\\AppData\\Roaming\\swiftcr.exe",
-              "C:\\Users\\victim\\AppData\\Roaming\\userpref.dll",
-              "HKCU:\\Control Panel\\Desktop",
-              "U:\\Control"
-            ]
-          }
-        },
-        "title_text": "FileSystem Actions detected by Box-PS",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
         "body": null,
         "body_config": {},
         "body_format": "TEXT",
@@ -187,14 +165,6 @@
   "files": {
     "extracted": [
       {
-        "name": "30252A9C7B082C5E72C5EE8EEDAF37A72109064712209CF2D645947312D00781",
-        "sha256": "30252a9c7b082c5e72c5ee8eedaf37a72109064712209cf2d645947312d00781"
-      },
-      {
-        "name": "739D52CF78560AB2C1DCD0F272006549D15312F0DCCCC420BF669717422DA441",
-        "sha256": "739d52cf78560ab2c1dcd0f272006549d15312f0dcccc420bf669717422da441"
-      },
-      {
         "name": "deobfuscated_by_ps1profiler_layer_0",
         "sha256": "bc6da7d79e622e6e17286084037d8e9591c0140c7195f8c890764cd2c15f7fb0"
       },
@@ -255,30 +225,7 @@
         ]
       }
     ],
-    "tags": {
-      "file.path": [
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "C:\\Users\\victim\\AppData\\Roaming\\swiftcr.exe"
-        },
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "C:\\Users\\victim\\AppData\\Roaming\\userpref.dll"
-        },
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "HKCU:\\Control Panel\\Desktop"
-        },
-        {
-          "heur_id": null,
-          "signatures": [],
-          "value": "U:\\Control"
-        }
-      ]
-    },
+    "tags": {},
     "temp_submission_data": {
       "deobfuscated_by_ps1profiler": true
     }
