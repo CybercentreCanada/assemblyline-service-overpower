@@ -240,8 +240,16 @@
   "files": {
     "extracted": [
       {
+        "name": "https://transfer.sh/get/vpiHmi/invoice.pdf",
+        "sha256": "49070c08c1925a86f3846aada1ddc628ab76915b74a5cd271a864753c3b828d7"
+      },
+      {
         "name": "deobfuscated_by_ps1profiler_958ed6efd9131c1207df57aeae8b5e0635d135e53d51bbf3d2c3ea1e770d6a97",
         "sha256": "7f19edd6c484a1324998eff332f4c2f8b3ddb8e6fa53889d7db3cc676d6957cb"
+      },
+      {
+        "name": "http://deal.real",
+        "sha256": "d1687fde2ac73d4a9544c4e5df55f1a8e0f34e9ae8af229d84b7c1540089ffe3"
       }
     ],
     "supplementary": [

