@@ -251,7 +251,7 @@ class TestOverpower:
 
     @staticmethod
     def test_extract_supplementary(overpower_class_instance):
-        ps1_profiler_output = {"blah": "blah"}
+        ps1_profiler_output = {"blah": {"blah": "blah"}}
         psdecode_output = ["blah"]
         suppl_ps1_profiler_output = path.join(
             overpower_class_instance.working_directory, "suppl_ps1_profiler_output.json"
