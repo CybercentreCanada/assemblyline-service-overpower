@@ -532,7 +532,7 @@ class Overpower(ServiceBase):
         if ps1_profiler_output:
             ps1_profiler_suppl_path = path.join(self.working_directory, "suppl_ps1_profiler_output.json")
             ps1_profiler_output_copy = deepcopy(ps1_profiler_output)
-            if any(values["extracted"] for values in ps1_profiler_output_copy.values()):
+            if any(values.get("extracted") for values in ps1_profiler_output_copy.values()):
                 for values in ps1_profiler_output_copy.values():
                     for item in values["extracted"]:
                         if isinstance(item["data"], bytes):
