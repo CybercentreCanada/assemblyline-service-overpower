@@ -1,8 +1,8 @@
 import re
+from copy import deepcopy
 from json import dumps
 from os import environ, getcwd, listdir, path, remove, rmdir, walk
 from shutil import copy
-from shutil import move as shutil_move
 from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Thread
 from time import sleep, time
@@ -531,8 +531,14 @@ class Overpower(ServiceBase):
         """
         if ps1_profiler_output:
             ps1_profiler_suppl_path = path.join(self.working_directory, "suppl_ps1_profiler_output.json")
+            ps1_profiler_output_copy = deepcopy(ps1_profiler_output)
+            if any(values.get("extracted") for values in ps1_profiler_output_copy.values()):
+                for values in ps1_profiler_output_copy.values():
+                    for item in values["extracted"]:
+                        if isinstance(item["data"], bytes):
+                            item["data"] = safe_str(item["data"])
             with open(ps1_profiler_suppl_path, "w") as f:
-                f.write(dumps(ps1_profiler_output))
+                f.write(dumps(ps1_profiler_output_copy))
         if psdecode_output:
             psdecode_suppl_path = path.join(self.working_directory, "suppl_psdecode_output.txt")
             with open(psdecode_suppl_path, "w") as f:
