@@ -90,3 +90,4 @@ docker_config:
   allow_internet_access: false
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG
   cpu_cores: 1
+  ram_mb: 2048
