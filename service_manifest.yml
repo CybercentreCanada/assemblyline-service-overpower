@@ -71,6 +71,7 @@ heuristics:
     description: PSDecode detected actions and was able to override them
     signature_score_map:
       suspicious_behaviour_combo_url: 500
+      telegram_post: 500
 
   - heur_id: 6
     name: Mshta Downloader

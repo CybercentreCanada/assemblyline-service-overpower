@@ -185,6 +185,13 @@ function Start-Sleep {
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/start-sleep?view=powershell-7.3
+$Sleep_Override = @'
+function Sleep {
+        Write-Host "%#[Sleep] $($args)%#"
+    }
+'@
+
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/start-job?view=powershell-7.3
 $Start_Job_Override = @'
 function Start-Job {
@@ -384,6 +391,57 @@ function Invoke-WebRequest {
         Write-Host "%#[Invoke-WebRequest] Download From: $($uri) --> Save To: $($outfile) %#"
     } else {
         Write-Host "%#[Invoke-WebRequest] Download From: $($uri) %#"
+    }
+}
+'@
+
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.4
+$Invoke_RestMethod_Override = @'
+function Invoke-RestMethod {
+    # Odds are the first or last arg is the URI, but we'll confirm this later
+    if ($args[0].IndexOf("-") -eq -1 -or $args[0].IndexOf("-") -ne 0) {
+        $uri = $args[0]
+    }
+    else {
+        $uri = $args[-1]
+    }
+
+    $method = "Get"
+
+    # We only care about URI and Method
+    $nextArgIsUri = $false;
+    $nextArgIsMethod = $false;
+
+    ForEach($arg in $args){
+        if ($nextArgIsUri) {
+            $uri = $arg
+            $nextArgIsUri = $false
+        } elseif ($nextArgIsMethod) {
+            $method = $arg
+            $nextArgIsMethod = $false;
+        }
+
+        if ($arg.GetType() -eq [System.String] -and $arg -ieq "-Uri") {
+            $nextArgIsUri = $true
+        }
+        elseif ($arg.GetType() -eq [System.String] -and ($arg -ieq "-Method")) {
+            $nextArgIsMethod = $true
+        }
+    }
+    # Let's encode the URI path so that there are no weird characters that could mess up the parsing
+    # of the action
+    $uri_object = [uri]$uri
+
+    $encoded_uri_path = [System.Web.HttpUtility]::UrlEncode($uri_object.PathAndQuery)
+
+    Write-Host "%#[Invoke-RestMethod] $($method.ToUpper()) $($uri_object.Scheme)://$($uri_object.host)/$($encoded_uri_path) %#"
+
+    # If this method is used to get the IP of the machine, let's give it what it wants!
+    if ($uri.IndexOf("ipv4") -ine -1 -or $uri.IndexOf("ipv6") -ine -1) {
+        return "127.0.0.1"
+    } else {
+        # Telegram-specific default
+        return @{"result"=@{"channel_post"=@{"chat"=@{"id"="-1234567890123"}; "text"="evilstuff"; "message_id"="badmessage_2"}}}
     }
 }
 '@
@@ -1664,6 +1722,7 @@ function PSDecode {
     $override_functions += $Remove_Item_Override
     $override_functions += $Clear_Content_Override
     $override_functions += $Start_Sleep_Override
+    $override_functions += $Sleep_Override
     $override_functions += $Start_Job_Override
     $override_functions += $Receive_Job_Override
     $override_functions += $Task_Kill_Override
@@ -1683,6 +1742,7 @@ function PSDecode {
     $override_functions += $Get_Content_Override
     $override_functions += $Test_Path_Override
     $override_functions += $Get_WmiObject_Override
+    $override_functions += $Invoke_RestMethod_Override
 
     if(!$x){
         $override_functions += $New_Object_Override

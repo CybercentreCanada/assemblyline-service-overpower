@@ -273,7 +273,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: Start-Sleep, sleep -s",
+        "body": "Marks: Start-Sleep, sleep ",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
