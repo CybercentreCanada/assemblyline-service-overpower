@@ -476,6 +476,8 @@ class Overpower(ServiceBase):
                     if path_seen in action or path_seen.startswith("./") and path_seen[2:] in action:
                         for url_seen in urls_seen_in_actions:
                             request.add_extracted_uri("File downloaded and executed", uri=url_seen)
+            elif action.startswith("[Invoke-RestMethod] POST") and "api.telegram.org" in action:
+                psdecode_actions_res_sec.heuristic.add_signature_id("telegram_post")
 
         if iex_count >= 3:
             psdecode_actions_res_sec.heuristic.add_signature_id("multiple_iex_calls", 250)

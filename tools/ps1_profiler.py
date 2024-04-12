@@ -472,7 +472,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Sleeps"] = [
         ["Start-Sleep"],
-        ["sleep -s"],
+        ["sleep "],
     ]
 
     behaviour_col["Uninstalls Apps"] = [
