@@ -619,7 +619,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Uses WMI"] = [
         ["wmic"],
-        ["gwmi"],
+        ["gwmi "],
         ["Get-WmiObject"],
     ]
 
@@ -799,6 +799,15 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
             for item in combo_row:
                 if item not in behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO]["marks"]:
                     behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO]["marks"].append(item)
+
+    # This suspicious behaviour combo (mix of two combos) has a 0% TP rate
+    if SUSPICIOUS_BEHAVIOUR_COMBO in behaviour_tags and sorted(behaviour_tags[SUSPICIOUS_BEHAVIOUR_COMBO]["marks"]) == [
+        "Downloader",
+        "Hidden Window",
+        "Script Execution",
+        "Uses WMI",
+    ]:
+        behaviour_tags.pop(SUSPICIOUS_BEHAVIOUR_COMBO)
 
     return behaviour_tags
 
