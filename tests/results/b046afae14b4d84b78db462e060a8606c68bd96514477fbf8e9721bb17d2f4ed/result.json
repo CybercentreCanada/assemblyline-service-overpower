@@ -56,7 +56,7 @@
             }
           }
         },
-        "title_text": "Actions detected with PSDecode",
+        "title_text": "Interesting actions captured by PSDecode",
         "zeroize_on_tag_safe": false
       },
       {
@@ -499,7 +499,7 @@
             }
           }
         },
-        "title_text": "Actions detected with subsequent run of PSDecode",
+        "title_text": "Interesting actions captured with subsequent run of PSDecode",
         "zeroize_on_tag_safe": false
       },
       {

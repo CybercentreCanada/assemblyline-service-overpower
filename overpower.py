@@ -439,9 +439,11 @@ class Overpower(ServiceBase):
                 actions = output[index + 1 :]
                 break
         if not subsequent_run:
-            psdecode_actions_res_sec = ResultTextSection(f"Actions detected with {PSDECODE}")
+            psdecode_actions_res_sec = ResultTextSection(f"Interesting actions captured by {PSDECODE}")
         else:
-            psdecode_actions_res_sec = ResultTextSection(f"Actions detected with subsequent run of {PSDECODE}")
+            psdecode_actions_res_sec = ResultTextSection(
+                f"Interesting actions captured with subsequent run of {PSDECODE}"
+            )
 
         psdecode_actions_res_sec.set_heuristic(5)
 
