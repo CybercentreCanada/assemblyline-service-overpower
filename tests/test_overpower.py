@@ -236,7 +236,7 @@ class TestOverpower:
     @staticmethod
     def test_handle_psdecode_output(overpower_class_instance, dummy_request_class_instance):
         dummy_request_class_instance.result = Result()
-        correct_res_sec = ResultSection("Actions detected with PSDecode")
+        correct_res_sec = ResultSection("Interesting actions captured by PSDecode")
         output = ["blah", "############################## Actions ##############################", "blah.com"]
         correct_res_sec.set_body("blah.com")
         correct_res_sec.set_heuristic(5)
