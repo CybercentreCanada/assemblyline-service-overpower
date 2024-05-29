@@ -619,7 +619,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
 
     behaviour_col["Uses WMI"] = [
         ["wmic"],
-        ["gwmi"],
+        ["gwmi "],
         ["Get-WmiObject"],
     ]
 
