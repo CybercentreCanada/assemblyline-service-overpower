@@ -1,7 +1,7 @@
 {
   "extra": {
     "drop_file": false,
-    "score": 641,
+    "score": 631,
     "sections": [
       {
         "auto_collapse": false,
@@ -134,31 +134,7 @@
       },
       {
         "auto_collapse": false,
-        "body": "Marks: gwmi",
-        "body_config": {},
-        "body_format": "TEXT",
-        "classification": "TLP:C",
-        "depth": 1,
-        "heuristic": {
-          "attack_ids": [],
-          "frequency": 1,
-          "heur_id": 3,
-          "score": 10,
-          "score_map": {
-            "Uses WMI": 10
-          },
-          "signatures": {
-            "Uses WMI": 1
-          }
-        },
-        "promote_to": null,
-        "tags": {},
-        "title_text": "Signature: Uses WMI",
-        "zeroize_on_tag_safe": false
-      },
-      {
-        "auto_collapse": false,
-        "body": "Marks: Script Execution, Hidden Window, Downloader, Uses WMI",
+        "body": "Marks: Script Execution, Hidden Window, Downloader",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -228,13 +204,6 @@
         "heur_id": 3,
         "signatures": [
           "Obfuscation"
-        ]
-      },
-      {
-        "attack_ids": [],
-        "heur_id": 3,
-        "signatures": [
-          "Uses WMI"
         ]
       },
       {
