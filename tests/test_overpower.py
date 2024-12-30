@@ -145,12 +145,12 @@ class TestOverpower:
     @staticmethod
     @pytest.mark.parametrize("sample", samples)
     def test_execute(sample, overpower_class_instance, dummy_completed_process_instance, mocker):
-        mocker.patch("overpower.profile_ps1", return_value=[])
+        mocker.patch("overpower.overpower.profile_ps1", return_value=[])
         mocker.patch.object(overpower_class_instance, "_handle_ps1_profiler_output")
         mocker.patch.object(overpower_class_instance, "_handle_psdecode_output")
         mocker.patch.object(overpower_class_instance, "_extract_supplementary")
         mocker.patch.object(overpower_class_instance, "_prepare_artifacts")
-        mocker.patch("overpower.Popen", return_value=dummy_completed_process_instance)
+        mocker.patch("overpower.overpower.Popen", return_value=dummy_completed_process_instance)
         mocker.patch.object(OntologyResults, "handle_artifacts")
 
         service_task = ServiceTask(sample)
@@ -168,7 +168,7 @@ class TestOverpower:
         assert overpower_class_instance.artifact_list == []
 
         # Code coverage
-        mocker.patch("overpower.Popen", side_effect=TimeoutExpired("blah", 1))
+        mocker.patch("overpower.overpower.Popen", side_effect=TimeoutExpired("blah", 1))
         overpower_class_instance.execute(service_request)
 
         if os.path.exists(overpower_class_instance.working_directory):
