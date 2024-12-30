@@ -13,7 +13,7 @@ from assemblyline_service_utilities.testing.helper import check_section_equality
 from assemblyline_v4_service.common.request import ServiceRequest
 from assemblyline_v4_service.common.result import Result, ResultSection, ResultTableSection, TableRow
 from assemblyline_v4_service.common.task import Task
-from overpower import Overpower
+from overpower.overpower import Overpower
 from tools.ps1_profiler import DEOBFUS_FILE_PREFIX
 
 # Getting absolute paths, names and regexes

@@ -1,14 +1,18 @@
 ARG branch=latest
 FROM cccs/assemblyline-v4-service-base:$branch
 
-ENV SERVICE_PATH overpower.Overpower
+# Python path to the service class from your service directory
+ENV SERVICE_PATH overpower.overpower.Overpower
 
-USER root
-# Update the list of packages
-RUN apt-get update
 # Install apt dependencies
-COPY pkglist.txt pkglist.txt
-RUN apt-get update && grep -vE '^#' pkglist.txt | xargs apt-get install -y && rm -rf /var/lib/apt/lists/*
+USER root
+COPY pkglist.txt /tmp/setup/
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+    $(grep -vE "^\s*(#|$)" /tmp/setup/pkglist.txt | tr "\n" " ") && \
+    rm -rf /tmp/setup/pkglist.txt /var/lib/apt/lists/*
+
 # Download the Microsoft repository GPG keys
 RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb
 # Register the Microsoft repository GPG keys
@@ -42,7 +46,11 @@ RUN pwsh -Command Get-Module -ListAvailable -Name PSDecode
 
 # Install python dependencies
 COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir --user --requirement requirements.txt && rm -rf ~/.cache/pip
+RUN pip install \
+    --no-cache-dir \
+    --user \
+    --requirement requirements.txt && \
+    rm -rf ~/.cache/pip
 
 # Install Box-PS fork from source
 # RUN wget https://github.com/cccs-kevin/box-ps/archive/refs/heads/master.zip -O /opt/al_support/box-ps.zip
@@ -51,12 +59,12 @@ RUN pip install --no-cache-dir --user --requirement requirements.txt && rm -rf ~
 # # This environment variable is required
 # ENV BOXPS /opt/al_support/box-ps/box-ps-master
 
-# Copy Overpower service code
+# Copy service code
 WORKDIR /opt/al_service
 COPY . .
 
 # Patch version in manifest
-ARG version=4.0.0.dev1
+ARG version=1.0.0.dev1
 USER root
 RUN sed -i -e "s/\$SERVICE_TAG/$version/g" service_manifest.yml
 
