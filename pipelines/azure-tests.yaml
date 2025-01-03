@@ -2,23 +2,6 @@ name: tests
 
 variables:
   - group: unittest-samples
-  - name: self_location
-    value: "self_location"
-  - name: full_self_location
-    value: "$(Agent.BuildDirectory)/$(self_location)"
-  - name: samples_location
-    value: "samples_location"
-  - name: full_samples_location
-    value: "$(Agent.BuildDirectory)/$(samples_location)"
-
-resources:
-  repositories:
-    - repository: unittest-samples
-      type: github
-      name: $(unittest_samples_repository)
-      ref: main
-      endpoint: github-repo-sa
-      trigger: none
 
 trigger: ["*"]
 pr: ["*"]
@@ -26,75 +9,24 @@ pr: ["*"]
 pool:
   vmImage: "ubuntu-20.04"
 
-jobs:
-  - job: run_test
-    strategy:
-      matrix:
-        Python3_11:
-         python.version: "3.11"
-        Python3_12:
-         python.version: "3.12"
+resources:
+  repositories:
+    - repository: PipelineTemplates
+      type: github
+      name: CybercentreCanada/assemblyline-pipeline-templates
+      ref: refs/heads/main
+      endpoint: github-repo-sa
+      trigger: none
+    - repository: unittest-samples
+      type: github
+      name: $(unittest_samples_repository)
+      ref: main
+      endpoint: github-repo-sa
+      trigger: none
 
-    timeoutInMinutes: 10
-
-    steps:
-      - task: UsePythonVersion@0
-        displayName: Set python version
-        inputs:
-          versionSpec: "$(python.version)"
-      - checkout: self
-        fetchDepth: 1
-        path: $(self_location)
-      - checkout: unittest-samples
-        fetchDepth: 1
-        path: $(samples_location)
-      - script: |
-          set -x # echo on
-          [ ! -d "$(pwd)/tests" ] && echo "No tests found" && exit
-          sudo apt-get update
-          if [[ -f "$(pwd)/pkglist.txt" ]]; then
-            grep -vE '^#' "$(pwd)/pkglist.txt" | xargs sudo apt install -y
-          fi
-          echo "Download the Microsoft repository GPG keys"
-          wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-          echo "Update the list of packages after we added packages.microsoft.com"
-          sudo apt-get update
-          echo "Install PowerShell"
-          # Pinning to version 7.3.3-1.deb
-          sudo apt-get install -y powershell=7.3.3-1.deb
-          echo "Cleanup packages-microsoft-prod.deb"
-          rm packages-microsoft-prod.deb
-          echo "Create the directory for the PSDecode module"
-          sudo mkdir -p /home/$USER/.local/share/powershell/Modules/PSDecode
-          sudo mkdir -p /var/lib/$USER/.local/share/powershell/Modules/PSDecode
-          echo "Move the PSDecode module to the correct directory"
-          sudo cp $(pwd)/tools/PSDecode.psm1 /home/$USER/.local/share/powershell/Modules/PSDecode
-          sudo cp $(pwd)/tools/PSDecode.psm1 /var/lib/$USER/.local/share/powershell/Modules/PSDecode
-          ls "/home/$USER/.local/share/powershell/Modules/PSDecode"
-          ls "/var/lib/$USER/.local/share/powershell/Modules/PSDecode"
-          echo "Testing pwsh if PSDecode exists"
-          pwsh -Command printenv PSModulePath
-          pwsh -Command Get-Module -ListAvailable -Name PSDecode
-          sudo rm -rf /var/lib/apt/lists/*
-          echo "Installing pip requirements"
-          sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir assemblyline assemblyline_v4_service
-          [ -f $(pwd)/requirements.txt ] && sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r $(pwd)/requirements.txt
-          # echo "Installing Box-PS"
-          # sudo mkdir /opt/al_support/
-          # sudo wget https://github.com/cccs-kevin/box-ps/archive/refs/heads/master.zip -O /opt/al_support/box-ps.zip
-          # sudo unzip /opt/al_support/box-ps.zip -d /opt/al_support/box-ps
-          # sudo env "PATH=$PATH" python -m pip install -e /opt/al_support/box-ps/box-ps-master/pyboxps-3.8+/
-          # export BOXPS="/opt/al_support/box-ps/box-ps-master"
-          # echo "Testing boxps"
-          # boxps
-          [ -f $(pwd)/tests/requirements.txt ] && sudo env "PATH=$PATH" python -m pip install -U --no-cache-dir -r $(pwd)/tests/requirements.txt
-          sudo rm -rf /tmp/* /var/lib/apt/lists/* ~/.cache/pip
-        workingDirectory: $(full_self_location)
-        displayName: Setup environment
-      - script: |
-          # export BOXPS=/opt/al_support/box-ps/box-ps-master
-          [ ! -d "$(pwd)/tests" ] && echo "No tests found" && exit
-          export REPO_NAME=${BUILD_REPOSITORY_NAME##*/}
-          python -m pytest -p no:cacheprovider --durations=10 -rsx -xsvvv --disable-warnings
-        workingDirectory: $(full_self_location)
-        displayName: Test
+extends:
+  template: stages/test-service.yaml@PipelineTemplates
+  parameters:
+    samples_repo: unittest-samples
+    test_container: "true"
+    
