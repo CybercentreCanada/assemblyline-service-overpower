@@ -7,7 +7,7 @@ import zlib
 from collections import defaultdict
 from typing import Any, Dict, List, Tuple
 
-from assemblyline_service_utilities.common.extractor.base64 import base64_search
+from assemblyline_service_utilities.common.extractor.base64 import find_base64
 from Crypto.Cipher import AES
 
 __author__ = "Jeff White [karttoon] @noottrak"
@@ -1693,34 +1693,36 @@ def decompress_data(content_data):
     return content_data
 
 
-def decode_base64(output, entries, modification_flag):
+def decode_base64(output, content_data: str, modification_flag: bool) -> bool:
     """
     Attempts to decode Base64 content.
 
     Args:
         output: What is to be returned by the profiler
-        entries: A dictionary with the original base64 encoded sections as keys
-        and the corresponding decoded data as values
+        content_data: Current state of the modified script
         modification_flag: Boolean
 
     Returns:
-        content_data: Decoded Base64 string
         modification_flag: Boolean
     """
-    for entry, decoded in entries.items():
+    data = content_data.encode()
+    entries = find_base64(data)
+    for decoded, start, end in entries:
+        entry = data[start:end]
         try:
             # In instances where we have a broken/fragmented Base64 string.
             # Try to subtract to the lower boundary than attempting to add padding.
             while len(entry) % 4:
                 entry = entry[:-1]
             base_string = strip_ascii(decoded)
+            entry_str = entry.decode()
 
             # Require a minimum length for encoded and decoded values
-            if entry and entry.decode() not in garbage_list and len(entry) > 50 and len(base_string) > 16:
+            if entry and entry_str not in garbage_list and len(entry) > 50 and len(base_string) > 16:
                 output["extracted"].append({"type": "base64_decoded", "data": decoded})
-                garbage_list.append(entry.decode())
+                garbage_list.append(entry_str)
                 modification_flag = True
-        except Exception as e:
+        except Exception:
             pass
 
     if modification_flag:
@@ -1914,26 +1916,17 @@ def unravel_content(output, original_data):
         if any(entry in original_data.lower() for entry in reverse_string):
             content_data, modification_flag = reverse_strings(output, original_data, content_data, modification_flag)
 
-        # Decompress Streams - Changes STATE
-        if (
-            all(entry in content_data.lower() for entry in ["streamreader", "frombase64string"])
-            or all(entry in content_data.lower() for entry in ["deflatestream", "decompress"])
-            or all(entry in content_data.lower() for entry in ["memorystream", "frombase64string"])
-        ):
-            # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
-            if len(content_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", content_data)) >= 5000:
-                pass
-            else:
+        # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
+        if len(content_data) < 1000000 and content_data.count("\n") < 5000:
+            # Decompress Streams - Changes STATE
+            if (
+                all(entry in content_data.lower() for entry in ["streamreader", "frombase64string"])
+                or all(entry in content_data.lower() for entry in ["deflatestream", "decompress"])
+                or all(entry in content_data.lower() for entry in ["memorystream", "frombase64string"])
+            ):
                 content_data, modification_flag = decompress_content(output, content_data, modification_flag)
-
-        # Base64 Decodes - Changes STATE
-        entries = base64_search(content_data.encode())
-        if len(entries):
-            # If a large compressed embedded file is attempted to be decompressed, the service will timeout...
-            if len(content_data) >= 1000000 or len(re.findall(r"(\n|\r\n)", content_data)) >= 5000:
-                pass
-            else:
-                modification_flag = decode_base64(output, entries, modification_flag)
+            # Base64 Decodes - Changes STATE
+            modification_flag = decode_base64(output, content_data, modification_flag)
 
         # Decrypts SecureStrings - Changes STATE
         if (
