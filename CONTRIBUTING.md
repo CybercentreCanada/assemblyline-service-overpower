@@ -34,7 +34,7 @@ We check for new pull requests every day and will merge them in once they have b
 
 # Guide de contribution d'Assemblyline
 
-Ce guide couvre les bases de la façon de contribuer au projet Assemblyline.
+Ce guide couvre les bases afin de contribuer au projet Assemblyline.
 
 Le code Python doit suivre les directives PEP8 définies ici:
 [Directives PEP8](https://www.python.org/dev/peps/pep-0008/).
