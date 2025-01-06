@@ -8,15 +8,15 @@
       "__svc_name": "overpower",
       "__repository": "assemblyline-service-overpower",
       "__pkg_name": "overpower",
-      "__class_name": "Overpower",
       "short_description": "De-obfuscates PowerShell files, profiles them and runs them.",
-      "short_description_fr": "Désobfusque les fichiers PowerShell, les profile et les exécute.",
+      "short_description_fr": "D\u00e9sobfusque les fichiers PowerShell, les profile et les ex\u00e9cute.",
       "stage": "CORE",
       "category": "Static Analysis",
       "org_name_full": "CybercentreCanada",
       "org_name_short": "cccs",
       "license": "mit",
-      "_template": "https://github.com/CybercentreCanada/assemblyline-service-template.git"
+      "_template": "https://github.com/CybercentreCanada/assemblyline-service-template.git",
+      "class_name": "Overpower"
     }
   },
   "directory": null
