@@ -1225,31 +1225,30 @@ def format_replace(output, content_data):
         content_data: 'This is an "EXAMPLE"'
         modification_flag: Boolean
     """
-    try:
-        # Inner most operators, may not contain strings potentially with nested format operator layers ("{").
-        obf_group = re.search(
-            r"\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(\"|\')[^{]+?(\"|\')(?:\s*)\)",
-            content_data,
-        ).group()
-    except Exception as e:
-        try:
-            # General capture of format operators without nested values.
-            # Replaced LF with 0x01 simply to have a place holder to return the string back to later.
-            obf_group = re.search(
-                r"\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(\"|\').+?(\"|\')(?:\s*)\)(?![^)])",
-                content_data.replace("\n", "\x01"),
-            ).group()
-
-        except Exception as e:
+    # Inner most operators, may not contain strings potentially with nested format operator layers ("{").
+    obf = re.search(
+        r"\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(\"|\')[^{]+?(\"|\')(?:\s*)\)",
+        content_data,
+    )
+    if obf is None:
+        # General capture of format operators without nested values.
+        # Replaced LF with 0x01 simply to have a place holder to return the string back to later.
+        obf = re.search(
+            r"\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(\"|\').+?(\"|\')(?:\s*)\)(?![^)])",
+            content_data.replace("\n", "\x01"),
+        )
+        if obf is None:
             # Final attempt by removing all LF - will potentially modify input string greatly
-            obf_group = re.search(
+            obf = re.search(
                 r"\((?:\s*)(\"|\')((?:\s*){[0-9]{1,3}}(?:\s*))+\1(?:\s*)-[fF](?:\s*)(\"|\').+?(\"|\')(?:\s*)\)(?![^)])",
                 content_data.replace("\n", ""),
-            ).group()
-
-            if obf_group:
+            )
+            if obf:
                 content_data = content_data.replace("\n", "")
+            else:
+                return content_data, False
 
+    obf_group = obf.group()
     built_string = format_builder(obf_group)
 
     content_data = content_data.replace(obf_group.replace("\x01", "\n"), '"' + built_string + '"').replace("\x01", "\n")
