@@ -1,1 +1,3 @@
+assemblyline
 assemblyline-service-utilities
+assemblyline-v4-service

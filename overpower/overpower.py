@@ -565,8 +565,10 @@ class Overpower(ServiceBase):
         for root, dirs, _ in walk(getcwd()):
             for d in dirs:
                 dir_path = path.join(root, d)
-                if len(listdir(dir_path)) == 0:
-                    rmdir(dir_path)
+                try:
+                    rmdir(dir_path)  # Non-empty dir raises OSError
+                except OSError:
+                    pass
 
         # Retrieve artifacts
         for root, _, files in walk(self.working_directory):

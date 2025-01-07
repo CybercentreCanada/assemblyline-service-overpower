@@ -1,2 +1,4 @@
+assemblyline
+assemblyline-service-utilities
 pytest
 pytest-mock

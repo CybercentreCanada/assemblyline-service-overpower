@@ -1,0 +1,23 @@
+{
+  "template": "https://github.com/CybercentreCanada/assemblyline-service-template.git",
+  "commit": "6d2fcb683f00eeda843cf2c40981e266679a97dc",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "service_name": "overpower",
+      "__svc_name": "overpower",
+      "__repository": "assemblyline-service-overpower",
+      "__pkg_name": "overpower",
+      "__class_name": "Overpower",
+      "short_description": "De-obfuscates PowerShell files, profiles them and runs them.",
+      "short_description_fr": "Désobfusque les fichiers PowerShell, les profile et les exécute.",
+      "stage": "CORE",
+      "category": "Static Analysis",
+      "org_name_full": "CybercentreCanada",
+      "org_name_short": "cccs",
+      "license": "mit",
+      "_template": "https://github.com/CybercentreCanada/assemblyline-service-template.git"
+    }
+  },
+  "directory": null
+}
