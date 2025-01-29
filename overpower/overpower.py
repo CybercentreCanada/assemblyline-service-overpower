@@ -138,10 +138,17 @@ class Overpower(ServiceBase):
 
         unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
         files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
+        missing_files = set()
         for file_to_move in files_to_move:
-            copy(file_to_move, self.working_directory)
-            remove(file_to_move)
-        return files_to_move
+            try:
+                copy(file_to_move, self.working_directory)
+            except FileNotFoundError:
+                missing_files.add(file_to_move)
+            try:
+                remove(file_to_move)
+            except FileNotFoundError:
+                pass  # File is not there anymore, job done
+        return files_to_move.difference(missing_files)  # Remove files that didn't copy
 
     def _remove_fake_files(self) -> None:
         """
