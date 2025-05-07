@@ -92,5 +92,5 @@ heuristics:
 
 docker_config:
   image: ${REGISTRY}cccs/assemblyline-service-overpower:$SERVICE_TAG
-  cpu_cores: 1.0
+  cpu_cores: 2
   ram_mb: 2048
