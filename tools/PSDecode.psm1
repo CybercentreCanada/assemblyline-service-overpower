@@ -14,9 +14,9 @@ function Invoke-Expression()
 
         if ("$($Command)".Length -gt 500) {
             # We want the command on a single line for when actions are replaced
-            $cmd = ("$($Command)").substring(0, 500).Replace("`n", "")
+            $cmd = ("$($Command)").Replace("`n", "")
             # Add the action, then write
-            Write-Host "%#[Invoke-Expression] Execute/Open: $($cmd)...%#"
+            Write-Host "%#[Invoke-Expression] Execute/Open: $($cmd)%#"
         } else {
             # Add the action, then write
             Write-Host "%#[Invoke-Expression] Execute/Open: $($Command)%#"
@@ -54,9 +54,9 @@ function Invoke-Command()
 
             if ("$($Command)".Length -gt 500) {
                 # We want the command on a single line for when actions are replaced
-                $cmd = ("$($Command)").substring(0, 500).Replace("`n", "")
+                $cmd = ("$($Command)").Replace("`n", "")
                 # Add the action, then write
-                Write-Host "%#[Invoke-Command] Execute/Open: $($cmd)...%#"
+                Write-Host "%#[Invoke-Command] Execute/Open: $($cmd)%#"
             } else {
                 # Add the action, then write
                 Write-Host "%#[Invoke-Command] Execute/Open: $($Command)%#"
@@ -68,9 +68,9 @@ function Invoke-Command()
         } elseif ($ScriptBlock) {
             if ("$($ScriptBlock)".Length + "$($ArgumentList)".Length -gt 500) {
                 # We want the script block + argument list on a single line for when actions are replaced
-                $cmd = ("$($ScriptBlock)" + " " + "$($ArgumentList)").substring(0, 500).Replace("`n", "")
+                $cmd = ("$($ScriptBlock)" + " " + "$($ArgumentList)").Replace("`n", "")
                 # Add the action
-                Write-Host "%#[Invoke-Command] Execute/Open: $($cmd)...%#"
+                Write-Host "%#[Invoke-Command] Execute/Open: $($cmd)%#"
             } else {
                 # Add the action
                 Write-Host "%#[Invoke-Command] Execute/Open: -ScriptBlock $($ScriptBlock) -ArgumentList $($ArgumentList)%#"
@@ -201,9 +201,9 @@ function Start-Job {
         )
         if ("$($ScriptBlock)".Length + "$($ArgumentList)".Length -gt 500) {
             # We want the script block and argument list on a single line for when actions are replaced
-            $start_job = ("$($ScriptBlock)" + " " + "$($ArgumentList)").substring(0, 500).Replace("`n", "")
+            $start_job = ("$($ScriptBlock)" + " " + "$($ArgumentList)").Replace("`n", "")
             # Add the action
-            Write-Host "%#[Start-Job] $($start_job)...%#"
+            Write-Host "%#[Start-Job] $($start_job)%#"
         } else {
             # Add the action
             Write-Host "%#[Start-Job] $($ScriptBlock)%#"
@@ -1056,20 +1056,7 @@ function Resolve_String_Formats
                 $Command = $Command.Replace($match, "'$($resolved_string)'")
                 $truncated = $false;
                 $match = "$($match)"
-                if ($match.Length -gt 500) {
-                    $truncated = $true;
-                    $match = $match.substring(0, 500)
-                }
-                if ($resolved_string.Length -gt 500) {
-                    $truncated = $true;
-                    $resolved_string = $resolved_string.substring(0, 500)
-                }
-                if ($truncated) {
-                    Write-Verbose "[Resolve_String_Formats] Replacing: $($match)... With: $($resolved_string)..."
-                }
-                else {
-                    Write-Verbose "[Resolve_String_Formats] Replacing: $($match) With: $($resolved_string)"
-                }
+                Write-Verbose "[Resolve_String_Formats] Replacing: $($match) With: $($resolved_string)"
             }
             $matches = $str_format_pattern.Matches($Command)
         }
@@ -1931,16 +1918,7 @@ function PSDecode {
                 $action_lines = $action -split "`n";
                 $action_line_count = 0
                 ForEach ($action_line in $action_lines) {
-                    if ($action_line_count -gt 100) {
-                        # After 100 lines, we get it
-                        Write-Host "..."
-                        break
-                    }
-                    if($action_line.length -gt 10000) {
-                        Write-Host $action_line.substring(0, 10000) "..."
-                    } else {
-                        Write-Host $action_line
-                    }
+                    Write-Host $action_line
                     $action_line_count += 1
                 }
             }

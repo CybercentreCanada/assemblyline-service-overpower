@@ -458,7 +458,9 @@ class Overpower(ServiceBase):
         if subsequent_run:
             psdecode_actions_res_sec.heuristic.add_signature_id("suspicious_behaviour_combo_url")
 
-        psdecode_actions_res_sec.add_lines(actions)
+        psdecode_actions_res_sec.add_lines(
+            [action[:500] + '...' if len(action) > 500 else action for action in actions]
+        )
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         iex_count = 0
         urls_seen_in_actions: Set[str] = set()
