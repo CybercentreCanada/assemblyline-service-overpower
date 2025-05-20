@@ -138,10 +138,17 @@ class Overpower(ServiceBase):
 
         unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
         files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
+        missing_files = set()
         for file_to_move in files_to_move:
-            copy(file_to_move, self.working_directory)
-            remove(file_to_move)
-        return files_to_move
+            try:
+                copy(file_to_move, self.working_directory)
+            except FileNotFoundError:
+                missing_files.add(file_to_move)
+            try:
+                remove(file_to_move)
+            except FileNotFoundError:
+                pass  # File is not there anymore, job done
+        return files_to_move.difference(missing_files)  # Remove files that didn't copy
 
     def _remove_fake_files(self) -> None:
         """
@@ -451,7 +458,9 @@ class Overpower(ServiceBase):
         if subsequent_run:
             psdecode_actions_res_sec.heuristic.add_signature_id("suspicious_behaviour_combo_url")
 
-        psdecode_actions_res_sec.add_lines(actions)
+        psdecode_actions_res_sec.add_lines(
+            [action[:500] + '...' if len(action) > 500 else action for action in actions]
+        )
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         iex_count = 0
         urls_seen_in_actions: Set[str] = set()
