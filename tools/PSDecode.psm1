@@ -668,6 +668,18 @@ $Get_WmiObject_Override = @'
     }
 '@
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-command?view=powershell-5.1
+# We don't want cmdlets showing up next to overrides
+$Get_Command_Override = @'
+    function Get-Command {
+        $list = Microsoft.Powershell.Core\Get-Command $Args
+        $overrides = ForEach($command in $list) { 
+            Microsoft.Powershell.Core\Get-Command $command.Name
+        }
+        return $overrides | Select -unique
+    }
+'@
+
 function Get_Encoding_Type {
     param(
         [Parameter(Mandatory=$True)]
@@ -1733,6 +1745,7 @@ function PSDecode {
 
     if(!$x){
         $override_functions += $New_Object_Override
+        $override_functions += $Get_Command_Override
     }
 
     if($fakefile){

@@ -466,9 +466,11 @@ class Overpower(ServiceBase):
         urls_seen_in_actions: Set[str] = set()
         paths_seen_in_actions: Set[str] = set()
         for action in actions:
-            extract_iocs_from_text_blob(action, actions_ioc_table)
+            static_iocs = False
             if action.startswith(INVOKE_EXPRESSION_ACTION):
+                static_iocs = True  # iEX calls have the same false positives as static powershell scripts
                 iex_count += 1
+            extract_iocs_from_text_blob(action, actions_ioc_table, is_network_static=static_iocs)
             match = re.search(DOWNLOAD_FILE_REGEX, action, re.IGNORECASE)
             if match and len(match.regs) == 3:
                 url = match.group(1)
