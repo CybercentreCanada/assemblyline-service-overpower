@@ -667,7 +667,7 @@ class Overpower(ServiceBase):
         :return: None
         """
         if file_type == "code/batch":
-            with open(file_path, "r") as f:
+            with open(file_path, "r", encoding="ascii", errors="ignore") as f:
                 body = f.read()
             url_sec = ResultTableSection("IOCs found in extracted batch file")
             extract_iocs_from_text_blob(body, url_sec, is_network_static=True)
