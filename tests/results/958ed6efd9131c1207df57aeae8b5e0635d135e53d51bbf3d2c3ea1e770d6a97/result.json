@@ -56,10 +56,6 @@
             "ioc_type": "domain"
           },
           {
-            "ioc": "http://deal.real",
-            "ioc_type": "uri"
-          },
-          {
             "ioc": "https://transfer.sh/get/vpiHmi/invoice.pdf",
             "ioc_type": "uri"
           },
@@ -87,13 +83,6 @@
         },
         "promote_to": null,
         "tags": {
-          "file": {
-            "string": {
-              "extracted": [
-                "http://deal.real"
-              ]
-            }
-          },
           "network": {
             "dynamic": {
               "domain": [
@@ -180,10 +169,6 @@
             "ioc_type": "domain"
           },
           {
-            "ioc": "http://deal.real",
-            "ioc_type": "uri"
-          },
-          {
             "ioc": "https://transfer.sh/get/vpiHmi/invoice.pdf",
             "ioc_type": "uri"
           },
@@ -211,13 +196,6 @@
         },
         "promote_to": null,
         "tags": {
-          "file": {
-            "string": {
-              "extracted": [
-                "http://deal.real"
-              ]
-            }
-          },
           "network": {
             "static": {
               "domain": [
@@ -307,16 +285,6 @@
       "file.string.extracted": [
         {
           "heur_id": 5,
-          "signatures": [],
-          "value": "http://deal.real"
-        },
-        {
-          "heur_id": 1,
-          "signatures": [],
-          "value": "http://deal.real"
-        },
-        {
-          "heur_id": 1,
           "signatures": [],
           "value": "http://deal.real"
         }
