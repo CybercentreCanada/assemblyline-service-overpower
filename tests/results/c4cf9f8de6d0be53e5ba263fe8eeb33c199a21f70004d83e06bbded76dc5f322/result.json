@@ -206,15 +206,15 @@
           "heur_id": 3,
           "score": 100,
           "score_map": {
-            "Embedded File": 100
+            "Embedded PE": 100
           },
           "signatures": {
-            "Embedded File": 1
+            "Embedded PE": 1
           }
         },
         "promote_to": null,
         "tags": {},
-        "title_text": "Signature: Embedded File",
+        "title_text": "Signature: Embedded PE",
         "zeroize_on_tag_safe": false
       },
       {
@@ -385,7 +385,7 @@
         "attack_ids": [],
         "heur_id": 3,
         "signatures": [
-          "Embedded File"
+          "Embedded PE"
         ]
       },
       {

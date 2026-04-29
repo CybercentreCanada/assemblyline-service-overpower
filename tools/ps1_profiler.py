@@ -83,7 +83,7 @@ def score_behaviours(behaviour_tags: Dict[str, Any]) -> Tuple[float, str, Dict[s
         "AMSI Bypass": 1.0,
         "Clear Logs": 1.0,
         "Coin Miner": 1.0,
-        "Embedded File": 2.0,
+        "Embedded PE": 2.0,
         "Abnormal Size": 1.0,
         "Ransomware": 1.0,
         "DNS C2": 1.0,
@@ -286,7 +286,7 @@ def profile_behaviours(behaviour_tags: Dict[str, any], original_data, alternativ
         ["xmrig.exe"],
     ]
 
-    behaviour_col["Embedded File"] = [
+    behaviour_col["Embedded PE"] = [
         ["MZ", "This program cannot be run in DOS mode"],
         ["TVqQAAMAAAA"],  # B64 MZ Header
     ]
