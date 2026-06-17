@@ -38,14 +38,14 @@ TRANSLATE_SCORE = {
     6.0: 1000,  # Malware (95-100% hit rate)
 }
 
-DOWNLOAD_FILE_REGEX = "\[.+\] Download From: (.+) --> Save To: (.+)\n"
+DOWNLOAD_FILE_REGEX = re.compile(r"\[.+\] Download From: (.+) --> Save To: (.+)\n", re.IGNORECASE)
 INVOKE_EXPRESSION_ACTION = "[Invoke-Expression]"
 
 # The SHA256 representation when PSDecode creates a fake file when pretending to download something
 FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e3b9f8"
 
 # This regular expression is used to find GPG keys statically in the code
-GPG_KEY_REGEX = r"(?:^|\n).*\becho\b\s*['\"]([a-zA-Z0-9]+)['\"]\s*\|.*\bgpg\b.*"
+GPG_KEY_REGEX = re.compile(r"(?:^|\n).*\becho\b\s*['\"]([a-zA-Z0-9]+)['\"]\s*\|.*\bgpg\b.*")
 
 # Enumerations
 PSDECODE = "PSDecode"
@@ -471,7 +471,7 @@ class Overpower(ServiceBase):
                 static_iocs = True  # iEX calls have the same false positives as static powershell scripts
                 iex_count += 1
             extract_iocs_from_text_blob(action, actions_ioc_table, is_network_static=static_iocs)
-            match = re.search(DOWNLOAD_FILE_REGEX, action, re.IGNORECASE)
+            match = DOWNLOAD_FILE_REGEX.search(action)
             if match and len(match.regs) == 3:
                 url = match.group(1)
                 urls_seen_in_actions.add(url)
@@ -683,19 +683,18 @@ class Overpower(ServiceBase):
         :param request: The ServiceRequest object
         :return: None
         """
+        file_contents = request.file_contents
         try:
-            if request.file_contents.startswith(b"\xff\xfe"):
-                matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode("utf-16"))
-            else:
-                matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode())
+            encoding = "utf-16" if file_contents.startswith(b"\xff\xfe") else "utf-8"
+            matches = GPG_KEY_REGEX.findall(file_contents.decode(encoding))
         except Exception:
-            matches = []
+            return
 
         if not matches:
             return
 
         if "passwords" in request.temp_submission_data and isinstance(request.temp_submission_data["passwords"], list):
             request.temp_submission_data["passwords"].extend(set(matches))
+            request.temp_submission_data["passwords"].sort()
         else:
             request.temp_submission_data["passwords"] = sorted(set(matches))
-        request.temp_submission_data["passwords"].sort()
