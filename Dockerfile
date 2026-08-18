@@ -20,8 +20,8 @@ RUN dpkg -i packages-microsoft-prod.deb
 # Update the list of packages after we added packages.microsoft.com
 RUN apt-get update
 # Install PowerShell
-# Pinning to version 7.3.3-1.deb
-RUN apt-get install -y powershell=7.3.3-1.deb
+# Pinning to the latest PowerShell 7.6 LTS patch
+RUN apt-get install -y powershell=7.6.5-1.deb
 # Cleanup
 RUN rm packages-microsoft-prod.deb
 
