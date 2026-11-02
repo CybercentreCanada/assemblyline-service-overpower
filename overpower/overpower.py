@@ -1,9 +1,11 @@
+
+import json
+import os
 import re
+import shutil
+import subprocess
+
 from copy import deepcopy
-from json import dumps
-from os import environ, getcwd, listdir, path, remove, rmdir, walk
-from shutil import copy
-from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Thread
 from time import sleep, time
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -58,8 +60,8 @@ class Overpower(ServiceBase):
         super(Overpower, self).__init__(config)
         self.artifact_hashes = None
         self.artifact_list = None
-        self.safe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
-        self.identify = get_identify(use_cache=environ.get("PRIVILEGED", "false").lower() == "true")
+        self.safe_file_list = [os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files]
+        self.identify = get_identify(use_cache=os.environ.get("PRIVILEGED", "false").lower() == "true")
         self.safelist: Dict[str, Dict[str, List[str]]] = {}
 
     def start(self):
@@ -87,15 +89,15 @@ class Overpower(ServiceBase):
         resp[tool_name] = []
         try:
             # Stream stdout to resp rather than waiting for process to finish
-            with Popen(
+            with subprocess.Popen(
                 args=args,
-                stdout=PIPE,
+                stdout=subprocess.PIPE,
                 bufsize=1,
                 universal_newlines=True,
             ) as p:
                 for line in p.stdout:
                     resp[tool_name].append(line)
-        except TimeoutExpired:
+        except subprocess.TimeoutExpired:
             pass
         except Exception as e:
             self.log.warning(f"{tool_name} crashed due to {repr(e)}")
@@ -136,16 +138,16 @@ class Overpower(ServiceBase):
         :return: A set containing the file paths of the files that were moved
         """
 
-        unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
+        unsafe_file_list = [os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files]
         files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
         missing_files = set()
         for file_to_move in files_to_move:
             try:
-                copy(file_to_move, self.working_directory)
+                shutil.copy(file_to_move, self.working_directory)
             except FileNotFoundError:
                 missing_files.add(file_to_move)
             try:
-                remove(file_to_move)
+                os.remove(file_to_move)
             except FileNotFoundError:
                 pass  # File is not there anymore, job done
         return files_to_move.difference(missing_files)  # Remove files that didn't copy
@@ -157,17 +159,17 @@ class Overpower(ServiceBase):
         """
         _ = self._move_unsafe_new_files_to_working_dir()
 
-        for file in sorted(listdir(self.working_directory)):
-            file_path = path.join(self.working_directory, file)
+        for file in sorted(os.listdir(self.working_directory)):
+            file_path = os.path.join(self.working_directory, file)
 
-            if path.isdir(file_path):
+            if os.path.isdir(file_path):
                 continue
 
             artifact_sha256 = get_sha256_for_file(file_path)
 
             if artifact_sha256 in [FAKE_FILE_CONTENT]:
                 self.log.debug(f"Removed fake file '{file}' in preparation for subsequent {PSDECODE} run...")
-                remove(file_path)
+                os.remove(file_path)
 
     def _setup_psdecode_args(
         self, request: ServiceRequest, tool_timeout: int, fake_web_download: bool = False
@@ -223,8 +225,8 @@ class Overpower(ServiceBase):
         files_to_profile = [(request.file_name, request.file_path)]
         files_to_profile.extend(
             [
-                (layer, path.join(self.working_directory, layer))
-                for layer in sorted(listdir(self.working_directory))
+                (layer, os.path.join(self.working_directory, layer))
+                for layer in sorted(os.listdir(self.working_directory))
                 if "layer" in layer
             ]
         )
@@ -380,14 +382,14 @@ class Overpower(ServiceBase):
             if number_of_extracted >= extracted_cap:
                 break
 
-            path_to_write = path.join(self.working_directory, f"ps1profiler_{extracted['type']}_{index}")
+            path_to_write = os.path.join(self.working_directory, f"ps1profiler_{extracted['type']}_{index}")
             with open(path_to_write, "wb") as f:
                 f.write(extracted["data"])
 
             file_type_details = self.identify.fileinfo(path_to_write, generate_hashes=False)
             if file_type_details["type"] in ["unknown", "text/plain"]:
                 self.log.debug(f"{path_to_write} was identified as {file_type_details['type']}. Ignoring...")
-                remove(path_to_write)
+                os.remove(path_to_write)
                 continue
 
             self.log.debug(f"Wrote {path_to_write} to disk for extraction...")
@@ -545,7 +547,7 @@ class Overpower(ServiceBase):
         :return: None
         """
         if ps1_profiler_output:
-            ps1_profiler_suppl_path = path.join(self.working_directory, "suppl_ps1_profiler_output.json")
+            ps1_profiler_suppl_path = os.path.join(self.working_directory, "suppl_ps1_profiler_output.json")
             ps1_profiler_output_copy = deepcopy(ps1_profiler_output)
             if any(values.get("extracted") for values in ps1_profiler_output_copy.values()):
                 for values in ps1_profiler_output_copy.values():
@@ -553,9 +555,9 @@ class Overpower(ServiceBase):
                         if isinstance(item["data"], bytes):
                             item["data"] = safe_str(item["data"])
             with open(ps1_profiler_suppl_path, "w") as f:
-                f.write(dumps(ps1_profiler_output_copy))
+                f.write(json.dumps(ps1_profiler_output_copy))
         if psdecode_output:
-            psdecode_suppl_path = path.join(self.working_directory, "suppl_psdecode_output.txt")
+            psdecode_suppl_path = os.path.join(self.working_directory, "suppl_psdecode_output.txt")
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
         # for boxps_file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
@@ -573,18 +575,18 @@ class Overpower(ServiceBase):
         files_to_move = self._move_unsafe_new_files_to_working_dir()
 
         # Remove empty dirs
-        for root, dirs, _ in walk(getcwd()):
+        for root, dirs, _ in os.walk(os.getcwd()):
             for d in dirs:
-                dir_path = path.join(root, d)
+                dir_path = os.path.join(root, d)
                 try:
-                    rmdir(dir_path)  # Non-empty dir raises OSError
+                    os.rmdir(dir_path)  # Non-empty dir raises OSError
                 except OSError:
                     pass
 
         # Retrieve artifacts
-        for root, _, files in walk(self.working_directory):
+        for root, _, files in os.walk(self.working_directory):
             for file in sorted(files):
-                file_path = path.join(root, file)
+                file_path = os.path.join(root, file)
                 # Skip Box-PS execution artifacts
                 # if root.endswith("boxps"):
                 #     # These files are handled in _extract_supplementary
