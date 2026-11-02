@@ -8,7 +8,7 @@ import subprocess
 from copy import deepcopy
 from threading import Thread
 from time import sleep, time
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.forge import get_identify
@@ -56,13 +56,13 @@ PS1_PROFILER = "PowerShellProfiler"
 
 
 class Overpower(ServiceBase):
-    def __init__(self, config: Optional[Dict] = None) -> None:
+    def __init__(self, config: dict | None = None) -> None:
         super(Overpower, self).__init__(config)
         self.artifact_hashes = None
         self.artifact_list = None
         self.safe_file_list = [os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files]
         self.identify = get_identify(use_cache=os.environ.get("PRIVILEGED", "false").lower() == "true")
-        self.safelist: Dict[str, Dict[str, List[str]]] = {}
+        self.safelist: dict[str, dict[str, list[str]]] = {}
 
     def start(self):
         try:
@@ -74,8 +74,8 @@ class Overpower(ServiceBase):
     def _run_tool(
         self,
         tool_name: str,
-        args: List[str],
-        resp: Dict[str, Any],
+        args: list[str],
+        resp: dict[str, Any],
     ) -> None:
         """
         This method runs a tool and appends the stdout from that tool to the dictionary
@@ -131,7 +131,7 @@ class Overpower(ServiceBase):
 
     #     return boxps_output
 
-    def _move_unsafe_new_files_to_working_dir(self) -> Set[str]:
+    def _move_unsafe_new_files_to_working_dir(self) -> set[str]:
         """
         Since we are running samples right on the Docker container, there is a chance that samples could drop
         files to the root directory of execution
@@ -173,7 +173,7 @@ class Overpower(ServiceBase):
 
     def _setup_psdecode_args(
         self, request: ServiceRequest, tool_timeout: int, fake_web_download: bool = False
-    ) -> List[str]:
+    ) -> list[str]:
         psdecode_args = [
             "pwsh",
             "-Command",
@@ -193,10 +193,10 @@ class Overpower(ServiceBase):
 
     def execute(self, request: ServiceRequest) -> None:
         self.artifact_hashes = set()
-        self.artifact_list: List[Dict[str, Any]] = []
+        self.artifact_list: list[dict[str, Any]] = []
         add_supplementary = request.get_param("add_supplementary")
         request.result = Result()
-        responses: Dict[str, List[str]] = {}
+        responses: dict[str, list[str]] = {}
 
         # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform
         # the deobfuscation when setting the tool_timeout param...
@@ -230,7 +230,7 @@ class Overpower(ServiceBase):
                 if "layer" in layer
             ]
         )
-        total_ps1_profiler_output: Dict[str, Any] = {}
+        total_ps1_profiler_output: dict[str, Any] = {}
         # We do not want a loop of PowerShellProfiler extractions
         if request.temp_submission_data.get("deobfuscated_by_ps1profiler") and request.task.file_name.startswith(
             DEOBFUS_FILE_PREFIX
@@ -283,7 +283,7 @@ class Overpower(ServiceBase):
         # Adding sandbox artifacts using the OntologyResults helper class
         _ = OntologyResults.handle_artifacts(self.artifact_list, request)
 
-    def _handle_ps1_profiler_output(self, output: Dict[str, Any], result: Result, file_name: str) -> bool:
+    def _handle_ps1_profiler_output(self, output: dict[str, Any], result: Result, file_name: str) -> bool:
         """
         This method converts the output from the PowerShellProfiler tool into ResultSections
         :param output: The output from the PowerShellProfiler tool
@@ -292,9 +292,9 @@ class Overpower(ServiceBase):
         :return: A flag indicating that we need to re-run PSDecode
         """
         # Get previous result sections for handling PowerShellProfiler profiles
-        previous_signatures: List[str] = []
-        previous_families: List[str] = []
-        previous_iocs: List[Tuple[str, str]] = []
+        previous_signatures: list[str] = []
+        previous_families: list[str] = []
+        previous_iocs: list[tuple[str, str]] = []
         static_uri_counter = 0
         for section in result.sections:
             for subsection in section.subsections:
@@ -414,7 +414,7 @@ class Overpower(ServiceBase):
                         if (tag, value) in previous_iocs:
                             values.remove(value)
 
-                tags_to_remove: Set[str] = set()
+                tags_to_remove: set[str] = set()
                 for tag in ioc_res_sec.tags:
                     if not ioc_res_sec.tags[tag]:
                         tags_to_remove.add(tag)
@@ -434,7 +434,7 @@ class Overpower(ServiceBase):
 
         return False
 
-    def _handle_psdecode_output(self, output: List[str], request: ServiceRequest, subsequent_run: bool = False) -> None:
+    def _handle_psdecode_output(self, output: list[str], request: ServiceRequest, subsequent_run: bool = False) -> None:
         """
         This method converts the output from the PSDecode tool into ResultSections
         :param output: The output from the PSDecode tool
@@ -442,7 +442,7 @@ class Overpower(ServiceBase):
         :param subsequent_run: A boolean indicating if this output is from a subsquent run of PSDecode
         :return: None
         """
-        actions: List[str] = []
+        actions: list[str] = []
         for index, line in enumerate(output):
             if "############################## Actions ##############################" in line:
                 actions = output[index + 1 :]
@@ -465,8 +465,8 @@ class Overpower(ServiceBase):
         )
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         iex_count = 0
-        urls_seen_in_actions: Set[str] = set()
-        paths_seen_in_actions: Set[str] = set()
+        urls_seen_in_actions: set[str] = set()
+        paths_seen_in_actions: set[str] = set()
         for action in actions:
             static_iocs = False
             if action.startswith(INVOKE_EXPRESSION_ACTION):
@@ -539,7 +539,7 @@ class Overpower(ServiceBase):
     #         if boxps_net_section.body:
     #             result.add_section(boxps_net_section)
 
-    def _extract_supplementary(self, ps1_profiler_output: Dict[str, Any], psdecode_output: List[str]) -> None:
+    def _extract_supplementary(self, ps1_profiler_output: dict[str, Any], psdecode_output: list[str]) -> None:
         """
         This method adds the stdout/output from tools as supplementary files
         :param ps1_profiler_output: A dictionary containing details from the PowerShellProfiler tool
