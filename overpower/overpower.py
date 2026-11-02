@@ -58,9 +58,9 @@ PS1_PROFILER = "PowerShellProfiler"
 class Overpower(ServiceBase):
     def __init__(self, config: dict | None = None) -> None:
         super(Overpower, self).__init__(config)
-        self.artifact_hashes = None
-        self.artifact_list = None
-        self.safe_file_list = [os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files]
+        self.artifact_hashes: set[str] = set()
+        self.artifact_list: list[dict[str, Any]] = []
+        self.safe_file_list = {os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files}
         self.identify = get_identify(use_cache=os.environ.get("PRIVILEGED", "false").lower() == "true")
         self.safelist: dict[str, dict[str, list[str]]] = {}
 
@@ -138,8 +138,8 @@ class Overpower(ServiceBase):
         :return: A set containing the file paths of the files that were moved
         """
 
-        unsafe_file_list = [os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files]
-        files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
+        unsafe_file_list = {os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files}
+        files_to_move = unsafe_file_list.difference(self.safe_file_list)
         missing_files = set()
         for file_to_move in files_to_move:
             try:
@@ -167,7 +167,7 @@ class Overpower(ServiceBase):
 
             artifact_sha256 = get_sha256_for_file(file_path)
 
-            if artifact_sha256 in [FAKE_FILE_CONTENT]:
+            if artifact_sha256 == FAKE_FILE_CONTENT:
                 self.log.debug(f"Removed fake file '{file}' in preparation for subsequent {PSDECODE} run...")
                 os.remove(file_path)
 
@@ -193,7 +193,7 @@ class Overpower(ServiceBase):
 
     def execute(self, request: ServiceRequest) -> None:
         self.artifact_hashes = set()
-        self.artifact_list: list[dict[str, Any]] = []
+        self.artifact_list = []
         add_supplementary = request.get_param("add_supplementary")
         request.result = Result()
         responses: dict[str, list[str]] = {}
@@ -595,7 +595,7 @@ class Overpower(ServiceBase):
 
                 artifact_sha256 = get_sha256_for_file(file_path)
 
-                if artifact_sha256 in [FAKE_FILE_CONTENT]:
+                if artifact_sha256 == FAKE_FILE_CONTENT:
                     continue
 
                 if artifact_sha256 in self.artifact_hashes:
