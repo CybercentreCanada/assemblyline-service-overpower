@@ -14,7 +14,7 @@ RUN apt-get update && \
     rm -rf /tmp/setup/pkglist.txt /var/lib/apt/lists/*
 
 # Download the Microsoft repository GPG keys
-RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb
+RUN wget https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb
 # Register the Microsoft repository GPG keys
 RUN dpkg -i packages-microsoft-prod.deb
 # Update the list of packages after we added packages.microsoft.com
