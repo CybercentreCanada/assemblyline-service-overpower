@@ -1,12 +1,13 @@
+import json
+import os
 import re
+import shutil
+import subprocess
+
 from copy import deepcopy
-from json import dumps
-from os import environ, getcwd, listdir, path, remove, rmdir, walk
-from shutil import copy
-from subprocess import PIPE, Popen, TimeoutExpired
 from threading import Thread
 from time import sleep, time
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 from assemblyline.common.digests import get_sha256_for_file
 from assemblyline.common.forge import get_identify
@@ -38,14 +39,14 @@ TRANSLATE_SCORE = {
     6.0: 1000,  # Malware (95-100% hit rate)
 }
 
-DOWNLOAD_FILE_REGEX = "\[.+\] Download From: (.+) --> Save To: (.+)\n"
+DOWNLOAD_FILE_REGEX = re.compile(r"\[.+\] Download From: (.+) --> Save To: (.+)\n", re.IGNORECASE)
 INVOKE_EXPRESSION_ACTION = "[Invoke-Expression]"
 
 # The SHA256 representation when PSDecode creates a fake file when pretending to download something
 FAKE_FILE_CONTENT = "d219a254440b9cd5094ea46128bd14f0eed3b644d31ea4854806c0cfe8e3b9f8"
 
 # This regular expression is used to find GPG keys statically in the code
-GPG_KEY_REGEX = r"(?:^|\n).*\becho\b\s*['\"]([a-zA-Z0-9]+)['\"]\s*\|.*\bgpg\b.*"
+GPG_KEY_REGEX = re.compile(r"(?:^|\n).*\becho\b\s*['\"]([a-zA-Z0-9]+)['\"]\s*\|.*\bgpg\b.*")
 
 # Enumerations
 PSDECODE = "PSDecode"
@@ -54,13 +55,13 @@ PS1_PROFILER = "PowerShellProfiler"
 
 
 class Overpower(ServiceBase):
-    def __init__(self, config: Optional[Dict] = None) -> None:
+    def __init__(self, config: dict | None = None) -> None:
         super(Overpower, self).__init__(config)
-        self.artifact_hashes = None
-        self.artifact_list = None
-        self.safe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
-        self.identify = get_identify(use_cache=environ.get("PRIVILEGED", "false").lower() == "true")
-        self.safelist: Dict[str, Dict[str, List[str]]] = {}
+        self.artifact_hashes: set[str] = set()
+        self.artifact_list: list[dict[str, Any]] = []
+        self.safe_file_list = {os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files}
+        self.identify = get_identify(use_cache=os.environ.get("PRIVILEGED", "false").lower() == "true")
+        self.safelist: dict[str, dict[str, list[str]]] = {}
 
     def start(self):
         try:
@@ -72,8 +73,8 @@ class Overpower(ServiceBase):
     def _run_tool(
         self,
         tool_name: str,
-        args: List[str],
-        resp: Dict[str, Any],
+        args: list[str],
+        resp: dict[str, Any],
     ) -> None:
         """
         This method runs a tool and appends the stdout from that tool to the dictionary
@@ -87,15 +88,15 @@ class Overpower(ServiceBase):
         resp[tool_name] = []
         try:
             # Stream stdout to resp rather than waiting for process to finish
-            with Popen(
+            with subprocess.Popen(
                 args=args,
-                stdout=PIPE,
+                stdout=subprocess.PIPE,
                 bufsize=1,
                 universal_newlines=True,
             ) as p:
                 for line in p.stdout:
                     resp[tool_name].append(line)
-        except TimeoutExpired:
+        except subprocess.TimeoutExpired:
             pass
         except Exception as e:
             self.log.warning(f"{tool_name} crashed due to {repr(e)}")
@@ -129,23 +130,23 @@ class Overpower(ServiceBase):
 
     #     return boxps_output
 
-    def _move_unsafe_new_files_to_working_dir(self) -> Set[str]:
+    def _move_unsafe_new_files_to_working_dir(self) -> set[str]:
         """
         Since we are running samples right on the Docker container, there is a chance that samples could drop
         files to the root directory of execution
         :return: A set containing the file paths of the files that were moved
         """
 
-        unsafe_file_list = [path.join(root, file) for root, _, files in walk(getcwd()) for file in files]
-        files_to_move = set(unsafe_file_list).difference(set(self.safe_file_list))
+        unsafe_file_list = {os.path.join(root, file) for root, _, files in os.walk(os.getcwd()) for file in files}
+        files_to_move = unsafe_file_list.difference(self.safe_file_list)
         missing_files = set()
         for file_to_move in files_to_move:
             try:
-                copy(file_to_move, self.working_directory)
+                shutil.copy(file_to_move, self.working_directory)
             except FileNotFoundError:
                 missing_files.add(file_to_move)
             try:
-                remove(file_to_move)
+                os.remove(file_to_move)
             except FileNotFoundError:
                 pass  # File is not there anymore, job done
         return files_to_move.difference(missing_files)  # Remove files that didn't copy
@@ -157,21 +158,21 @@ class Overpower(ServiceBase):
         """
         _ = self._move_unsafe_new_files_to_working_dir()
 
-        for file in sorted(listdir(self.working_directory)):
-            file_path = path.join(self.working_directory, file)
+        for file in sorted(os.listdir(self.working_directory)):
+            file_path = os.path.join(self.working_directory, file)
 
-            if path.isdir(file_path):
+            if os.path.isdir(file_path):
                 continue
 
             artifact_sha256 = get_sha256_for_file(file_path)
 
-            if artifact_sha256 in [FAKE_FILE_CONTENT]:
+            if artifact_sha256 == FAKE_FILE_CONTENT:
                 self.log.debug(f"Removed fake file '{file}' in preparation for subsequent {PSDECODE} run...")
-                remove(file_path)
+                os.remove(file_path)
 
     def _setup_psdecode_args(
         self, request: ServiceRequest, tool_timeout: int, fake_web_download: bool = False
-    ) -> List[str]:
+    ) -> list[str]:
         psdecode_args = [
             "pwsh",
             "-Command",
@@ -191,10 +192,10 @@ class Overpower(ServiceBase):
 
     def execute(self, request: ServiceRequest) -> None:
         self.artifact_hashes = set()
-        self.artifact_list: List[Dict[str, Any]] = []
+        self.artifact_list = []
         add_supplementary = request.get_param("add_supplementary")
         request.result = Result()
-        responses: Dict[str, List[str]] = {}
+        responses: dict[str, list[str]] = {}
 
         # PSDecode performs deobfuscating prior to execution with the given timeout. Provide some time to perform
         # the deobfuscation when setting the tool_timeout param...
@@ -223,12 +224,12 @@ class Overpower(ServiceBase):
         files_to_profile = [(request.file_name, request.file_path)]
         files_to_profile.extend(
             [
-                (layer, path.join(self.working_directory, layer))
-                for layer in sorted(listdir(self.working_directory))
+                (layer, os.path.join(self.working_directory, layer))
+                for layer in sorted(os.listdir(self.working_directory))
                 if "layer" in layer
             ]
         )
-        total_ps1_profiler_output: Dict[str, Any] = {}
+        total_ps1_profiler_output: dict[str, Any] = {}
         # We do not want a loop of PowerShellProfiler extractions
         if request.temp_submission_data.get("deobfuscated_by_ps1profiler") and request.task.file_name.startswith(
             DEOBFUS_FILE_PREFIX
@@ -281,7 +282,7 @@ class Overpower(ServiceBase):
         # Adding sandbox artifacts using the OntologyResults helper class
         _ = OntologyResults.handle_artifacts(self.artifact_list, request)
 
-    def _handle_ps1_profiler_output(self, output: Dict[str, Any], result: Result, file_name: str) -> bool:
+    def _handle_ps1_profiler_output(self, output: dict[str, Any], result: Result, file_name: str) -> bool:
         """
         This method converts the output from the PowerShellProfiler tool into ResultSections
         :param output: The output from the PowerShellProfiler tool
@@ -290,9 +291,9 @@ class Overpower(ServiceBase):
         :return: A flag indicating that we need to re-run PSDecode
         """
         # Get previous result sections for handling PowerShellProfiler profiles
-        previous_signatures: List[str] = []
-        previous_families: List[str] = []
-        previous_iocs: List[Tuple[str, str]] = []
+        previous_signatures: list[str] = []
+        previous_families: list[str] = []
+        previous_iocs: list[tuple[str, str]] = []
         static_uri_counter = 0
         for section in result.sections:
             for subsection in section.subsections:
@@ -380,14 +381,14 @@ class Overpower(ServiceBase):
             if number_of_extracted >= extracted_cap:
                 break
 
-            path_to_write = path.join(self.working_directory, f"ps1profiler_{extracted['type']}_{index}")
+            path_to_write = os.path.join(self.working_directory, f"ps1profiler_{extracted['type']}_{index}")
             with open(path_to_write, "wb") as f:
                 f.write(extracted["data"])
 
             file_type_details = self.identify.fileinfo(path_to_write, generate_hashes=False)
             if file_type_details["type"] in ["unknown", "text/plain"]:
                 self.log.debug(f"{path_to_write} was identified as {file_type_details['type']}. Ignoring...")
-                remove(path_to_write)
+                os.remove(path_to_write)
                 continue
 
             self.log.debug(f"Wrote {path_to_write} to disk for extraction...")
@@ -412,7 +413,7 @@ class Overpower(ServiceBase):
                         if (tag, value) in previous_iocs:
                             values.remove(value)
 
-                tags_to_remove: Set[str] = set()
+                tags_to_remove: set[str] = set()
                 for tag in ioc_res_sec.tags:
                     if not ioc_res_sec.tags[tag]:
                         tags_to_remove.add(tag)
@@ -432,7 +433,7 @@ class Overpower(ServiceBase):
 
         return False
 
-    def _handle_psdecode_output(self, output: List[str], request: ServiceRequest, subsequent_run: bool = False) -> None:
+    def _handle_psdecode_output(self, output: list[str], request: ServiceRequest, subsequent_run: bool = False) -> None:
         """
         This method converts the output from the PSDecode tool into ResultSections
         :param output: The output from the PSDecode tool
@@ -440,7 +441,7 @@ class Overpower(ServiceBase):
         :param subsequent_run: A boolean indicating if this output is from a subsquent run of PSDecode
         :return: None
         """
-        actions: List[str] = []
+        actions: list[str] = []
         for index, line in enumerate(output):
             if "############################## Actions ##############################" in line:
                 actions = output[index + 1 :]
@@ -463,15 +464,15 @@ class Overpower(ServiceBase):
         )
         actions_ioc_table = ResultTableSection("IOCs found in actions")
         iex_count = 0
-        urls_seen_in_actions: Set[str] = set()
-        paths_seen_in_actions: Set[str] = set()
+        urls_seen_in_actions: set[str] = set()
+        paths_seen_in_actions: set[str] = set()
         for action in actions:
             static_iocs = False
             if action.startswith(INVOKE_EXPRESSION_ACTION):
                 static_iocs = True  # iEX calls have the same false positives as static powershell scripts
                 iex_count += 1
             extract_iocs_from_text_blob(action, actions_ioc_table, is_network_static=static_iocs)
-            match = re.search(DOWNLOAD_FILE_REGEX, action, re.IGNORECASE)
+            match = DOWNLOAD_FILE_REGEX.search(action)
             if match and len(match.regs) == 3:
                 url = match.group(1)
                 urls_seen_in_actions.add(url)
@@ -537,7 +538,7 @@ class Overpower(ServiceBase):
     #         if boxps_net_section.body:
     #             result.add_section(boxps_net_section)
 
-    def _extract_supplementary(self, ps1_profiler_output: Dict[str, Any], psdecode_output: List[str]) -> None:
+    def _extract_supplementary(self, ps1_profiler_output: dict[str, Any], psdecode_output: list[str]) -> None:
         """
         This method adds the stdout/output from tools as supplementary files
         :param ps1_profiler_output: A dictionary containing details from the PowerShellProfiler tool
@@ -545,7 +546,7 @@ class Overpower(ServiceBase):
         :return: None
         """
         if ps1_profiler_output:
-            ps1_profiler_suppl_path = path.join(self.working_directory, "suppl_ps1_profiler_output.json")
+            ps1_profiler_suppl_path = os.path.join(self.working_directory, "suppl_ps1_profiler_output.json")
             ps1_profiler_output_copy = deepcopy(ps1_profiler_output)
             if any(values.get("extracted") for values in ps1_profiler_output_copy.values()):
                 for values in ps1_profiler_output_copy.values():
@@ -553,9 +554,9 @@ class Overpower(ServiceBase):
                         if isinstance(item["data"], bytes):
                             item["data"] = safe_str(item["data"])
             with open(ps1_profiler_suppl_path, "w") as f:
-                f.write(dumps(ps1_profiler_output_copy))
+                f.write(json.dumps(ps1_profiler_output_copy))
         if psdecode_output:
-            psdecode_suppl_path = path.join(self.working_directory, "suppl_psdecode_output.txt")
+            psdecode_suppl_path = os.path.join(self.working_directory, "suppl_psdecode_output.txt")
             with open(psdecode_suppl_path, "w") as f:
                 f.writelines(psdecode_output)
         # for boxps_file in ["stderr.txt", "layers.ps1", "stdout.txt", "report.json"]:
@@ -573,18 +574,18 @@ class Overpower(ServiceBase):
         files_to_move = self._move_unsafe_new_files_to_working_dir()
 
         # Remove empty dirs
-        for root, dirs, _ in walk(getcwd()):
+        for root, dirs, _ in os.walk(os.getcwd()):
             for d in dirs:
-                dir_path = path.join(root, d)
+                dir_path = os.path.join(root, d)
                 try:
-                    rmdir(dir_path)  # Non-empty dir raises OSError
+                    os.rmdir(dir_path)  # Non-empty dir raises OSError
                 except OSError:
                     pass
 
         # Retrieve artifacts
-        for root, _, files in walk(self.working_directory):
+        for root, _, files in os.walk(self.working_directory):
             for file in sorted(files):
-                file_path = path.join(root, file)
+                file_path = os.path.join(root, file)
                 # Skip Box-PS execution artifacts
                 # if root.endswith("boxps"):
                 #     # These files are handled in _extract_supplementary
@@ -593,7 +594,7 @@ class Overpower(ServiceBase):
 
                 artifact_sha256 = get_sha256_for_file(file_path)
 
-                if artifact_sha256 in [FAKE_FILE_CONTENT]:
+                if artifact_sha256 == FAKE_FILE_CONTENT:
                     continue
 
                 if artifact_sha256 in self.artifact_hashes:
@@ -683,19 +684,18 @@ class Overpower(ServiceBase):
         :param request: The ServiceRequest object
         :return: None
         """
+        file_contents = request.file_contents
         try:
-            if request.file_contents.startswith(b"\xff\xfe"):
-                matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode("utf-16"))
-            else:
-                matches = re.findall(GPG_KEY_REGEX, request.file_contents.decode())
+            encoding = "utf-16" if file_contents.startswith(b"\xff\xfe") else "utf-8"
+            matches = GPG_KEY_REGEX.findall(file_contents.decode(encoding))
         except Exception:
-            matches = []
+            return
 
         if not matches:
             return
 
         if "passwords" in request.temp_submission_data and isinstance(request.temp_submission_data["passwords"], list):
             request.temp_submission_data["passwords"].extend(set(matches))
+            request.temp_submission_data["passwords"].sort()
         else:
             request.temp_submission_data["passwords"] = sorted(set(matches))
-        request.temp_submission_data["passwords"].sort()
