@@ -1000,7 +1000,7 @@ function Resolve_Env_Variables_For_System32
             }
 
             # Read in the list of standard System32 directory contents
-            $binaries = Get-Content "tools/ENV_SYSTEM32.txt"
+            $binaries = Get-Content "$PSScriptRoot/ENV_SYSTEM32.txt"
 
             ForEach($match in $matches){
                 $cmd_wildcard_pattern = $match.groups[1].Value
