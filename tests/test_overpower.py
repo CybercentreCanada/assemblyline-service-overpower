@@ -140,7 +140,7 @@ class TestOverpower:
     @staticmethod
     def test_init(overpower_class_instance):
         assert overpower_class_instance.artifact_hashes == set()
-        assert overpower_class_instance.artifact_list == []
+        assert overpower_class_instance.artifact_list == {}
 
     @staticmethod
     @pytest.mark.parametrize("sample", samples)
@@ -165,8 +165,11 @@ class TestOverpower:
 
         # Actually executing the sample
         overpower_class_instance.execute(service_request)
-        assert overpower_class_instance.artifact_list == []
+        assert overpower_class_instance.artifact_list == {}
 
+        execution_dir = os.path.join(overpower_class_instance.working_directory, "execution_dir")
+        if os.path.exists(execution_dir):
+            shutil.rmtree(execution_dir)
         # Code coverage
         mocker.patch("overpower.overpower.subprocess.Popen", side_effect=TimeoutExpired("blah", 1))
         overpower_class_instance.execute(service_request)
@@ -270,7 +273,7 @@ class TestOverpower:
 
     @staticmethod
     def test_prepare_artifacts(overpower_class_instance, dummy_request_class_instance):
-        overpower_class_instance.artifact_list = []
+        overpower_class_instance.artifact_list = {}
         overpower_class_instance.artifact_hashes = set()
 
         item_0 = join(overpower_class_instance.working_directory, f"{DEOBFUS_FILE_PREFIX}layer1.txt")
@@ -287,28 +290,36 @@ class TestOverpower:
             f.write("blah_2")
 
         overpower_class_instance._prepare_artifacts(dummy_request_class_instance)
-        assert overpower_class_instance.artifact_list[0] == {
+        assert overpower_class_instance.artifact_list[
+            "e388fc2e014ed2d7a269f5936e825dc19797a979d64aa9e9408dadb80ea9d82e"
+        ] == {
             "name": f"{DEOBFUS_FILE_PREFIX}layer1.txt",
             "path": item_0,
             "description": "De-obfuscated layer from PowerShellProfiler",
             "to_be_extracted": True,
             "sha256": "e388fc2e014ed2d7a269f5936e825dc19797a979d64aa9e9408dadb80ea9d82e",
         }
-        assert overpower_class_instance.artifact_list[1] == {
+        assert overpower_class_instance.artifact_list[
+            "96098ae905117093937447807ca60b2d1105df9f35163f2a0f2bb6ed7c58e2d9"
+        ] == {
             "name": "executable.bin",
             "path": item_3,
             "description": "Overpower Dump",
             "to_be_extracted": True,
             "sha256": "96098ae905117093937447807ca60b2d1105df9f35163f2a0f2bb6ed7c58e2d9",
         }
-        assert overpower_class_instance.artifact_list[2] == {
+        assert overpower_class_instance.artifact_list[
+            "823b42df5b53e54895e9f8a0dd7430c722c63796fb847db2a43cde91bc951a38"
+        ] == {
             "name": "layer1.txt",
             "path": item_1,
             "description": "Layer of de-obfuscated PowerShell from PSDecode",
             "to_be_extracted": False,
             "sha256": "823b42df5b53e54895e9f8a0dd7430c722c63796fb847db2a43cde91bc951a38",
         }
-        assert overpower_class_instance.artifact_list[3] == {
+        assert overpower_class_instance.artifact_list[
+            "2d0bc6e82ff7dda5491eefc888ea9fae386f8460bf461fa763944149d0cd8caa"
+        ] == {
             "name": "2d0bc6e82ff7dda5491eefc888ea9fae386f8460bf461fa763944149d0cd8caa",
             "path": item_2,
             "description": "Output from PowerShell tool",
@@ -316,17 +327,21 @@ class TestOverpower:
             "sha256": "2d0bc6e82ff7dda5491eefc888ea9fae386f8460bf461fa763944149d0cd8caa",
         }
 
-        overpower_class_instance.artifact_list = []
+        overpower_class_instance.artifact_list = {}
         overpower_class_instance.artifact_hashes = set()
         overpower_class_instance._prepare_artifacts(dummy_request_class_instance, False)
-        assert overpower_class_instance.artifact_list[0] == {
+        assert overpower_class_instance.artifact_list[
+            "823b42df5b53e54895e9f8a0dd7430c722c63796fb847db2a43cde91bc951a38"
+        ] == {
             "name": "layer1.txt",
             "path": item_1,
             "description": "Layer of de-obfuscated PowerShell from PSDecode",
             "to_be_extracted": False,
             "sha256": "823b42df5b53e54895e9f8a0dd7430c722c63796fb847db2a43cde91bc951a38",
         }
-        assert overpower_class_instance.artifact_list[1] == {
+        assert overpower_class_instance.artifact_list[
+            "2d0bc6e82ff7dda5491eefc888ea9fae386f8460bf461fa763944149d0cd8caa"
+        ] == {
             "name": "2d0bc6e82ff7dda5491eefc888ea9fae386f8460bf461fa763944149d0cd8caa",
             "path": item_2,
             "description": "Output from PowerShell tool",
