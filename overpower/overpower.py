@@ -105,17 +105,16 @@ class Overpower(ServiceBase):
         This method removes fake files since we don't want them to exist on subsequent PSDecode runs
         :return: None
         """
-        for file in sorted(os.listdir(self.working_directory)):
-            file_path = os.path.join(self.working_directory, file)
+        execution_dir = os.path.join(self.working_directory, EXECUTION_DIR)
+        for directory, _, files in os.walk(execution_dir):
+            for file in files:
+                file_path = os.path.join(directory, file)
 
-            if os.path.isdir(file_path):
-                continue
+                artifact_sha256 = get_sha256_for_file(file_path)
 
-            artifact_sha256 = get_sha256_for_file(file_path)
-
-            if artifact_sha256 == FAKE_FILE_CONTENT:
-                self.log.debug(f"Removed fake file '{file}' in preparation for subsequent {PSDECODE} run...")
-                os.remove(file_path)
+                if artifact_sha256 == FAKE_FILE_CONTENT:
+                    self.log.debug(f"Removed fake file '{file}' in preparation for subsequent {PSDECODE} run...")
+                    os.remove(file_path)
 
     def _setup_psdecode_args(
         self, request: ServiceRequest, tool_timeout: int, fake_web_download: bool = False
