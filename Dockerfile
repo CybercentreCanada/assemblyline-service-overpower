@@ -30,7 +30,9 @@ RUN mkdir -p /home/assemblyline/.local/share/powershell/Modules/PSDecode
 RUN mkdir -p /var/lib/assemblyline/.local/share/powershell/Modules/PSDecode
 # Move the PSDecode module to the correct directory
 COPY tools/PSDecode.psm1 /home/assemblyline/.local/share/powershell/Modules/PSDecode
+COPY tools/ENV_SYSTEM32.txt /home/assemblyline/.local/share/powershell/Modules/PSDecode
 COPY tools/PSDecode.psm1 /var/lib/assemblyline/.local/share/powershell/Modules/PSDecode
+COPY tools/ENV_SYSTEM32.txt /var/lib/assemblyline/.local/share/powershell/Modules/PSDecode
 
 RUN mkdir -p /opt/al_support
 
