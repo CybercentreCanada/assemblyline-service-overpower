@@ -57,7 +57,7 @@ class Overpower(ServiceBase):
     def __init__(self, config: dict | None = None) -> None:
         super(Overpower, self).__init__(config)
         self.artifact_hashes: set[str] = set()
-        self.artifact_list: dict[dict[str, Any]] = {}
+        self.artifact_list: dict[str, dict[str, Any]] = {}
         self.identify = get_identify(use_cache=os.environ.get("PRIVILEGED", "false").lower() == "true")
         self.safelist: dict[str, dict[str, list[str]]] = {}
 
