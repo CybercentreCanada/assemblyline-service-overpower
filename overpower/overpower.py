@@ -70,9 +70,8 @@ class Overpower(ServiceBase):
         self,
         tool_name: str,
         args: list[str],
-        resp: dict[str, Any],
         tool_timeout: float,
-    ) -> None:
+    ) -> list[str]:
         """
         This method runs a tool and appends the stdout from that tool to the dictionary
         :param tool_name: The name of the tool to be run
@@ -83,22 +82,21 @@ class Overpower(ServiceBase):
         execution_dir = os.path.join(self.working_directory, EXECUTION_DIR)
         self.log.debug(f"Running {tool_name}...")
         start_time = time()
-        resp[tool_name] = []
+        resp = b''
         try:
             p = subprocess.run(
                 args=args,
                 stdout=subprocess.PIPE,
                 cwd=execution_dir,
-                bufsize=1,
-                universal_newlines=True,
-                timeout=tool_timeout,
+                timeout=tool_timeout+3,  # give time for the tool to exit on it's own
             )
-            resp[tool_name] = p.stdout.splitlines(keepends=True)
+            resp = p.stdout
         except subprocess.TimeoutExpired as err:
-            resp[tool_name] = err.output.decode().splitlines(keepends=True)
+            resp = err.output
         except Exception as e:
             self.log.warning(f"{tool_name} crashed due to {repr(e)}")
         self.log.debug(f"Completed running {tool_name}! Time elapsed: {round(time() - start_time)}s")
+        return resp.decode().splitlines(keepends=True)
 
     def _remove_fake_files(self) -> None:
         """
@@ -141,7 +139,6 @@ class Overpower(ServiceBase):
         self.artifact_list = {}
         add_supplementary = request.get_param("add_supplementary")
         request.result = Result()
-        responses: dict[str, list[str]] = {}
 
         # Set up clean directory for execution
         execution_dir = os.path.join(self.working_directory, EXECUTION_DIR)
@@ -153,8 +150,8 @@ class Overpower(ServiceBase):
         tool_timeout = request.get_param("tool_timeout")
 
         psdecode_args = self._setup_psdecode_args(request, tool_timeout, fake_web_download)
-        self._run_tool(PSDECODE, psdecode_args, responses, tool_timeout)
-        self._handle_psdecode_output(responses[PSDECODE], request)
+        response = self._run_tool(PSDECODE, psdecode_args, tool_timeout)
+        self._handle_psdecode_output(response, request)
 
         # PowerShellProfiler
         rerun_psdecode = False
@@ -196,15 +193,14 @@ class Overpower(ServiceBase):
             # First, remove fake files
             self._remove_fake_files()
             # We do not want to fake a successful web download on this second run
-            responses[PSDECODE].clear()
             psdecode_args = self._setup_psdecode_args(request, tool_timeout)
-            self._run_tool(PSDECODE, psdecode_args, responses, tool_timeout)
-            self._handle_psdecode_output(responses[PSDECODE], request, subsequent_run=True)
+            response = self._run_tool(PSDECODE, psdecode_args, tool_timeout)
+            self._handle_psdecode_output(response, request, subsequent_run=True)
 
         self.gpg_key_hunter(request)
 
         if add_supplementary:
-            self._extract_supplementary(total_ps1_profiler_output, responses[PSDECODE])
+            self._extract_supplementary(total_ps1_profiler_output, response)
 
         worth_extracting = len(request.result.sections) > 0
         self.artifact_hashes.add(request.sha256)
