@@ -4,7 +4,6 @@ import re
 import subprocess
 
 from copy import deepcopy
-from threading import Thread
 from time import sleep, time
 from typing import Any
 
@@ -154,15 +153,7 @@ class Overpower(ServiceBase):
         tool_timeout = request.get_param("tool_timeout")
 
         psdecode_args = self._setup_psdecode_args(request, tool_timeout, fake_web_download)
-        # PSDecode may drop things in the shell's current working directory, switching to a clean one
-        psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
-        psdecode_thr.start()
-        psdecode_thr.join(timeout=tool_timeout)
-        if psdecode_thr.is_alive():
-            self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
-            # Give the tool a chance to clean up after to the tool timeout
-            sleep(3)
-
+        self._run_tool(PSDECODE, psdecode_args, responses)
         self._handle_psdecode_output(responses[PSDECODE], request)
 
         # PowerShellProfiler
@@ -207,13 +198,7 @@ class Overpower(ServiceBase):
             # We do not want to fake a successful web download on this second run
             responses[PSDECODE].clear()
             psdecode_args = self._setup_psdecode_args(request, tool_timeout)
-            psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
-            psdecode_thr.start()
-            psdecode_thr.join(timeout=tool_timeout)
-            if psdecode_thr.is_alive():
-                self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
-                # Give the tool a chance to clean up after to the tool timeout
-                sleep(3)
+            self._run_tool(PSDECODE, psdecode_args, responses)
             self._handle_psdecode_output(responses[PSDECODE], request, subsequent_run=True)
 
         self.gpg_key_hunter(request)
