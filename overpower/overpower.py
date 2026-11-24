@@ -3,7 +3,6 @@ import os
 import re
 import subprocess
 
-from contextlib import chdir
 from copy import deepcopy
 from threading import Thread
 from time import sleep, time
@@ -81,6 +80,7 @@ class Overpower(ServiceBase):
         :param resp: A dictionary used to contain the stdout from a tool
         :return: None
         """
+        execution_dir = os.path.join(self.working_directory, EXECUTION_DIR)
         self.log.debug(f"Running {tool_name}...")
         start_time = time()
         resp[tool_name] = []
@@ -89,6 +89,7 @@ class Overpower(ServiceBase):
             with subprocess.Popen(
                 args=args,
                 stdout=subprocess.PIPE,
+                cwd=execution_dir,
                 bufsize=1,
                 universal_newlines=True,
             ) as p:
@@ -154,14 +155,13 @@ class Overpower(ServiceBase):
 
         psdecode_args = self._setup_psdecode_args(request, tool_timeout, fake_web_download)
         # PSDecode may drop things in the shell's current working directory, switching to a clean one
-        with chdir(execution_dir):
-            psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
-            psdecode_thr.start()
-            psdecode_thr.join(timeout=tool_timeout)
-            if psdecode_thr.is_alive():
-                self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
-                # Give the tool a chance to clean up after to the tool timeout
-                sleep(3)
+        psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
+        psdecode_thr.start()
+        psdecode_thr.join(timeout=tool_timeout)
+        if psdecode_thr.is_alive():
+            self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
+            # Give the tool a chance to clean up after to the tool timeout
+            sleep(3)
 
         self._handle_psdecode_output(responses[PSDECODE], request)
 
@@ -207,14 +207,13 @@ class Overpower(ServiceBase):
             # We do not want to fake a successful web download on this second run
             responses[PSDECODE].clear()
             psdecode_args = self._setup_psdecode_args(request, tool_timeout)
-            with chdir(execution_dir):
-                psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
-                psdecode_thr.start()
-                psdecode_thr.join(timeout=tool_timeout)
-                if psdecode_thr.is_alive():
-                    self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
-                    # Give the tool a chance to clean up after to the tool timeout
-                    sleep(3)
+            psdecode_thr = Thread(target=self._run_tool, args=(PSDECODE, psdecode_args, responses), daemon=True)
+            psdecode_thr.start()
+            psdecode_thr.join(timeout=tool_timeout)
+            if psdecode_thr.is_alive():
+                self.log.debug(f"{PSDECODE} did not finish. Look at previous logs...")
+                # Give the tool a chance to clean up after to the tool timeout
+                sleep(3)
             self._handle_psdecode_output(responses[PSDECODE], request, subsequent_run=True)
 
         self.gpg_key_hunter(request)
