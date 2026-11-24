@@ -71,6 +71,7 @@ class Overpower(ServiceBase):
         tool_name: str,
         args: list[str],
         resp: dict[str, Any],
+        tool_timeout: float,
     ) -> None:
         """
         This method runs a tool and appends the stdout from that tool to the dictionary
@@ -84,18 +85,17 @@ class Overpower(ServiceBase):
         start_time = time()
         resp[tool_name] = []
         try:
-            # Stream stdout to resp rather than waiting for process to finish
-            with subprocess.Popen(
+            p = subprocess.run(
                 args=args,
                 stdout=subprocess.PIPE,
                 cwd=execution_dir,
                 bufsize=1,
                 universal_newlines=True,
-            ) as p:
-                for line in p.stdout:
-                    resp[tool_name].append(line)
-        except subprocess.TimeoutExpired:
-            pass
+                timeout=tool_timeout,
+            )
+            resp[tool_name] = p.stdout.splitlines(keepends=True)
+        except subprocess.TimeoutExpired as err:
+            resp[tool_name] = err.output.decode().splitlines(keepends=True)
         except Exception as e:
             self.log.warning(f"{tool_name} crashed due to {repr(e)}")
         self.log.debug(f"Completed running {tool_name}! Time elapsed: {round(time() - start_time)}s")
@@ -153,7 +153,7 @@ class Overpower(ServiceBase):
         tool_timeout = request.get_param("tool_timeout")
 
         psdecode_args = self._setup_psdecode_args(request, tool_timeout, fake_web_download)
-        self._run_tool(PSDECODE, psdecode_args, responses)
+        self._run_tool(PSDECODE, psdecode_args, responses, tool_timeout)
         self._handle_psdecode_output(responses[PSDECODE], request)
 
         # PowerShellProfiler
@@ -198,7 +198,7 @@ class Overpower(ServiceBase):
             # We do not want to fake a successful web download on this second run
             responses[PSDECODE].clear()
             psdecode_args = self._setup_psdecode_args(request, tool_timeout)
-            self._run_tool(PSDECODE, psdecode_args, responses)
+            self._run_tool(PSDECODE, psdecode_args, responses, tool_timeout)
             self._handle_psdecode_output(responses[PSDECODE], request, subsequent_run=True)
 
         self.gpg_key_hunter(request)
