@@ -92,7 +92,7 @@ class Overpower(ServiceBase):
             )
             resp = p.stdout
         except subprocess.TimeoutExpired as err:
-            resp = err.output
+            resp = err.output or b""
         except Exception as e:
             self.log.warning(f"{tool_name} crashed due to {repr(e)}")
         self.log.debug(f"Completed running {tool_name}! Time elapsed: {round(time() - start_time)}s")
