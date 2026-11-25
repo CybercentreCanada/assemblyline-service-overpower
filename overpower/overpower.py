@@ -73,11 +73,11 @@ class Overpower(ServiceBase):
         tool_timeout: float,
     ) -> list[str]:
         """
-        This method runs a tool and appends the stdout from that tool to the dictionary
+        This method runs a tool and returns the stdout from that tool
         :param tool_name: The name of the tool to be run
         :param args: A list of arguments to use to run the tool
-        :param resp: A dictionary used to contain the stdout from a tool
-        :return: None
+        :param tool_timeout: The timeout of the tool in seconds
+        :return: The stout split into lines
         """
         execution_dir = os.path.join(self.working_directory, EXECUTION_DIR)
         self.log.debug(f"Running {tool_name}...")
